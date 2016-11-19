@@ -4,6 +4,8 @@
 
 /* http://learnopengl.com/#!Model-Loading/Mesh */
 
+enum Axis { xAxis, yAxis, zAxis };
+
 struct Vertex {
 	glm::vec3 Position;
 	glm::vec3 Colour;
@@ -22,5 +24,14 @@ public:
 	void set();
 	std::vector<Vertex> vertices;
 	std::vector<GLuint> indices;
-	void draw(GLuint shader,Camera* cam);
+
+	
+	void setPosition(glm::vec3 newPos); /*!< Set model position */
+	void setScale(glm::vec3 newScale);	/*!< Set model scale */
+	void setRotation(float degrees, Axis axis); /*!< Set model rotation on choosen axis */
+
+	void translate(glm::vec3 translate);			/*!< Move model */
+	void rotate(float degrees, Axis Axis);	/*!< Rotate model */
+
+	void draw(GLuint shader,Camera* cam); /*!< Draw model */
 };

@@ -30,6 +30,104 @@ void Model::set()
 	gl::BindVertexArray(0);
 }
 
+void Model::setPosition(glm::vec3 newPos)
+{
+	t = glm::mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		newPos.x, newPos.y, newPos.z, 1.0f
+	);
+}
+
+void Model::setScale(glm::vec3 newScale)
+{
+	s = glm::mat4(
+		newScale.x, 0.0f, 0.0f, 0.0f,
+		0.0f, newScale.y, 0.0f, 0.0f,
+		0.0f, 0.0f, newScale.z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+}
+
+void Model::setRotation(float degrees, Axis axis)
+{
+	float rad = glm::radians(degrees);
+	switch (axis)	//Choose axis to rotate around
+	{
+	case xAxis:
+		r *= glm::mat4(
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, cos(rad), -sin(rad), 0.0f,
+			0.0f, sin(rad), cos(rad), 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+		break;
+	case yAxis:
+		r *= glm::mat4(
+			cos(rad), 0.0f, sin(rad), 0.0f,
+			0, 1.0, 0.0f, 0.0f,
+			-sin(rad), 0.0f, cos(rad), 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+		break;
+	case zAxis:
+		r *= glm::mat4(
+			cos(rad), -sin(rad), 0.0f, 0.0f,
+			sin(rad), cos(rad), 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+		break;
+	default:
+		break;
+	}
+}
+
+void Model::translate(glm::vec3 translate)
+{
+	t *= glm::mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		translate.x, translate.y, translate.z, 1.0f
+	);
+}
+
+void Model::rotate(float degrees, Axis Axis)
+{
+	float rad = glm::radians(degrees);
+	switch (Axis)	//Choose axis to rotate around
+	{
+	case xAxis:
+		r *= glm::mat4(
+			1.0f, 0.0f, 0.0f, 0.0f,
+			0.0f, cos(rad), -sin(rad), 0.0f,
+			0.0f, sin(rad), cos(rad), 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+		break;
+	case yAxis:
+		r *= glm::mat4(
+			cos(rad), 0.0f, sin(rad), 0.0f,
+			0, 1.0, 0.0f, 0.0f,
+			-sin(rad), 0.0f, cos(rad), 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+		break;
+	case zAxis:
+		r *= glm::mat4(
+			cos(rad), -sin(rad), 0.0f, 0.0f,
+			sin(rad), cos(rad), 0.0f, 0.0f,
+			0.0f, 0.0f, 1.0f, 0.0f,
+			0.0f, 0.0f, 0.0f, 1.0f
+		);
+		break;
+	default:
+		break;
+	}
+}
+
 Model::Model()
 {
 	 t = glm::mat4(
@@ -59,6 +157,7 @@ void Model::draw(GLuint shader,Camera* cam)
 {
 	//Transform
 	glm::mat4 M;	//Model matrix
+	M = t * r * s;
 	GLint modelMatrixID = gl::GetUniformLocation(shader, "mModel");
 	GLint viewMatrixID = gl::GetUniformLocation(shader, "mView");
 	GLint projectionMatrixID = gl::GetUniformLocation(shader, "mProjection");

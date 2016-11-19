@@ -86,12 +86,15 @@ int main() {
 	camera.setFacing(glm::vec3(0.0f, 0.0f, 0.0f));
 	camera.setUpVector(glm::vec3(0.0f, 1.0f, 0.0f));
 
+	float dt = 0.001;
+	float speed = 5.0f * dt;
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+		triangle.rotate(1.0f, yAxis);
 		gl::Clear(gl::COLOR_BUFFER_BIT);
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		graphics->update((float)glfwGetTime());
 		triangle.draw(graphics->programHandle,&camera);
-		triangle2.draw(graphics->programHandle,&camera);
+		//triangle2.draw(graphics->programHandle,&camera);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
