@@ -161,13 +161,24 @@ void Model::draw(GLuint shader,Camera* cam)
 	GLint modelMatrixID = gl::GetUniformLocation(shader, "mModel");
 	GLint viewMatrixID = gl::GetUniformLocation(shader, "mView");
 	GLint projectionMatrixID = gl::GetUniformLocation(shader, "mProjection");
-
+	glm::mat4 V = cam->getView();
 	gl::UniformMatrix4fv(modelMatrixID, 1, gl::FALSE_, glm::value_ptr(M));
 	gl::UniformMatrix4fv(viewMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->getView()));
 	gl::UniformMatrix4fv(projectionMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->getPerspective()));
 
 	// Draw mesh
 	gl::BindVertexArray(this->VAO);
-	gl::DrawElements(gl::TRIANGLES, this->indices.size(), gl::UNSIGNED_INT, 0);
+	//gl::DrawArrays(gl::TRIANGLES, 0, 3);
+	gl::DrawElements(gl::TRIANGLES, indices.size(), gl::UNSIGNED_INT, 0);
 	gl::BindVertexArray(0);
+}
+
+Vertex::Vertex()
+{
+}
+
+Vertex::Vertex(glm::vec3 pos, glm::vec3 colour)
+{
+	Position = pos;
+	Colour = colour;
 }

@@ -6,7 +6,10 @@
 
 enum Axis { xAxis, yAxis, zAxis };
 
-struct Vertex {
+class Vertex {
+public:
+	Vertex();
+	Vertex(glm::vec3 pos, glm::vec3 colour);
 	glm::vec3 Position;
 	glm::vec3 Colour;
 };
