@@ -3,6 +3,47 @@
 #include "Graphics.h"
 #include "Model.h"
 #include "Camera.h"
+#include "Robot.h"
+
+
+bool bW, bS, bA, bD,
+bUp, bDown, bLeft, bRight,
+bSpace;
+
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	switch (key)
+	{
+	case GLFW_KEY_W:
+		bW = action;
+		break;
+	case GLFW_KEY_S:
+		bS = action;
+		break;
+	case GLFW_KEY_A:
+		bA = action;
+		break;
+	case GLFW_KEY_D:
+		bD = action;
+		break;
+	case GLFW_KEY_UP:
+		bUp = action;
+		break;
+	case GLFW_KEY_DOWN:
+		bDown = action;
+		break;
+	case GLFW_KEY_LEFT:
+		bLeft = action;
+		break;
+	case GLFW_KEY_RIGHT:
+		bRight = action;
+		break;
+	case GLFW_KEY_SPACE:
+		bSpace = action;
+	default:
+		break;
+	};
+}
 
 int main() {
 
@@ -17,7 +58,7 @@ int main() {
 	glfwWindowHint(GLFW_RESIZABLE, FALSE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, TRUE);
 	//Open window
-	GLFWwindow *window = glfwCreateWindow(500, 500, "Barrel Engine" , NULL, NULL);
+	GLFWwindow *window = glfwCreateWindow(1024, 768, "Barrel Engine" , NULL, NULL);
 	if (window == NULL) {
 		std::cout << "Failed to load window\n";
 		system("pause");
@@ -53,12 +94,12 @@ int main() {
 	triangle.indices.push_back(0);
 	triangle.indices.push_back(1);
 	triangle.indices.push_back(2);
+	triangle.indices.push_back(2);
 
 	triangle.set();
 
 	Model triangle2;
 
-	//Vertex top, botL, botR;
 
 	top.Position = glm::vec3(0.0f, 0.f, 0.0f);
 	botL.Position = glm::vec3(-0.5f, -0.5f, 0.0f);
@@ -81,22 +122,76 @@ int main() {
 	Graphics* graphics = new Graphics();
 	graphics->init();
 
-	Camera camera = Camera(45.0f, 1.0f, 0.1f, 100.0f);
-	camera.setPosition(glm::vec3(0.0f, 0.0f, 2.0f));
-	camera.setFacing(glm::vec3(0.0f, 0.0f, 0.0f));
-	camera.setUpVector(glm::vec3(0.0f, 1.0f, 0.0f));
+	Camera camera = Camera(90.0f, 1.0f, 0.1f, 100.0f);
+	glm::vec3 CameraPos(0.0f, 5.0f, 20.0f);
+	glm::vec3 CameraFace(0.0f, 0.0f, 0.0f);
+	glm::vec3 CameraUp(0.0f, 1.0f, 0.0f);
+	camera.setPosition(CameraPos);
+	camera.setFacing(CameraFace);
+	camera.setUpVector(CameraUp);
+	
 
-	float dt = 0.001;
-	float speed = 5.0f * dt;
+
+	Robot robot;
+	robot.setCamera(&camera);
+	robot.setShader(graphics->programHandle);
+
+	
+
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-		triangle.rotate(1.0f, yAxis);
+		float dt = glfwGetTime();
+		//triangle.rotate(1.0f, yAxis);
 		gl::Clear(gl::COLOR_BUFFER_BIT);
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-		graphics->update((float)glfwGetTime());
-		triangle.draw(graphics->programHandle,&camera);
+		//graphics->update((float)glfwGetTime());
+		//triangle.draw(graphics->programHandle,&camera);
 		//triangle2.draw(graphics->programHandle,&camera);
+		glfwSetKeyCallback(window, key_callback);
+
+		float fSpeed = 100000.0f * dt;
+		//Change camera facing /*Broken*/
+		if (bLeft) {
+			CameraFace.x -= fSpeed;
+			std::cout << CameraPos.x << "\n";
+		}
+		else if (bRight) {
+			CameraFace.x += fSpeed;
+		}
+		else if (bUp) {
+			CameraFace.y += fSpeed;
+		}
+		else if (bDown) {
+			CameraFace.y -= fSpeed;
+		}
+		//Move Camera
+		if (bA) {								//Move Left
+			CameraPos.x -= fSpeed;
+			std::cout << CameraPos.x << "\n";
+		}
+		else if (bD) {							//Move Right
+			CameraPos.x += fSpeed;
+		}
+		else if (bW) {							//Move Forward
+			CameraPos.z -= fSpeed;		
+		}
+		else if (bS) {							//Move Backwards
+			CameraPos.z += fSpeed;
+		}
+
+		else if (bSpace) {
+			CameraPos = glm::vec3 (0.0f, 0.0f, 20.0f);
+			CameraFace = glm::vec3(0.0f, 0.0f, 0.0f);
+			CameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		}
+
+		camera.setPosition(CameraPos);
+		camera.setFacing(CameraFace);
+		camera.setUpVector(CameraUp);
+
+		robot.DrawRobot(0.0f, 0.0f, 0.0f, 0.0f);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		glfwSetTime(0.0f);
 	}
 
 	//Close window and terminate GLFW
