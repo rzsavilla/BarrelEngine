@@ -35,6 +35,6 @@ public:
 
 	void translate(glm::vec3 translate);			/*!< Move model */
 	void rotate(float degrees, Axis Axis);	/*!< Rotate model */
-
+	void setColour(glm::vec3 newColour); /*!< Set the colour of all the models vertices*/
 	void draw(GLuint shader,Camera* cam); /*!< Draw model */
 };

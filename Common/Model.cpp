@@ -128,6 +128,13 @@ void Model::rotate(float degrees, Axis Axis)
 	}
 }
 
+void Model::setColour(glm::vec3 newColour)
+{
+	for (int i = 0; i < vertices.size(); i++) {
+		vertices.at(i).Colour = newColour;
+	}
+}
+
 Model::Model()
 {
 	 t = glm::mat4(
