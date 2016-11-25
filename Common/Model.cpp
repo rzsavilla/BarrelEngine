@@ -94,6 +94,11 @@ void Model::translate(glm::vec3 translate)
 	);
 }
 
+void Model::setOrigin(glm::vec3 newOrigin)
+{
+	origin = newOrigin;
+}
+
 void Model::rotate(float degrees, Axis Axis)
 {
 	float rad = glm::radians(degrees);
@@ -159,18 +164,46 @@ Model::Model()
 		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
+
+	origin = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 void Model::draw(GLuint shader,Camera* cam)
 {
 	//Transform
 	glm::mat4 M;	//Model matrix
-	M = t * r * s;
-	GLint modelMatrixID = gl::GetUniformLocation(shader, "mModel");
+
+	glm::mat4 o,oM;
+	//Origin matrix to move vertices to origin
+	o = glm::mat4(								
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		origin.x, origin.y, origin.z, 1.0f
+	);
+	//Origin minus matrix to move vertices to 0;
+	oM = glm::mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-origin.x, -origin.y, -origin.z, 1.0f
+	);
+
+	GLint originMatrixID = gl::GetUniformLocation(shader, "mOrigin");
+	GLint originMinusMatrixID = gl::GetUniformLocation(shader, "mOriginMinus");
+	GLint translateMatrixID = gl::GetUniformLocation(shader, "mTranslate");
+	GLint rotateMatrixID = gl::GetUniformLocation(shader, "mRotate");
+	GLint scaleMatrixID = gl::GetUniformLocation(shader, "mScale");
+
 	GLint viewMatrixID = gl::GetUniformLocation(shader, "mView");
 	GLint projectionMatrixID = gl::GetUniformLocation(shader, "mProjection");
 	glm::mat4 V = cam->getView();
-	gl::UniformMatrix4fv(modelMatrixID, 1, gl::FALSE_, glm::value_ptr(M));
+	gl::UniformMatrix4fv(originMatrixID, 1, gl::FALSE_, glm::value_ptr(o));
+	gl::UniformMatrix4fv(originMinusMatrixID, 1, gl::FALSE_, glm::value_ptr(oM));
+	gl::UniformMatrix4fv(translateMatrixID, 1, gl::FALSE_, glm::value_ptr(t));
+	gl::UniformMatrix4fv(rotateMatrixID, 1, gl::FALSE_, glm::value_ptr(r));
+	gl::UniformMatrix4fv(scaleMatrixID, 1, gl::FALSE_, glm::value_ptr(s));
+
 	gl::UniformMatrix4fv(viewMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->getView()));
 	gl::UniformMatrix4fv(projectionMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->getPerspective()));
 

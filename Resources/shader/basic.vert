@@ -5,7 +5,12 @@ layout (location=1) in vec3 VertexColour;
 
 in vec4 vertPosition;
 
-uniform mat4 mModel;
+uniform mat4 mTranslate;
+uniform mat4 mRotate;
+uniform mat4 mScale;
+uniform mat4 mOrigin;
+uniform mat4 mOriginMinus;
+
 uniform mat4 mView;
 uniform mat4 mProjection;
 
@@ -16,5 +21,5 @@ void main()
 {
     Colour = vertColour;
 
-    gl_Position = mProjection * mView * mModel * vertPosition;
+    gl_Position = mProjection * mView * mTranslate * mOriginMinus * mRotate * mOrigin * mScale * vertPosition;
 }
