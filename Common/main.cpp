@@ -57,6 +57,8 @@ int main() {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, FALSE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, TRUE);
+	glfwWindowHint(GLFW_DEPTH_BITS, 32);								//Enable Depth buffer
+
 	//Open window
 	GLFWwindow *window = glfwCreateWindow(1024, 768, "Barrel Engine" , NULL, NULL);
 	if (window == NULL) {
@@ -141,14 +143,17 @@ int main() {
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 		float dt = glfwGetTime();
 		//triangle.rotate(1.0f, yAxis);
-		gl::Clear(gl::COLOR_BUFFER_BIT);
+		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
+		gl::Enable(gl::DEPTH_TEST);			//Enable depth buffer
+
 		//graphics->update((float)glfwGetTime());
 		//triangle.draw(graphics->programHandle,&camera);
 		//triangle2.draw(graphics->programHandle,&camera);
 		glfwSetKeyCallback(window, key_callback);
 
-		float fSpeed = 100000.0f * dt;
+		float fSpeed = 1.0f;
 		//Change camera facing /*Broken*/
 		if (bLeft) {
 			CameraFace.x -= fSpeed;
