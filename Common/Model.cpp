@@ -133,6 +133,7 @@ void Model::setColour(glm::vec3 newColour)
 	for (int i = 0; i < vertices.size(); i++) {
 		vertices.at(i).Colour = newColour;
 	}
+	set();	//Reset buffers
 }
 
 Model::Model()
