@@ -32,7 +32,13 @@ private:
 	Camera *cam;
 	GLuint shader;
 
-	Model Cube;
+	Model cube;
+	Model Head, Torso, LeftLeg, RightLeg, LeftArm, RightArm, LeftFoot, RightFoot;
+	glm::vec3 position;
+	void initModel();
+	void createCube();
+
+	float rot;
 
 public:
 

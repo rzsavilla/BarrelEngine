@@ -8,7 +8,7 @@
 
 bool bW, bS, bA, bD,
 bUp, bDown, bLeft, bRight,
-bSpace;
+bSpace, bLShift;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -40,6 +40,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		break;
 	case GLFW_KEY_SPACE:
 		bSpace = action;
+		break;
+	case GLFW_KEY_LEFT_SHIFT:
+		bLShift = action;
+		break;
 	default:
 		break;
 	};
@@ -147,7 +151,7 @@ int main() {
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
 		gl::Enable(gl::DEPTH_TEST);			//Enable depth buffer
-
+		robot.Prepare(0.1f);
 		//graphics->update((float)glfwGetTime());
 		//triangle.draw(graphics->programHandle,&camera);
 		//triangle2.draw(graphics->programHandle,&camera);
@@ -171,17 +175,29 @@ int main() {
 		//Move Camera
 		if (bA) {								//Move Left
 			CameraPos.x -= fSpeed;
-			std::cout << CameraPos.x << "\n";
+			CameraFace.x -= fSpeed;
 		}
 		else if (bD) {							//Move Right
 			CameraPos.x += fSpeed;
+			CameraFace.x += fSpeed;
+		}
+		else if (bW && bLShift) {							//Move UP
+			CameraPos.y += fSpeed;
+			CameraFace.y += fSpeed;
+		}
+		else if (bS && bLShift) {							//Move DOWN
+			CameraPos.y -= fSpeed;
+			CameraFace.y -= fSpeed;
 		}
 		else if (bW) {							//Move Forward
-			CameraPos.z -= fSpeed;		
+			CameraPos.z -= fSpeed;
+			CameraFace.z -= fSpeed;
 		}
 		else if (bS) {							//Move Backwards
 			CameraPos.z += fSpeed;
+			CameraFace.z += fSpeed;
 		}
+		
 
 		else if (bSpace) {
 			CameraPos = glm::vec3 (0.0f, 0.0f, 20.0f);
