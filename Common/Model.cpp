@@ -56,7 +56,7 @@ void Model::setRotation(float degrees, Axis axis)
 	switch (axis)	//Choose axis to rotate around
 	{
 	case xAxis:
-		r *= glm::mat4(
+		r = glm::mat4(
 			1.0f, 0.0f, 0.0f, 0.0f,
 			0.0f, cos(rad), -sin(rad), 0.0f,
 			0.0f, sin(rad), cos(rad), 0.0f,
@@ -64,7 +64,7 @@ void Model::setRotation(float degrees, Axis axis)
 		);
 		break;
 	case yAxis:
-		r *= glm::mat4(
+		r = glm::mat4(
 			cos(rad), 0.0f, sin(rad), 0.0f,
 			0, 1.0, 0.0f, 0.0f,
 			-sin(rad), 0.0f, cos(rad), 0.0f,
@@ -72,7 +72,7 @@ void Model::setRotation(float degrees, Axis axis)
 		);
 		break;
 	case zAxis:
-		r *= glm::mat4(
+		r = glm::mat4(
 			cos(rad), -sin(rad), 0.0f, 0.0f,
 			sin(rad), cos(rad), 0.0f, 0.0f,
 			0.0f, 0.0f, 1.0f, 0.0f,
