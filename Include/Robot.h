@@ -35,10 +35,14 @@ private:
 	Model cube;
 	Model Head, Torso, LeftLeg, RightLeg, LeftArm, RightArm, LeftFoot, RightFoot;
 	glm::vec3 position;
+	glm::vec3 heading;
 	void initModel();
 	void createCube();
 
-	float rot;
+	float rot;		//Rotation around y axis
+	glm::mat4 rotMatrix;
+	float fTurnSpeed = 100.0f;
+	float fMoveSpeed =  1.0f;
 
 public:
 
@@ -50,6 +54,13 @@ public:
 
 	// draws the entire robot
 	void DrawRobot(float xPos, float yPos, float zPos, float rotation);
+
+	void moveForward();
+	void moveBackward();
+	void moveLeft();
+	void moveRight();
+	void turnLeft();
+	void turnRight();
 
 	// updates the robot data
 	void Prepare(float dt);

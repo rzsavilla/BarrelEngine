@@ -161,7 +161,6 @@ int main() {
 		//Change camera facing /*Broken*/
 		if (bLeft) {
 			CameraFace.x -= fSpeed;
-			std::cout << CameraPos.x << "\n";
 		}
 		else if (bRight) {
 			CameraFace.x += fSpeed;
@@ -174,12 +173,14 @@ int main() {
 		}
 		//Move Camera
 		if (bA) {								//Move Left
-			CameraPos.x -= fSpeed;
-			CameraFace.x -= fSpeed;
+			//CameraPos.x -= fSpeed;
+			//CameraFace.x -= fSpeed;
+			robot.moveLeft();
 		}
 		else if (bD) {							//Move Right
-			CameraPos.x += fSpeed;
-			CameraFace.x += fSpeed;
+			//CameraPos.x += fSpeed;
+			//CameraFace.x += fSpeed;
+			robot.moveRight();
 		}
 		else if (bW && bLShift) {							//Move UP
 			CameraPos.y += fSpeed;
@@ -190,14 +191,15 @@ int main() {
 			CameraFace.y -= fSpeed;
 		}
 		else if (bW) {							//Move Forward
-			CameraPos.z -= fSpeed;
-			CameraFace.z -= fSpeed;
+			//CameraPos.z -= fSpeed;
+			//CameraFace.z -= fSpeed;
+			robot.moveForward();
 		}
 		else if (bS) {							//Move Backwards
-			CameraPos.z += fSpeed;
-			CameraFace.z += fSpeed;
+			//CameraPos.z += fSpeed;
+			//CameraFace.z += fSpeed;
+			robot.moveBackward();
 		}
-		
 
 		else if (bSpace) {
 			CameraPos = glm::vec3 (0.0f, 0.0f, 20.0f);

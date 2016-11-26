@@ -15,6 +15,9 @@ Robot::Robot()
 	legStates[LEFT] = FORWARD_STATE;
 	legStates[RIGHT] = BACKWARD_STATE;
 
+	heading = glm::vec3(1.0f, 0.0f, 0.0f);		//Set initial heading
+	position = glm::vec3(0.0f, 0.0f, 0.0f);		//Initial position
+	rot = 0.0f;
 	initModel();
 }
 
@@ -284,8 +287,7 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 	//glPushMatrix();
 	//glTranslatef(xPos, yPos, zPos);	// draw robot at desired coordinates
 	//glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-	//rot += 0.5f;
-	//rotation = rot;
+	rotation = glm::radians(rot);
 
 	//position.y += -0.1f;
 
@@ -350,7 +352,7 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 
 	LeftFoot.setPosition(position);
 	LeftFoot.setScale(glm::vec3(1.0f, 0.5f, 3.0f));
-	LeftFoot.translate(glm::vec3(-1.0f, -7.5f, 1.5f));
+	LeftFoot.translate(glm::vec3(-1.0f, -7.5f, -1.5f));
 	LeftFoot.setOrigin(glm::vec3(0.0f, -8.0f, 0.0f));
 	//LeftFoot.setRotation(0, xAxis);
 	LeftFoot.rotate(legAngles[LEFT], xAxis);
@@ -374,13 +376,36 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 
 	RightFoot.setPosition(position);
 	RightFoot.setScale(glm::vec3(1.0f, 0.5f, 3.0f));
-	RightFoot.translate(glm::vec3(1.0f, -7.0f, 1.5f));
+	RightFoot.translate(glm::vec3(1.0f, -7.0f, -1.5f));
 	RightFoot.setOrigin(glm::vec3(0.0f, -8.0f, 0.0f));
 	//RightFoot.setRotation(0, xAxis);
 	RightFoot.rotate(legAngles[RIGHT], xAxis);
 	RightFoot.draw(shader, cam);
 
 	//glPopMatrix();	// pop back to original coordinate system
+}
+
+void Robot::moveForward() {
+	position.z -= fMoveSpeed;
+}
+
+void Robot::moveBackward() {
+	position.z += fMoveSpeed;
+}
+
+void Robot::moveLeft() {
+	position.x -= fMoveSpeed;
+}
+
+void Robot::moveRight() {
+	position.x += fMoveSpeed;
+}
+
+void Robot::turnLeft() {
+	rot -= fTurnSpeed;
+}
+void Robot::turnRight() {
+	rot += fTurnSpeed;
 }
 
 void Robot::Prepare(float dt)
