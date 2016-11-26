@@ -287,7 +287,7 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 	//glPushMatrix();
 	//glTranslatef(xPos, yPos, zPos);	// draw robot at desired coordinates
 	//glRotatef(rotation, 0.0f, 1.0f, 0.0f);
-	rotation = glm::radians(rot);
+	rotation = (rot);
 
 	//position.y += -0.1f;
 
@@ -385,20 +385,28 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 	//glPopMatrix();	// pop back to original coordinate system
 }
 
+void Robot::setPosition(float x, float y, float z) {
+	position = glm::vec3(x, y, z);
+}
+
 void Robot::moveForward() {
 	position.z -= fMoveSpeed;
+	rot = 0.0f;
 }
 
 void Robot::moveBackward() {
 	position.z += fMoveSpeed;
+	rot = -180.0f;
 }
 
 void Robot::moveLeft() {
 	position.x -= fMoveSpeed;
+	rot = 90.0f;
 }
 
 void Robot::moveRight() {
 	position.x += fMoveSpeed;
+	rot = -90.0f;
 }
 
 void Robot::turnLeft() {

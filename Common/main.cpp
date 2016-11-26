@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Camera.h"
 #include "Robot.h"
+#include "ModelReader.h"
 
 
 bool bW, bS, bA, bD,
@@ -80,69 +81,40 @@ int main() {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
+	ModelReader loader;	//Object loader
 
-	Model triangle;
+	Model loadedCube = loader.ReadModelObjData("Source\\Resources\\models\\cube.obj");
+	loadedCube.setColour(glm::vec3(1.0f, 0.0f, 0.0f));
+	loadedCube.setPosition(glm::vec3(-10.0f, 5.0f, 3.0f));
 
-	Vertex top, botL, botR;
+	Model loadedSphere = loader.ReadModelObjData("Source\\Resources\\models\\sphere.obj");
+	loadedSphere.setColour(glm::vec3(0.0f, 1.0f, 1.0f));
+	loadedSphere.setPosition(glm::vec3(10.0f, 5.0f, 5.0f));
 
-	top.Position = glm::vec3(0.0f, 0.5f, 0.0f);
-	botL.Position = glm::vec3(-0.5f, -0.5f, 0.0f);
-	botR.Position = glm::vec3(0.5f, -0.5f, 0.0f);
+	Model loadedCylinder = loader.ReadModelObjData("Source\\Resources\\models\\cylinder.obj");
+	loadedCylinder.setColour(glm::vec3(1.0f, 0.0f, 1.0f));
+	loadedCylinder.setPosition(glm::vec3(5.0f, 10.0f, -5.0f));
 
-	top.Colour = glm::vec3(0.0f, 0.0f, 1.0f);
-	botL.Colour = glm::vec3(1.0f, 0.0f, 0.0f);
-	botR.Colour = glm::vec3(1.0f, 0.0f, 0.0f);
-
-	triangle.vertices.push_back(top);
-	triangle.vertices.push_back(botL);
-	triangle.vertices.push_back(botR);
-
-	triangle.indices.push_back(0);
-	triangle.indices.push_back(1);
-	triangle.indices.push_back(2);
-	triangle.indices.push_back(2);
-
-	triangle.set();
-
-	Model triangle2;
-
-
-	top.Position = glm::vec3(0.0f, 0.f, 0.0f);
-	botL.Position = glm::vec3(-0.5f, -0.5f, 0.0f);
-	botR.Position = glm::vec3(0.5f, -0.5f, 0.0f);
-
-	triangle2.vertices.push_back(top);
-	triangle2.vertices.push_back(botL);
-	triangle2.vertices.push_back(botR);
-
-	top.Colour = glm::vec3(1.0f, 1.0f, 0.0f);
-	botL.Colour = glm::vec3(1.0f, 0.0f, 0.0f);
-	botR.Colour = glm::vec3(1.0f, 0.0f, 0.0f);
-
-	triangle2.indices.push_back(0);
-	triangle2.indices.push_back(1);
-	triangle2.indices.push_back(2);
-
-	triangle2.set();
+	Model loadedPlane = loader.ReadModelObjData("Source\\Resources\\models\\plane.obj");
+	loadedPlane.setColour(glm::vec3(0.0f, 0.7f, 0.3f));
+	loadedPlane.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+	loadedPlane.setScale(glm::vec3(10.f, 1.0f, 10.0f));
 
 	Graphics* graphics = new Graphics();
 	graphics->init();
 
 	Camera camera = Camera(90.0f, 1.0f, 0.1f, 100.0f);
-	glm::vec3 CameraPos(0.0f, 5.0f, 20.0f);
-	glm::vec3 CameraFace(0.0f, 0.0f, 0.0f);
+	glm::vec3 CameraPos(0.0f, 10.0f, 20.0f);
+	glm::vec3 CameraFace(0.0f, 10.0f, 0.0f);
 	glm::vec3 CameraUp(0.0f, 1.0f, 0.0f);
 	camera.setPosition(CameraPos);
 	camera.setFacing(CameraFace);
 	camera.setUpVector(CameraUp);
 	
-
-
 	Robot robot;
 	robot.setCamera(&camera);
 	robot.setShader(graphics->programHandle);
-
-	
+	robot.setPosition(0.0f, 10.0f, 0.0f);
 
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 		float dt = glfwGetTime();
@@ -158,23 +130,47 @@ int main() {
 		glfwSetKeyCallback(window, key_callback);
 
 		float fSpeed = 1.0f;
-		//Change camera facing /*Broken*/
-		if (bLeft) {
+		///////Move Camera///////////////
+		if (bUp && bLShift) {		//Move Camera forward
+			CameraPos.z -= fSpeed;
+			CameraFace.z -= fSpeed;
+		}
+		else if (bDown && bLShift) {	//Move Camera backwward
+			CameraPos.z += fSpeed;
+			CameraFace.z += fSpeed;
+		}
+		else if (bLeft && bLShift) {	//Move Camera left
+			CameraPos.x -= fSpeed;
 			CameraFace.x -= fSpeed;
 		}
-		else if (bRight) {
+		else if (bRight && bLShift) {	//Move Camera right
+			CameraPos.x += fSpeed;
 			CameraFace.x += fSpeed;
 		}
-		else if (bUp) {
+		else if (bW && bLShift) {		//Move UP
+			CameraPos.y += fSpeed;
 			CameraFace.y += fSpeed;
 		}
-		else if (bDown) {
+		else if (bS && bLShift) {		//Move DOWN
+			CameraPos.y -= fSpeed;
 			CameraFace.y -= fSpeed;
 		}
-		//Move Camera
+		//Change camera facing /*Broken*/
+		else if (bLeft) {					//Camera turn left
+			CameraFace.x -= fSpeed;
+		}
+		else if (bRight) {				//Camera turn right
+			CameraFace.x += fSpeed;
+		}
+		else if (bUp) {					//Camera look up		
+			CameraFace.y += fSpeed;
+		}
+		else if (bDown) {				//Camera look down
+			CameraFace.y -= fSpeed;
+		}
+		
+		/////////////Move Robot//////////////
 		if (bA) {								//Move Left
-			//CameraPos.x -= fSpeed;
-			//CameraFace.x -= fSpeed;
 			robot.moveLeft();
 		}
 		else if (bD) {							//Move Right
@@ -182,35 +178,28 @@ int main() {
 			//CameraFace.x += fSpeed;
 			robot.moveRight();
 		}
-		else if (bW && bLShift) {							//Move UP
-			CameraPos.y += fSpeed;
-			CameraFace.y += fSpeed;
-		}
-		else if (bS && bLShift) {							//Move DOWN
-			CameraPos.y -= fSpeed;
-			CameraFace.y -= fSpeed;
-		}
 		else if (bW) {							//Move Forward
-			//CameraPos.z -= fSpeed;
-			//CameraFace.z -= fSpeed;
 			robot.moveForward();
 		}
 		else if (bS) {							//Move Backwards
-			//CameraPos.z += fSpeed;
-			//CameraFace.z += fSpeed;
 			robot.moveBackward();
 		}
 
 		else if (bSpace) {
-			CameraPos = glm::vec3 (0.0f, 0.0f, 20.0f);
-			CameraFace = glm::vec3(0.0f, 0.0f, 0.0f);
+			CameraPos = glm::vec3 (0.0f, 10.0f, 20.0f);
+			CameraFace = glm::vec3(0.0f, 10.0f, 0.0f);
 			CameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+			robot.setPosition(0.0f, 10.0f, 0.0f);
 		}
 
 		camera.setPosition(CameraPos);
 		camera.setFacing(CameraFace);
 		camera.setUpVector(CameraUp);
 
+		loadedCube.draw(graphics->programHandle, &camera);
+		loadedSphere.draw(graphics->programHandle, &camera);
+		loadedCylinder.draw(graphics->programHandle, &camera);
+		loadedPlane.draw(graphics->programHandle, &camera);
 		robot.DrawRobot(0.0f, 0.0f, 0.0f, 0.0f);
 		glfwSwapBuffers(window);
 		glfwPollEvents();

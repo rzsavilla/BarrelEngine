@@ -62,6 +62,8 @@ public:
 	void turnLeft();
 	void turnRight();
 
+	void setPosition(float x,float y,float z);
+
 	// updates the robot data
 	void Prepare(float dt);
 };
