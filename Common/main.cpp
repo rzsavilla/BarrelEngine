@@ -5,6 +5,8 @@
 #include "Camera.h"
 #include "Robot.h"
 #include "ModelReader.h"
+#include "Bitmap.h"
+#include "Texture.h"
 
 
 bool bW, bS, bA, bD,
@@ -115,6 +117,14 @@ int main() {
 	robot.setCamera(&camera);
 	robot.setShader(graphics->programHandle);
 	robot.setPosition(0.0f, 10.0f, 0.0f);
+
+	//Load Texture
+	Bitmap bmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\red.bmp");
+	Texture* gTexture = new Texture(bmp);
+	gl::ActiveTexture(gl::TEXTURE0);
+	gl::BindTexture(gl::TEXTURE_2D, gTexture->object());
+	GLint loc = gl::GetUniformLocation(graphics->programHandle,"tex");
+	gl::Uniform1f(loc, 0);
 
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 		float dt = glfwGetTime();

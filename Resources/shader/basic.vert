@@ -2,6 +2,7 @@
 
 layout (location=0) in vec3 VertexPosition;
 layout (location=1) in vec3 VertexColour;
+layout (location=2) in vec2 VertexUV;
 
 in vec4 vertPosition;
 
@@ -16,10 +17,12 @@ uniform mat4 mProjection;
 
 in vec3 vertColour;
 out vec3 Colour;
+out vec2 texCoord;
 
 void main()
 {
     Colour = vertColour;
+	texCoord = VertexUV;
 
     gl_Position = mProjection * mView * mTranslate * mOriginMinus * mRotate * mOrigin * mScale * vertPosition;
 }

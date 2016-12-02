@@ -22,10 +22,14 @@ void Model::set()
 	gl::EnableVertexAttribArray(0);
 	gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE_, sizeof(Vertex),
 		(GLvoid*)0);
-	// Vertex Normals
+	// Vertex Colour
 	gl::EnableVertexAttribArray(1);
 	gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE_, sizeof(Vertex),
 		(GLvoid*)offsetof(Vertex, Colour));
+	// Vertex UV
+	gl::EnableVertexAttribArray(1);
+	gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE_, sizeof(Vertex),
+		(GLvoid*)offsetof(Vertex, UV));
 
 	gl::BindVertexArray(0);
 }
