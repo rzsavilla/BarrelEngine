@@ -124,8 +124,12 @@ int main() {
 	box.setScale(glm::vec3(1.0, 1.0, 1.0));
 
 	//Load Texture
-	Bitmap bmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\red.bmp");
+	Bitmap bmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\bear.png");
+	bmp.flipVertically();
 	Texture* gTexture = new Texture(bmp);
+
+
+	GLuint textureID;
 	gl::ActiveTexture(gl::TEXTURE0);
 	gl::BindTexture(gl::TEXTURE_2D, gTexture->object());
 	GLint loc = gl::GetUniformLocation(graphics->programHandle,"tex");
@@ -181,6 +185,7 @@ int main() {
 		}
 		cam.rotate(dX * rotateVel, dY * rotateVel);
 
+		gl::BindTexture(gl::TEXTURE_2D, gTexture->object());
 		box.draw(graphics->programHandle, &cam);
 
 		glfwSwapBuffers(window);

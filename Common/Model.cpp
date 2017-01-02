@@ -18,21 +18,20 @@ void Model::set()
 	int t = sizeof(float);
 
 	gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
-	gl::BufferData(gl::ARRAY_BUFFER, (mesh->getVertices().size()) * sizeof(GLfloat), mesh->getVertices().data(), gl::STATIC_DRAW);
+	gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
 	gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 	gl::EnableVertexAttribArray(0);
 
-	if (!mesh->getTextCoords()->empty()) {
+	if (!mesh->getExpandedTexCoords().empty()) {
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
-		gl::BufferData(gl::ARRAY_BUFFER, mesh->getTextCoords()->size() * sizeof(int), mesh->getTextCoords()->data(), gl::STATIC_DRAW);
-		gl::VertexAttribPointer((GLuint)1, 3, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
+		gl::BufferData(gl::ARRAY_BUFFER, mesh->getExpandedTexCoords().size() * sizeof(GLfloat), mesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
+		gl::VertexAttribPointer((GLuint)1, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
 		gl::EnableVertexAttribArray(1);
 	}
 
-	int sup = mesh->getVertIndices().size();
 	// Indices
 	gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, handle[2]);
-	gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (mesh->getVertIndices().size()) * sizeof(GLfloat), mesh->getVertIndices().data(), gl::STATIC_DRAW);
+	gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
 
 	gl::BindVertexArray(0);
 }
@@ -214,7 +213,7 @@ void Model::draw(GLuint shader, QuatCamera* cam)
 	
 	// Draw mesh
 	gl::BindVertexArray(this->VAO);
-	//gl::DrawArrays(gl::TRIANGLES,0, mesh->getVertices()->size());
-	gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
+	gl::DrawArrays(gl::TRIANGLES,0, mesh->getExpandedVertices().size());
+	//gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
 	gl::BindVertexArray(0);
 }

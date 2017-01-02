@@ -44,11 +44,8 @@ bool Mesh::load(std::string sFilename)
 	bool bHasNormals = false;
 	bool bHasTexture = false;
 
-	//float f[3];		//Float		temp store parsed data
-	//int iIntegers[9];		//Integer	temp store parsed data
-
-	std::vector<float> fFloats;
-	std::vector<int> iIntegers;
+	std::vector<float> fFloats;		//Temp float for parsed data
+	std::vector<int> iIntegers;		//Temporary integers for parsed data
 	fFloats.resize(3);
 	iIntegers.resize(9);
 
@@ -86,7 +83,7 @@ bool Mesh::load(std::string sFilename)
 				if (line[i] == '/') iSlashCounter++;
 			}
 
-			//-1 applied to index data stored as OpenGL stores vertex data starting at 0;
+			//"0 index" -1 applied to index data stored as OpenGL stores vertex data starting at 0;
 
 			//If statements determine format to be read
 			if (iSlashCounter <= 0) {
@@ -134,32 +131,55 @@ bool Mesh::load(std::string sFilename)
 
 		}
 	}
+
+	//Expand vertices in order to use UVs
+	for (std::vector<GLuint>::iterator it = vi_vertIndices.begin(); it != vi_vertIndices.end(); ++it) {
+		GLuint iIndex = *it * 3;	//Vertex index
+		vf_expandedVertices.push_back(vf_vertices.at(iIndex));
+		vf_expandedVertices.push_back(vf_vertices.at(iIndex+1));
+		vf_expandedVertices.push_back(vf_vertices.at(iIndex+2));
+	}
+
+	for (std::vector<GLuint>::iterator it = vi_textIndices.begin(); it != vi_textIndices.end(); ++it) {
+		GLuint iIndex = *it * 2;	//Vertex index
+		vf_expandedTexCoords.push_back(vf_textCoords.at(iIndex));
+		vf_expandedTexCoords.push_back(vf_textCoords.at(iIndex + 1));
+	}
+
 	delete[] file;
 	fclose(infile);
 	return true;
 }
 
-const std::vector<GLfloat>&  Mesh::getVertices()
+//const std::vector<GLfloat>&  Mesh::getVertices()
+//{
+//	return this->vf_vertices;
+//}
+//const std::vector<GLuint>&  Mesh::getVertIndices()
+//{
+//	return this->vi_vertIndices;
+//}
+const std::vector<GLfloat>& Mesh::getExpandedVertices()
 {
-	return this->vf_vertices;
+	return this->vf_expandedVertices;
 }
-const std::vector<GLuint>&  Mesh::getVertIndices()
+const std::vector<GLfloat>& Mesh::getExpandedTexCoords()
 {
-	return this->vi_vertIndices;
+	return this->vf_expandedTexCoords;
 }
-const std::vector<float>* Mesh::getVertNormals()
+const std::vector<GLfloat>& Mesh::getVertNormals()
 {
-	return &vf_vertNormals;
+	return vf_vertNormals;
 }
-const std::vector<int>* Mesh::getVertNormIndices()
+const std::vector<GLuint>& Mesh::getVertNormIndices()
 {
-	return &vi_vertNormIndices;
+	return vi_vertNormIndices;
 }
-const std::vector<float>* Mesh::getTextCoords()
+const std::vector<GLfloat>& Mesh::getTextCoords()
 {
-	return &vf_textCoords;
+	return vf_textCoords;
 }
-const std::vector<int>* Mesh::getTextIndices()
+const std::vector<GLuint>& Mesh::getTextIndices()
 {
-	return &vi_textIndices;
+	return vi_textIndices;
 }
