@@ -21,8 +21,8 @@ out vec2 texCoord;
 
 void main()
 {
-    Colour = vertColour;
+    Colour = VertexColour;
 	texCoord = VertexUV;
-
-    gl_Position = mProjection * mView * mTranslate * mOriginMinus * mRotate * mOrigin * mScale * vertPosition;
+	gl_Position = mProjection * mView * vec4(VertexPosition,1.0);
+    //gl_Position = mProjection * mView * mTranslate * mOriginMinus * mRotate * mOrigin * mScale * vec4(VertexPosition,1.0);
 }

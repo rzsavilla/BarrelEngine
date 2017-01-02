@@ -29,7 +29,7 @@ private:
 	void DrawLeg(float xPos, float yPos, float zPos);
 	void DrawFoot(float xPos, float yPos, float zPos);
 
-	Camera *cam;
+	QuatCamera *cam;
 	GLuint shader;
 
 	Model cube;
@@ -49,7 +49,7 @@ public:
 	Robot();
 	virtual ~Robot();
 
-	void setCamera(Camera* cam);
+	void setCamera(QuatCamera* cam);
 	void setShader(GLuint Shader);
 
 	// draws the entire robot

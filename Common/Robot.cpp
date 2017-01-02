@@ -41,80 +41,80 @@ void Robot::initModel()
 
 void Robot::createCube()
 {
-	//Vertex top, left, right, bot;
-	glm::vec3 c = glm::vec3(1.0f, 1.0f, 1.0f);
+	////Vertex top, left, right, bot;
+	//glm::vec3 c = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	cube.vertices.push_back(Vertex(glm::vec3(-0.5, 0.5f, 0.5f), c));	//Top left Front 0
-	cube.vertices.push_back(Vertex(glm::vec3(-0.5f, -0.5f, 0.5f), c));	//Bot Left Front 1
-	cube.vertices.push_back(Vertex(glm::vec3(0.5f, -0.5f, 0.5f), c));	//Bot Right Front 2
-	cube.vertices.push_back(Vertex(glm::vec3(0.5f, 0.5f, 0.5f), c));	//Top Right Front 3
-	cube.vertices.push_back(Vertex(glm::vec3(-0.5f, 0.5f, -0.5f), c));  //Top Left Back 4 
-	cube.vertices.push_back(Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), c));	//Bot Left Back 5 
-	cube.vertices.push_back(Vertex(glm::vec3(0.5f, -0.5f, -0.5f), c));	//Bot Right Back 6 
-	cube.vertices.push_back(Vertex(glm::vec3(0.5f, 0.5f, -0.5f), c));	//Top Right Back 7
+	//cube.vertices.push_back(Vertex(glm::vec3(-0.5, 0.5f, 0.5f), c));	//Top left Front 0
+	//cube.vertices.push_back(Vertex(glm::vec3(-0.5f, -0.5f, 0.5f), c));	//Bot Left Front 1
+	//cube.vertices.push_back(Vertex(glm::vec3(0.5f, -0.5f, 0.5f), c));	//Bot Right Front 2
+	//cube.vertices.push_back(Vertex(glm::vec3(0.5f, 0.5f, 0.5f), c));	//Top Right Front 3
+	//cube.vertices.push_back(Vertex(glm::vec3(-0.5f, 0.5f, -0.5f), c));  //Top Left Back 4 
+	//cube.vertices.push_back(Vertex(glm::vec3(-0.5f, -0.5f, -0.5f), c));	//Bot Left Back 5 
+	//cube.vertices.push_back(Vertex(glm::vec3(0.5f, -0.5f, -0.5f), c));	//Bot Right Back 6 
+	//cube.vertices.push_back(Vertex(glm::vec3(0.5f, 0.5f, -0.5f), c));	//Top Right Back 7
 
-																		//Front Face
-	cube.indices.push_back(0);
-	cube.indices.push_back(1);
-	cube.indices.push_back(2);
-	cube.indices.push_back(2);
-	cube.indices.push_back(0);
-	cube.indices.push_back(3);
-	//Right Face
-	cube.indices.push_back(3);
-	cube.indices.push_back(7);
-	cube.indices.push_back(2);
-	cube.indices.push_back(7);
-	cube.indices.push_back(2);
-	cube.indices.push_back(6);
-	//Back Face
-	cube.indices.push_back(6);
-	cube.indices.push_back(5);
-	cube.indices.push_back(4);
-	cube.indices.push_back(4);
-	cube.indices.push_back(7);
-	cube.indices.push_back(6);
-	//Bot Face
-	cube.indices.push_back(6);
-	cube.indices.push_back(5);
-	cube.indices.push_back(2);
-	cube.indices.push_back(2);
-	cube.indices.push_back(5);
-	cube.indices.push_back(1);
-	//Left Face
-	cube.indices.push_back(1);
-	cube.indices.push_back(5);
-	cube.indices.push_back(4);
-	cube.indices.push_back(4);
-	cube.indices.push_back(1);
-	cube.indices.push_back(0);
-	//Top Face
-	cube.indices.push_back(0);
-	cube.indices.push_back(4);
-	cube.indices.push_back(3);
-	cube.indices.push_back(3);
-	cube.indices.push_back(7);
-	cube.indices.push_back(4);
+	//																	//Front Face
+	//cube.indices.push_back(0);
+	//cube.indices.push_back(1);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(0);
+	//cube.indices.push_back(3);
+	////Right Face
+	//cube.indices.push_back(3);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(6);
+	////Back Face
+	//cube.indices.push_back(6);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(6);
+	////Bot Face
+	//cube.indices.push_back(6);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(1);
+	////Left Face
+	//cube.indices.push_back(1);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(1);
+	//cube.indices.push_back(0);
+	////Top Face
+	//cube.indices.push_back(0);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(3);
+	//cube.indices.push_back(3);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(4);
 
-	//Back Face
-	cube.indices.push_back(6);
-	cube.indices.push_back(4);
-	cube.indices.push_back(7);
-	cube.indices.push_back(5);
-	cube.indices.push_back(2);
-	cube.indices.push_back(4);
-	cube.indices.push_back(0);
-	cube.indices.push_back(1);
+	////Back Face
+	//cube.indices.push_back(6);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(0);
+	//cube.indices.push_back(1);
 
-	cube.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-	cube.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
-	cube.setRotation(0, Axis::xAxis);
+	//cube.translate(glm::vec3(0.0f, 0.0f, 0.0f));
+	//cube.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
+	//cube.setRotation(0, Axis::xAxis);
 
-	cube.set();
+	//cube.set();
 }
 
 
-void Robot::setCamera(Camera *camera)
+void Robot::setCamera(QuatCamera *camera)
 {
 	cam = camera;
 }
@@ -126,79 +126,79 @@ void Robot::setShader(GLuint Shader)
 
 void Robot::DrawCube(glm::vec3 pos, glm::vec3 scale,float rotation,Axis axis,glm::vec3 colour)
 {
-	Model cube;
-	//Vertex top, left, right, bot;
-	glm::vec3 c = colour;
+	//Model cube;
+	////Vertex top, left, right, bot;
+	//glm::vec3 c = colour;
 
-	cube.vertices.push_back(Vertex(glm::vec3(-1.0f, 1.0f, 1.0f), c));	//Top left Front 0
-	cube.vertices.push_back(Vertex(glm::vec3(-1.0f, -1.0f, 1.0f), c));	//Bot Left Front 1
-	cube.vertices.push_back(Vertex(glm::vec3(1.0f, -1.0f, 1.0f), c));	//Bot Right Front 2
-	cube.vertices.push_back(Vertex(glm::vec3(1.0f, 1.0f, 1.0f), c));	//Top Right Front 3
-	cube.vertices.push_back(Vertex(glm::vec3(-1.0f, 1.0f, -1.0f), c));  //Top Left Back 4 
-	cube.vertices.push_back(Vertex(glm::vec3(-1.0f, -1.0f, -1.0f), c));	//Bot Left Back 5 
-	cube.vertices.push_back(Vertex(glm::vec3(1.0f, -1.0f, -1.0f), c));	//Bot Right Back 6 
-	cube.vertices.push_back(Vertex(glm::vec3(1.0f, 1.0f, -1.0f), c));	//Top Right Back 7
+	//cube.vertices.push_back(Vertex(glm::vec3(-1.0f, 1.0f, 1.0f), c));	//Top left Front 0
+	//cube.vertices.push_back(Vertex(glm::vec3(-1.0f, -1.0f, 1.0f), c));	//Bot Left Front 1
+	//cube.vertices.push_back(Vertex(glm::vec3(1.0f, -1.0f, 1.0f), c));	//Bot Right Front 2
+	//cube.vertices.push_back(Vertex(glm::vec3(1.0f, 1.0f, 1.0f), c));	//Top Right Front 3
+	//cube.vertices.push_back(Vertex(glm::vec3(-1.0f, 1.0f, -1.0f), c));  //Top Left Back 4 
+	//cube.vertices.push_back(Vertex(glm::vec3(-1.0f, -1.0f, -1.0f), c));	//Bot Left Back 5 
+	//cube.vertices.push_back(Vertex(glm::vec3(1.0f, -1.0f, -1.0f), c));	//Bot Right Back 6 
+	//cube.vertices.push_back(Vertex(glm::vec3(1.0f, 1.0f, -1.0f), c));	//Top Right Back 7
 
-																		//Front Face
-	cube.indices.push_back(0);
-	cube.indices.push_back(1);
-	cube.indices.push_back(2);
-	cube.indices.push_back(2);
-	cube.indices.push_back(0);
-	cube.indices.push_back(3);
-	//Right Face
-	cube.indices.push_back(3);
-	cube.indices.push_back(7);
-	cube.indices.push_back(2);
-	cube.indices.push_back(7);
-	cube.indices.push_back(2);
-	cube.indices.push_back(6);
-	//Back Face
-	cube.indices.push_back(6);
-	cube.indices.push_back(5);
-	cube.indices.push_back(4);
-	cube.indices.push_back(4);
-	cube.indices.push_back(7);
-	cube.indices.push_back(6);
-	//Bot Face
-	cube.indices.push_back(6);
-	cube.indices.push_back(5);
-	cube.indices.push_back(2);
-	cube.indices.push_back(2);
-	cube.indices.push_back(5);
-	cube.indices.push_back(1);
-	//Left Face
-	cube.indices.push_back(1);
-	cube.indices.push_back(5);
-	cube.indices.push_back(4);
-	cube.indices.push_back(4);
-	cube.indices.push_back(1);
-	cube.indices.push_back(0);
-	//Top Face
-	cube.indices.push_back(0);
-	cube.indices.push_back(4);
-	cube.indices.push_back(3);
-	cube.indices.push_back(3);
-	cube.indices.push_back(7);
-	cube.indices.push_back(4);
+	//																	//Front Face
+	//cube.indices.push_back(0);
+	//cube.indices.push_back(1);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(0);
+	//cube.indices.push_back(3);
+	////Right Face
+	//cube.indices.push_back(3);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(6);
+	////Back Face
+	//cube.indices.push_back(6);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(6);
+	////Bot Face
+	//cube.indices.push_back(6);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(1);
+	////Left Face
+	//cube.indices.push_back(1);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(1);
+	//cube.indices.push_back(0);
+	////Top Face
+	//cube.indices.push_back(0);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(3);
+	//cube.indices.push_back(3);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(4);
 
-	//Back Face
-	cube.indices.push_back(6);
-	cube.indices.push_back(4);
-	cube.indices.push_back(7);
-	cube.indices.push_back(5);
-	cube.indices.push_back(2);
-	cube.indices.push_back(4);
-	cube.indices.push_back(0);
-	cube.indices.push_back(1);
+	////Back Face
+	//cube.indices.push_back(6);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(7);
+	//cube.indices.push_back(5);
+	//cube.indices.push_back(2);
+	//cube.indices.push_back(4);
+	//cube.indices.push_back(0);
+	//cube.indices.push_back(1);
 
-	cube.translate(pos);
-	cube.setScale(scale);
-	cube.setRotation(rotation, axis);
+	//cube.translate(pos);
+	//cube.setScale(scale);
+	//cube.setRotation(rotation, axis);
 
-	cube.set();
+	//cube.set();
 
-	cube.draw(shader, cam);
+	//cube.draw(shader, cam);
 }
 
 void Robot::DrawArm(float xPos, float yPos, float zPos)
@@ -223,7 +223,6 @@ void Robot::DrawHead(float xPos, float yPos, float zPos)
 	glm::vec3 scale(2.0f, 2.0f, 2.0f);		// head is a 2x2x2 cube
 	Head.setScale(scale);
 	Head.translate(pos);
-	Head.setColour(colour);
 	Head.draw(shader, cam);
 }
 
@@ -232,7 +231,6 @@ void Robot::DrawTorso(float xPos, float yPos, float zPos)
 	glm::vec3 colour(0.0f, 0.0f, 1.0f);		// blue
 	glm::vec3 pos(xPos, yPos, zPos);
 	glm::vec3 scale(3.0f, 5.0f, 2.0f);		// torso is a 3x5x2 cube
-	Torso.setColour(colour);
 	Torso.translate(pos);
 	Torso.setScale(scale);
 	Torso.draw(shader, cam);
@@ -320,7 +318,7 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 	LeftArm.setPosition(position);
 	LeftArm.setOrigin(glm::vec3(-2.0f, -2.0f, 0.5f));
 	LeftArm.setScale(glm::vec3(1.0f, 4.0f, 1.0f));
-	LeftArm.setColour(glm::vec3(1.0f, 0.0f, 0.0f));
+
 	//LeftArm.translate(glm::vec3(0.0f, -0.5f, 0.0f));
 	LeftArm.rotate(armAngles[LEFT], xAxis);
 	LeftArm.translate(glm::vec3(-2.0f, 0.0f, -0.5f));
@@ -329,7 +327,7 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 	RightArm.setPosition(position);
 	RightArm.setOrigin(glm::vec3(2.0f, -2.0f, 0.0f));
 	RightArm.setScale(glm::vec3(1.0f, 4.0f, 1.0f));
-	RightArm.setColour(glm::vec3(1.0f, 0.0f, 0.0f));
+
 	//RightArm.translate(glm::vec3(0.0f, -0.5f, 0.0f));
 	RightArm.rotate(armAngles[RIGHT], xAxis);
 	RightArm.translate(glm::vec3(2.0f, 0.0f, -0.5f));
@@ -344,7 +342,7 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 	LeftLeg.setPosition(position);
 	LeftLeg.setOrigin(glm::vec3(0.0f, -8.0f, 0.0f));
 	LeftLeg.setScale(glm::vec3(1.0f, 4.0f, 1.0f));
-	LeftLeg.setColour(glm::vec3(1.0f, 1.0f, 0.0f));
+
 	//LeftLeg.setRotation(0, xAxis);
 	LeftLeg.rotate(legAngles[LEFT], xAxis);
 	LeftLeg.translate(glm::vec3(-1.0f, -5.0f, -0.5f));
@@ -368,7 +366,7 @@ void Robot::DrawRobot(float xPos, float yPos, float zPos, float rotation)
 	RightLeg.setPosition(position);
 	RightLeg.setOrigin(glm::vec3(0.0f, -8.0f, 0.0f));
 	RightLeg.setScale(glm::vec3(1.0f, 4.0f, 1.0f));
-	RightLeg.setColour(glm::vec3(1.0f, 1.0f, 0.0f));
+
 	//RightLeg.setRotation(0, xAxis);
 	RightLeg.rotate(legAngles[RIGHT], xAxis);
 	RightLeg.translate(glm::vec3(1.0f, -5.0f, -0.5f));

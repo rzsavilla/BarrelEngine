@@ -7,11 +7,13 @@
 #include <glm\glm.hpp>
 
 #include <iostream>
+#include <cmath>
 #include <fstream>
 #include <sstream>
 #include <string>
-
+#include <string.h>
 #include <vector>
+
 
 #include "Scene.h"
 

@@ -2,19 +2,19 @@
 
 #include "Graphics.h"
 #include "Model.h"
-#include "Camera.h"
 #include "Robot.h"
 #include "ModelReader.h"
 #include "Bitmap.h"
 #include "Texture.h"
-
+#include "QuatCamera.h"
 
 bool bW, bS, bA, bD,
 bUp, bDown, bLeft, bRight,
-bSpace, bLShift;
+bSpace, bLShift, bLeftMouse, bRightMouse;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+
 	switch (key)
 	{
 	case GLFW_KEY_W:
@@ -52,7 +52,29 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	};
 }
 
+float mousePos[] = { 0.0f,0.0f };
+float prevMousePos[] = { 0.0f,0.0f };
+
+void mouseButtonPress(GLFWwindow* window, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+
+	}
+}
+
+static void mouseMove(GLFWwindow* window, double xpos, double ypos)
+{
+	prevMousePos[0] = mousePos[0];
+	prevMousePos[1] = mousePos[1];
+
+	mousePos[0] = (float)xpos;
+	mousePos[1] = (float)ypos;
+}
+
 int main() {
+
+	unsigned int uiWidth = 1024;
+	unsigned int uiHeight = 768;
 
 	// Initialize GLFW
 	if (!glfwInit()) exit(EXIT_FAILURE);
@@ -83,40 +105,23 @@ int main() {
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	ModelReader loader;	//Object loader
 
-	Model loadedCube = loader.ReadModelObjData("Source\\Resources\\models\\cube.obj");
-	loadedCube.setColour(glm::vec3(1.0f, 0.0f, 0.0f));
-	loadedCube.setPosition(glm::vec3(-10.0f, 5.0f, 3.0f));
-
-	Model loadedSphere = loader.ReadModelObjData("Source\\Resources\\models\\sphere.obj");
-	loadedSphere.setColour(glm::vec3(0.0f, 1.0f, 1.0f));
-	loadedSphere.setPosition(glm::vec3(10.0f, 5.0f, 5.0f));
-
-	Model loadedCylinder = loader.ReadModelObjData("Source\\Resources\\models\\cylinder.obj");
-	loadedCylinder.setColour(glm::vec3(1.0f, 0.0f, 1.0f));
-	loadedCylinder.setPosition(glm::vec3(5.0f, 10.0f, -5.0f));
-
-	Model loadedPlane = loader.ReadModelObjData("Source\\Resources\\models\\plane.obj");
-	loadedPlane.setColour(glm::vec3(0.0f, 0.7f, 0.3f));
-	loadedPlane.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-	loadedPlane.setScale(glm::vec3(10.f, 1.0f, 10.0f));
-
+	//Load Shader program
 	Graphics* graphics = new Graphics();
 	graphics->init();
 
-	Camera camera = Camera(90.0f, 1.0f, 0.1f, 100.0f);
-	glm::vec3 CameraPos(0.0f, 10.0f, 20.0f);
-	glm::vec3 CameraFace(0.0f, 10.0f, 0.0f);
-	glm::vec3 CameraUp(0.0f, 1.0f, 0.0f);
-	camera.setPosition(CameraPos);
-	camera.setFacing(CameraFace);
-	camera.setUpVector(CameraUp);
+	QuatCamera cam;
+
+	Mesh CubeMesh;
+	//CubeMesh.load("simpleCube.obj");
 	
-	Robot robot;
-	robot.setCamera(&camera);
-	robot.setShader(graphics->programHandle);
-	robot.setPosition(0.0f, 10.0f, 0.0f);
+	if (!CubeMesh.load("bear.obj")) {
+		return 0;
+	}
+
+	Model box;
+	box.setMesh(&CubeMesh);
+	box.setScale(glm::vec3(1.0, 1.0, 1.0));
 
 	//Load Texture
 	Bitmap bmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\red.bmp");
@@ -126,93 +131,60 @@ int main() {
 	GLint loc = gl::GetUniformLocation(graphics->programHandle,"tex");
 	gl::Uniform1f(loc, 0);
 
+	glfwSetCursorPosCallback(window, mouseMove);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+		//Handle Inputs
+
 		float dt = glfwGetTime();
-		//triangle.rotate(1.0f, yAxis);
 		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
 		gl::Enable(gl::DEPTH_TEST);			//Enable depth buffer
-		robot.Prepare(0.1f);
-		//graphics->update((float)glfwGetTime());
-		//triangle.draw(graphics->programHandle,&camera);
-		//triangle2.draw(graphics->programHandle,&camera);
+
 		glfwSetKeyCallback(window, key_callback);
 
-		float fSpeed = 1.0f;
-		///////Move Camera///////////////
-		if (bUp && bLShift) {		//Move Camera forward
-			CameraPos.z -= fSpeed;
-			CameraFace.z -= fSpeed;
-		}
-		else if (bDown && bLShift) {	//Move Camera backwward
-			CameraPos.z += fSpeed;
-			CameraFace.z += fSpeed;
-		}
-		else if (bLeft && bLShift) {	//Move Camera left
-			CameraPos.x -= fSpeed;
-			CameraFace.x -= fSpeed;
-		}
-		else if (bRight && bLShift) {	//Move Camera right
-			CameraPos.x += fSpeed;
-			CameraFace.x += fSpeed;
-		}
-		else if (bW && bLShift) {		//Move UP
-			CameraPos.y += fSpeed;
-			CameraFace.y += fSpeed;
-		}
-		else if (bS && bLShift) {		//Move DOWN
-			CameraPos.y -= fSpeed;
-			CameraFace.y -= fSpeed;
-		}
-		//Change camera facing /*Broken*/
-		else if (bLeft) {					//Camera turn left
-			CameraFace.x -= fSpeed;
-		}
-		else if (bRight) {				//Camera turn right
-			CameraFace.x += fSpeed;
-		}
-		else if (bUp) {					//Camera look up		
-			CameraFace.y += fSpeed;
-		}
-		else if (bDown) {				//Camera look down
-			CameraFace.y -= fSpeed;
-		}
-		
-		/////////////Move Robot//////////////
+		float fSpeed = 0.1f;
+		//Move Camera
 		if (bA) {								//Move Left
-			robot.moveLeft();
+			cam.pan(-fSpeed,0.0f);
 		}
 		else if (bD) {							//Move Right
-			//CameraPos.x += fSpeed;
-			//CameraFace.x += fSpeed;
-			robot.moveRight();
+			cam.pan(+fSpeed, 0.0f);
 		}
-		else if (bW) {							//Move Forward
-			robot.moveForward();
+		else if (bS && bLShift) {				//Move Forwards
+			cam.pan(0.0f, -fSpeed);
 		}
-		else if (bS) {							//Move Backwards
-			robot.moveBackward();
+		else if (bW && bLShift) {				//Move Backwards;
+			cam.pan(0.0f, fSpeed);
 		}
-
+		else if (bS) {							//Move Down
+			cam.zoom(-fSpeed);
+		}
+		else if (bW) {							//Move Up
+			
+			cam.zoom(fSpeed);
+		}
 		else if (bSpace) {
-			CameraPos = glm::vec3 (0.0f, 10.0f, 20.0f);
-			CameraFace = glm::vec3(0.0f, 10.0f, 0.0f);
-			CameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-			robot.setPosition(0.0f, 10.0f, 0.0f);
+			cam.reset();
 		}
 
-		camera.setPosition(CameraPos);
-		camera.setFacing(CameraFace);
-		camera.setUpVector(CameraUp);
+		float dX = prevMousePos[0] - mousePos[0];
+		float dY = prevMousePos[1] - mousePos[1];
+		//printf_s("DX: %f Prev: %i Cur: %i\n", dX, prevMousePos[0], mousePos[0]);
 
-		loadedCube.draw(graphics->programHandle, &camera);
-		loadedSphere.draw(graphics->programHandle, &camera);
-		loadedCylinder.draw(graphics->programHandle, &camera);
-		loadedPlane.draw(graphics->programHandle, &camera);
-		robot.DrawRobot(0.0f, 0.0f, 0.0f, 0.0f);
+		float rotateVel = 0.001f;
+		
+		printf_s("%f\t %f\t %f\n",dX, dX * rotateVel, dY * rotateVel);
+		if (dX != 0 && dY != 0) {
+			
+		}
+		cam.rotate(dX * rotateVel, dY * rotateVel);
+
+		box.draw(graphics->programHandle, &cam);
+
 		glfwSwapBuffers(window);
-		glfwPollEvents();
+		glfwWaitEvents();
 		glfwSetTime(0.0f);
 	}
 

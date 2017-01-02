@@ -1,37 +1,46 @@
 #include "stdafx.h"
 #include "Model.h"
+
 #include <../glm/gtc/type_ptr.hpp>
 
 void Model::set()
 {
-	gl::GenVertexArrays(1, &this->VAO);
-	gl::GenBuffers(1, &this->VBO);
-	gl::GenBuffers(1, &this->EBO);
+	unsigned int handle[4];
+	gl::GenBuffers(4, handle);
 
-	gl::BindVertexArray(this->VAO);
-	gl::BindBuffer(gl::ARRAY_BUFFER, this->VBO);
+	gl::GenVertexArrays(1, &VAO);
+	gl::BindVertexArray(VAO);
 
-	gl::BufferData(gl::ARRAY_BUFFER, this->vertices.size() * sizeof(Vertex),
-		&this->vertices[0], gl::STATIC_DRAW);
+	//Place data in buffers
+	// Vertex position
 
-	gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, this->EBO);
-	gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, this->indices.size() * sizeof(GLuint),
-		&this->indices[0], gl::STATIC_DRAW);
+	int w = sizeof(int);
+	int t = sizeof(float);
 
-	// Vertex Positions
+	gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
+	gl::BufferData(gl::ARRAY_BUFFER, (mesh->getVertices().size()) * sizeof(GLfloat), mesh->getVertices().data(), gl::STATIC_DRAW);
+	gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 	gl::EnableVertexAttribArray(0);
-	gl::VertexAttribPointer(0, 3, gl::FLOAT, gl::FALSE_, sizeof(Vertex),
-		(GLvoid*)0);
-	// Vertex Colour
-	gl::EnableVertexAttribArray(1);
-	gl::VertexAttribPointer(1, 3, gl::FLOAT, gl::FALSE_, sizeof(Vertex),
-		(GLvoid*)offsetof(Vertex, Colour));
-	// Vertex UV
-	gl::EnableVertexAttribArray(1);
-	gl::VertexAttribPointer(1, 2, gl::FLOAT, gl::FALSE_, sizeof(Vertex),
-		(GLvoid*)offsetof(Vertex, UV));
+
+	if (!mesh->getTextCoords()->empty()) {
+		gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
+		gl::BufferData(gl::ARRAY_BUFFER, mesh->getTextCoords()->size() * sizeof(int), mesh->getTextCoords()->data(), gl::STATIC_DRAW);
+		gl::VertexAttribPointer((GLuint)1, 3, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
+		gl::EnableVertexAttribArray(1);
+	}
+
+	int sup = mesh->getVertIndices().size();
+	// Indices
+	gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, handle[2]);
+	gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (mesh->getVertIndices().size()) * sizeof(GLfloat), mesh->getVertIndices().data(), gl::STATIC_DRAW);
 
 	gl::BindVertexArray(0);
+}
+
+void Model::setMesh(Mesh * newMesh)
+{
+	mesh = newMesh;
+	set();
 }
 
 void Model::setPosition(glm::vec3 newPos)
@@ -137,14 +146,6 @@ void Model::rotate(float degrees, Axis Axis)
 	}
 }
 
-void Model::setColour(glm::vec3 newColour)
-{
-	for (int i = 0; i < vertices.size(); i++) {
-		vertices.at(i).Colour = newColour;
-	}
-	set();	//Reset buffers
-}
-
 Model::Model()
 {
 	 t = glm::mat4(
@@ -172,7 +173,7 @@ Model::Model()
 	origin = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-void Model::draw(GLuint shader,Camera* cam)
+void Model::draw(GLuint shader, QuatCamera* cam)
 {
 	//Transform
 	glm::mat4 M;	//Model matrix
@@ -201,29 +202,19 @@ void Model::draw(GLuint shader,Camera* cam)
 
 	GLint viewMatrixID = gl::GetUniformLocation(shader, "mView");
 	GLint projectionMatrixID = gl::GetUniformLocation(shader, "mProjection");
-	glm::mat4 V = cam->getView();
+	glm::mat4 V = cam->view();
 	gl::UniformMatrix4fv(originMatrixID, 1, gl::FALSE_, glm::value_ptr(o));
 	gl::UniformMatrix4fv(originMinusMatrixID, 1, gl::FALSE_, glm::value_ptr(oM));
-	gl::UniformMatrix4fv(translateMatrixID, 1, gl::FALSE_, glm::value_ptr(t));
+	gl::UniformMatrix4fv(translateMatrixID, 1, gl::FALSE_, glm::value_ptr(M));
 	gl::UniformMatrix4fv(rotateMatrixID, 1, gl::FALSE_, glm::value_ptr(r));
 	gl::UniformMatrix4fv(scaleMatrixID, 1, gl::FALSE_, glm::value_ptr(s));
 
-	gl::UniformMatrix4fv(viewMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->getView()));
-	gl::UniformMatrix4fv(projectionMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->getPerspective()));
-
+	gl::UniformMatrix4fv(viewMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->view()));
+	gl::UniformMatrix4fv(projectionMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->projection()));
+	
 	// Draw mesh
 	gl::BindVertexArray(this->VAO);
-	//gl::DrawArrays(gl::TRIANGLES, 0, 3);
-	gl::DrawElements(gl::TRIANGLES, indices.size(), gl::UNSIGNED_INT, 0);
+	//gl::DrawArrays(gl::TRIANGLES,0, mesh->getVertices()->size());
+	gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
 	gl::BindVertexArray(0);
-}
-
-Vertex::Vertex()
-{
-}
-
-Vertex::Vertex(glm::vec3 pos, glm::vec3 colour)
-{
-	Position = pos;
-	Colour = colour;
 }
