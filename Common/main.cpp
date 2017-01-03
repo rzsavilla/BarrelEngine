@@ -64,11 +64,13 @@ void mouseButtonPress(GLFWwindow* window, int button, int action, int mods)
 
 static void mouseMove(GLFWwindow* window, double xpos, double ypos)
 {
-	prevMousePos[0] = mousePos[0];
-	prevMousePos[1] = mousePos[1];
-
 	mousePos[0] = (float)xpos;
 	mousePos[1] = (float)ypos;
+}
+
+static void mouseStop(GLFWwindow* window, double xpos, double ypos) {
+	prevMousePos[0] = mousePos[0];
+	prevMousePos[1] = mousePos[1];
 }
 
 int main() {
@@ -87,7 +89,7 @@ int main() {
 	glfwWindowHint(GLFW_RESIZABLE, FALSE);
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, TRUE);
 	glfwWindowHint(GLFW_DEPTH_BITS, 32);								//Enable Depth buffer
-
+	
 	//Open window
 	GLFWwindow *window = glfwCreateWindow(1024, 768, "Barrel Engine" , NULL, NULL);
 	if (window == NULL) {
@@ -97,7 +99,6 @@ int main() {
 		exit(EXIT_FAILURE);
 	}
 	glfwMakeContextCurrent(window);
-
 	//Load OpenGL functions
 	gl::exts::LoadTest didLoad = gl::sys::LoadFunctions();
 	if (!didLoad) {
@@ -109,6 +110,9 @@ int main() {
 	//Load Shader program
 	Graphics* graphics = new Graphics();
 	graphics->init();
+
+	//Delta time
+	float dt,time,oldTime = 0;
 
 	QuatCamera cam;
 
@@ -125,7 +129,6 @@ int main() {
 	Model box;
 	box.setMesh(&CubeMesh,gTexture);
 	box.setScale(glm::vec3(1.0, 1.0, 1.0));
-	//box.setTexture(gTexture);
 
 	GLuint textureID;
 	gl::ActiveTexture(gl::TEXTURE0);
@@ -134,19 +137,28 @@ int main() {
 	gl::Uniform1f(loc, 0);
 
 	glfwSetCursorPosCallback(window, mouseMove);
+	glfwSetCursorPosCallback(window, mouseStop);
+	
+	glfwSetKeyCallback(window, key_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	
+	oldTime = glfwGetTime();
+	
+	double mX = 0, mY = 0, prevX = 0, prevY = 0;
+
+
+	gl::Enable(gl::DEPTH_TEST);
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-		//Handle Inputs
 
-		float dt = glfwGetTime();
-		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
-		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		////////////UPDATE//////////////////////
 
-		gl::Enable(gl::DEPTH_TEST);			//Enable depth buffer
+		//Calculate time step
+		time = glfwGetTime();
+		dt = time - oldTime;
+		oldTime = time;
+		//std::cout << dt << "\n";
 
-		glfwSetKeyCallback(window, key_callback);
-
-		float fSpeed = 0.1f;
+		float fSpeed = 50.0f * dt;
 		//Move Camera
 		if (bA) {								//Move Left
 			cam.pan(-fSpeed,0.0f);
@@ -154,40 +166,48 @@ int main() {
 		else if (bD) {							//Move Right
 			cam.pan(+fSpeed, 0.0f);
 		}
-		else if (bS && bLShift) {				//Move Forwards
-			cam.pan(0.0f, -fSpeed);
-		}
-		else if (bW && bLShift) {				//Move Backwards;
+		else if (bS && bLShift) {				//Move UP
 			cam.pan(0.0f, fSpeed);
 		}
-		else if (bS) {							//Move Down
-			cam.zoom(-fSpeed);
+		else if (bW && bLShift) {				//Move Down;
+			cam.pan(0.0f, -fSpeed);
 		}
-		else if (bW) {							//Move Up
+		else if (bW) {							//Move Forwards
 			
 			cam.zoom(fSpeed);
 		}
+		else if (bS) {							//Move Backwards
+			cam.zoom(-fSpeed);
+		}
+
 		else if (bSpace) {
 			cam.reset();
 		}
 
-		float dX = prevMousePos[0] - mousePos[0];
-		float dY = prevMousePos[1] - mousePos[1];
-		//printf_s("DX: %f Prev: %i Cur: %i\n", dX, prevMousePos[0], mousePos[0]);
-
-		float rotateVel = 0.001f;
 		
-		printf_s("%f\t %f\t %f\n",dX, dX * rotateVel, dY * rotateVel);
-		if (dX != 0 && dY != 0) {
-			
-		}
-		cam.rotate(dX * rotateVel, dY * rotateVel);
+
+		//Mouse//Camera rotation
+		double dX, dY;
+		float rotateVel = 0.08f;	//Camera rotation velocity
+		glfwGetCursorPos(window, &mX, &mY);
+		dX = prevX - mX;
+		dY = prevY - mY;
+		prevX = mX;
+		prevY = mY;
+		//printf_s("DX: %f Prev: %i Cur: %i\n", dX, prevMousePos[0], mousePos[0]);
+		cam.rotate((-dX * rotateVel) * dt, (-dY * rotateVel) * dt);
+
+
+		//////////////////RENDER//////////
+		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
 		box.draw(graphics->programHandle, &cam);
 
+		glfwSwapInterval(1);		//VSYNC
 		glfwSwapBuffers(window);
-		glfwWaitEvents();
-		glfwSetTime(0.0f);
+		glfwPollEvents();
+		time = glfwGetTime();
 	}
 
 	//Close window and terminate GLFW
