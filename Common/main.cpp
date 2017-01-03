@@ -113,21 +113,19 @@ int main() {
 	QuatCamera cam;
 
 	Mesh CubeMesh;
-	//CubeMesh.load("simpleCube.obj");
-	
 	if (!CubeMesh.load("bear.obj")) {
 		return 0;
 	}
-
-	Model box;
-	box.setMesh(&CubeMesh);
-	box.setScale(glm::vec3(1.0, 1.0, 1.0));
 
 	//Load Texture
 	Bitmap bmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\bear.png");
 	bmp.flipVertically();
 	Texture* gTexture = new Texture(bmp);
 
+	Model box;
+	box.setMesh(&CubeMesh,gTexture);
+	box.setScale(glm::vec3(1.0, 1.0, 1.0));
+	//box.setTexture(gTexture);
 
 	GLuint textureID;
 	gl::ActiveTexture(gl::TEXTURE0);
@@ -185,7 +183,6 @@ int main() {
 		}
 		cam.rotate(dX * rotateVel, dY * rotateVel);
 
-		gl::BindTexture(gl::TEXTURE_2D, gTexture->object());
 		box.draw(graphics->programHandle, &cam);
 
 		glfwSwapBuffers(window);

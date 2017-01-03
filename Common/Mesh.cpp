@@ -151,14 +151,14 @@ bool Mesh::load(std::string sFilename)
 	return true;
 }
 
-//const std::vector<GLfloat>&  Mesh::getVertices()
-//{
-//	return this->vf_vertices;
-//}
-//const std::vector<GLuint>&  Mesh::getVertIndices()
-//{
-//	return this->vi_vertIndices;
-//}
+const std::vector<GLfloat>&  Mesh::getVertices()
+{
+	return this->vf_vertices;
+}
+const std::vector<GLuint>&  Mesh::getVertIndices()
+{
+	return this->vi_vertIndices;
+}
 const std::vector<GLfloat>& Mesh::getExpandedVertices()
 {
 	return this->vf_expandedVertices;

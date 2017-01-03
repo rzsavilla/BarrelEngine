@@ -3,43 +3,65 @@
 
 #include <../glm/gtc/type_ptr.hpp>
 
-void Model::set()
+void Model::setBuffers()
 {
-	unsigned int handle[4];
-	gl::GenBuffers(4, handle);
-
-	gl::GenVertexArrays(1, &VAO);
 	gl::BindVertexArray(VAO);
 
 	//Place data in buffers
 	// Vertex position
+	//Use expanded vertices and texture coordinates if it has a texture
 
-	int w = sizeof(int);
-	int t = sizeof(float);
-
-	gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
-	gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
-	gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
-	gl::EnableVertexAttribArray(0);
-
+	if (m_Texture) {
+		int www;
+		www = 1;
+	}
 	if (!mesh->getExpandedTexCoords().empty()) {
-		gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
+		int ttt;
+		ttt = 1;
+	}
+
+
+
+	if (!mesh->getExpandedTexCoords().empty() && m_Texture) {
+		//Expanded Vertices
+		gl::BindBuffer(gl::ARRAY_BUFFER, VBO);
+		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
+		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
+		gl::EnableVertexAttribArray(0);
+
+		//Expanded Texture Coordinates
+		gl::BindBuffer(gl::ARRAY_BUFFER, EBO);
 		gl::BufferData(gl::ARRAY_BUFFER, mesh->getExpandedTexCoords().size() * sizeof(GLfloat), mesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)1, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
 		gl::EnableVertexAttribArray(1);
 	}
+	//Use Element Array buffer (Indices) 
+	else {
+		//Vertices
+		gl::BindBuffer(gl::ARRAY_BUFFER, VBO);
+		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getVertices().size()) * sizeof(GLfloat), mesh->getVertices().data(), gl::STATIC_DRAW);
+		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
+		gl::EnableVertexAttribArray(0);
 
-	// Indices
-	gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, handle[2]);
-	gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
-
-	gl::BindVertexArray(0);
+		// Indices
+		gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, EBO);
+		gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (mesh->getVertIndices().size()) * sizeof(GLfloat), mesh->getVertIndices().data(), gl::STATIC_DRAW);
+	}
+	
+	gl::BindVertexArray(0);		//Unbind
 }
 
-void Model::setMesh(Mesh * newMesh)
+void Model::setMesh(Mesh * newMesh, Texture* newTexture)
 {
 	mesh = newMesh;
-	set();
+	m_Texture = newTexture;
+	setBuffers();
+}
+
+void Model::setTexture(Texture* texture)
+{
+	m_Texture = texture;
+	setBuffers();
 }
 
 void Model::setPosition(glm::vec3 newPos)
@@ -147,6 +169,12 @@ void Model::rotate(float degrees, Axis Axis)
 
 Model::Model()
 {
+	//Generate Buffer handles
+	gl::GenVertexArrays(1, &VAO);
+
+	gl::GenBuffers(1, &VBO);
+	gl::GenBuffers(1, &EBO);
+
 	 t = glm::mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
@@ -212,8 +240,19 @@ void Model::draw(GLuint shader, QuatCamera* cam)
 	gl::UniformMatrix4fv(projectionMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->projection()));
 	
 	// Draw mesh
-	gl::BindVertexArray(this->VAO);
-	gl::DrawArrays(gl::TRIANGLES,0, mesh->getExpandedVertices().size());
-	//gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
-	gl::BindVertexArray(0);
+	
+
+	//Has Texture
+	if (!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL) {
+		gl::BindVertexArray(this->VBO);
+		gl::BindTexture(gl::TEXTURE_2D, m_Texture->object());					//Bind Texture
+		gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
+	}
+	else {
+		gl::BindVertexArray(this->VAO);
+		gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
+	}
+
+	gl::BindTexture(gl::TEXTURE_2D, 0);										//Unbind Texture
+	gl::BindVertexArray(0);													//Unbind VAO
 }
