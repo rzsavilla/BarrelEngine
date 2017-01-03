@@ -107,9 +107,23 @@ int main() {
 		exit(EXIT_FAILURE);
 	}
 
-	//Load Shader program
-	Graphics* graphics = new Graphics();
-	graphics->init();
+	//Compile and link shader program
+	GLSLProgram shader;
+	try {
+		shader.compileShader("Source\\Resources\\shader\\basic.frag");
+		shader.compileShader("Source\\Resources\\shader\\basic.vert");
+		shader.link();
+		shader.validate();
+		shader.use();
+	}
+	catch (GLSLProgramException & e) {
+		cerr << e.what() << endl;
+		exit(EXIT_FAILURE);
+	}
+
+
+	//Graphics* graphics = new Graphics();
+	//graphics->init();
 
 	//Delta time
 	float dt,time,oldTime = 0;
@@ -133,8 +147,8 @@ int main() {
 	GLuint textureID;
 	gl::ActiveTexture(gl::TEXTURE0);
 	gl::BindTexture(gl::TEXTURE_2D, gTexture->object());
-	GLint loc = gl::GetUniformLocation(graphics->programHandle,"tex");
-	gl::Uniform1f(loc, 0);
+	//GLint loc = gl::GetUniformLocation(graphics->programHandle,"tex");
+	//gl::Uniform1f(loc, 0);
 
 	glfwSetCursorPosCallback(window, mouseMove);
 	glfwSetCursorPosCallback(window, mouseStop);
@@ -184,11 +198,9 @@ int main() {
 			cam.reset();
 		}
 
-		
-
 		//Mouse//Camera rotation
 		double dX, dY;
-		float rotateVel = 0.08f;	//Camera rotation velocity
+		float rotateVel = 0.01f;	//Camera rotation velocity
 		glfwGetCursorPos(window, &mX, &mY);
 		dX = prevX - mX;
 		dY = prevY - mY;
@@ -198,11 +210,16 @@ int main() {
 		cam.rotate((-dX * rotateVel) * dt, (-dY * rotateVel) * dt);
 
 
+		//Camera View and Projection matrices to shader
+		shader.setUniform("mView", cam.view());
+		shader.setUniform("mProjection", cam.projection());
+
 		//////////////////RENDER//////////
+
 		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-		box.draw(graphics->programHandle, &cam);
+		box.draw(&shader);
 
 		glfwSwapInterval(1);		//VSYNC
 		glfwSwapBuffers(window);

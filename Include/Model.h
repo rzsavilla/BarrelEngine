@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "QuatCamera.h"
 #include "Texture.h"
+#include "GLSLProgram.h"
 
 /* http://learnopengl.com/#!Model-Loading/Mesh */
 
@@ -32,5 +33,5 @@ public:
 
 	void translate(glm::vec3 translate);		/*!< Move model */
 	void rotate(float degrees, Axis Axis);		/*!< Rotate model */
-	void draw(GLuint shader, QuatCamera* cam);	/*!< Draw model */
+	void draw(GLSLProgram* shader);		/*!< Draw model */
 };

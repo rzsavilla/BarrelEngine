@@ -200,8 +200,11 @@ Model::Model()
 	origin = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-void Model::draw(GLuint shader, QuatCamera* cam)
+void Model::draw(GLSLProgram* shader)
 {
+	shader->use();	//Ensure correct shader is used
+
+	/////////////Model Transform variables///////////////////
 	//Transform
 	glm::mat4 M;	//Model matrix
 
@@ -221,27 +224,14 @@ void Model::draw(GLuint shader, QuatCamera* cam)
 		-origin.x, -origin.y, -origin.z, 1.0f
 	);
 
-	GLint originMatrixID = gl::GetUniformLocation(shader, "mOrigin");
-	GLint originMinusMatrixID = gl::GetUniformLocation(shader, "mOriginMinus");
-	GLint translateMatrixID = gl::GetUniformLocation(shader, "mTranslate");
-	GLint rotateMatrixID = gl::GetUniformLocation(shader, "mRotate");
-	GLint scaleMatrixID = gl::GetUniformLocation(shader, "mScale");
-
-	GLint viewMatrixID = gl::GetUniformLocation(shader, "mView");
-	GLint projectionMatrixID = gl::GetUniformLocation(shader, "mProjection");
-	glm::mat4 V = cam->view();
-	gl::UniformMatrix4fv(originMatrixID, 1, gl::FALSE_, glm::value_ptr(o));
-	gl::UniformMatrix4fv(originMinusMatrixID, 1, gl::FALSE_, glm::value_ptr(oM));
-	gl::UniformMatrix4fv(translateMatrixID, 1, gl::FALSE_, glm::value_ptr(M));
-	gl::UniformMatrix4fv(rotateMatrixID, 1, gl::FALSE_, glm::value_ptr(r));
-	gl::UniformMatrix4fv(scaleMatrixID, 1, gl::FALSE_, glm::value_ptr(s));
-
-	gl::UniformMatrix4fv(viewMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->view()));
-	gl::UniformMatrix4fv(projectionMatrixID, 1, gl::FALSE_, glm::value_ptr(cam->projection()));
+	//Pass Uniform model transform variables to shader program
+	shader->setUniform("mOrigin", o);
+	shader->setUniform("mOriginMinus", o);
+	shader->setUniform("mTranslate", o);
+	shader->setUniform("mRotate", o);
+	shader->setUniform("mScale", o);
 	
-	// Draw mesh
-	
-
+	///////////Draw Model////////////////////////
 	//Has Texture
 	if (!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL) {
 		gl::BindVertexArray(this->VBO);
