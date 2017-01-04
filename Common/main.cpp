@@ -2,11 +2,11 @@
 
 #include "Graphics.h"
 #include "Model.h"
-#include "Robot.h"
 #include "ModelReader.h"
 #include "Bitmap.h"
 #include "Texture.h"
 #include "QuatCamera.h"
+#include "MyRobot.h"
 
 bool bW, bS, bA, bD,
 bUp, bDown, bLeft, bRight,
@@ -14,7 +14,6 @@ bSpace, bLShift, bLeftMouse, bRightMouse;
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-
 	switch (key)
 	{
 	case GLFW_KEY_W:
@@ -121,17 +120,26 @@ int main() {
 		exit(EXIT_FAILURE);
 	}
 
-
-	//Graphics* graphics = new Graphics();
-	//graphics->init();
+	GLSLProgram colourShader;
+	try {
+		colourShader.compileShader("Source\\Resources\\shader\\colour.frag");
+		colourShader.compileShader("Source\\Resources\\shader\\colour.vert");
+		colourShader.link();
+		colourShader.validate();
+		colourShader.use();
+	}
+	catch (GLSLProgramException & e) {
+		cerr << e.what() << endl;
+		exit(EXIT_FAILURE);
+	}
 
 	//Delta time
 	float dt,time,oldTime = 0;
 
 	QuatCamera cam;
 
-	Mesh CubeMesh;
-	if (!CubeMesh.load("bear.obj")) {
+	Mesh bearMesh;
+	if (!bearMesh.load("bear.obj")) {
 		return 0;
 	}
 
@@ -141,7 +149,7 @@ int main() {
 	Texture* gTexture = new Texture(bmp);
 
 	Model box;
-	box.setMesh(&CubeMesh,gTexture);
+	box.setMesh(&bearMesh,gTexture);
 	box.setScale(glm::vec3(1.0, 1.0, 1.0));
 
 	GLuint textureID;
@@ -160,6 +168,9 @@ int main() {
 	
 	double mX = 0, mY = 0, prevX = 0, prevY = 0;
 
+	Mesh cubeMesh;
+	cubeMesh.load("cube.obj");
+	MyRobot robot(&cubeMesh);
 
 	gl::Enable(gl::DEPTH_TEST);
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
@@ -172,7 +183,22 @@ int main() {
 		oldTime = time;
 		//std::cout << dt << "\n";
 
-		float fSpeed = 50.0f * dt;
+
+		if (bUp) {
+			robot.moveForward();
+		}
+		else if (bDown) {
+			robot.moveBackward();
+		}
+
+		if (bLeft) {
+			robot.turnLeft();
+		}
+		else if (bRight) {
+			robot.turnRight();
+		}
+
+		float fSpeed = 10.0f * dt;
 		//Move Camera
 		if (bA) {								//Move Left
 			cam.pan(-fSpeed,0.0f);
@@ -198,6 +224,8 @@ int main() {
 			cam.reset();
 		}
 
+		robot.update(dt);
+
 		//Mouse//Camera rotation
 		double dX, dY;
 		float rotateVel = 0.01f;	//Camera rotation velocity
@@ -209,10 +237,13 @@ int main() {
 		//printf_s("DX: %f Prev: %i Cur: %i\n", dX, prevMousePos[0], mousePos[0]);
 		cam.rotate((-dX * rotateVel) * dt, (-dY * rotateVel) * dt);
 
-
 		//Camera View and Projection matrices to shader
+		shader.use();
 		shader.setUniform("mView", cam.view());
 		shader.setUniform("mProjection", cam.projection());
+		colourShader.use();
+		colourShader.setUniform("mView", cam.view());
+		colourShader.setUniform("mProjection", cam.projection());
 
 		//////////////////RENDER//////////
 
@@ -220,6 +251,7 @@ int main() {
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
 		box.draw(&shader);
+		robot.draw(&colourShader);
 
 		glfwSwapInterval(1);		//VSYNC
 		glfwSwapBuffers(window);

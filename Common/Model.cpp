@@ -20,8 +20,6 @@ void Model::setBuffers()
 		ttt = 1;
 	}
 
-
-
 	if (!mesh->getExpandedTexCoords().empty() && m_Texture) {
 		//Expanded Vertices
 		gl::BindBuffer(gl::ARRAY_BUFFER, VBO);
@@ -76,6 +74,7 @@ void Model::setPosition(glm::vec3 newPos)
 
 void Model::setScale(glm::vec3 newScale)
 {
+	scale = newScale;
 	s = glm::mat4(
 		newScale.x, 0.0f, 0.0f, 0.0f,
 		0.0f, newScale.y, 0.0f, 0.0f,
@@ -135,6 +134,8 @@ void Model::setOrigin(glm::vec3 newOrigin)
 
 void Model::rotate(float degrees, Axis Axis)
 {
+	glm::mat4 s = r;
+
 	float rad = glm::radians(degrees);
 	switch (Axis)	//Choose axis to rotate around
 	{
@@ -182,11 +183,10 @@ Model::Model()
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 
-	//Rotate around Y axis
 	 r = glm::mat4(
-		cos(0), 0.0f, sin(0), 0.0f,
-		0, 1.0, 0.0f, 0.0f,
-		-sin(0), 0.0f, cos(0), 0.0f,
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 
@@ -210,7 +210,21 @@ void Model::draw(GLSLProgram* shader)
 
 	glm::mat4 o,oM;
 	//Origin matrix to move vertices to origin
-	o = glm::mat4(								
+	//o = glm::mat4(								
+	//	1.0f, 0.0f, 0.0f, 0.0f,
+	//	0.0f, 1.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, 1.0f, 0.0f,
+	//	origin.x * scale.x, origin.y * scale.y, origin.z * scale.z, 1.0f
+	//);
+	////Origin minus matrix to move vertices to 0;
+	//oM = glm::mat4(
+	//	1.0f, 0.0f, 0.0f, 0.0f,
+	//	0.0f, 1.0f, 0.0f, 0.0f,
+	//	0.0f, 0.0f, 1.0f, 0.0f,
+	//	-origin.x * scale.x, -origin.y * scale.y, -origin.z * scale.z, 1.0f
+	//);
+
+	o = glm::mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
@@ -224,12 +238,20 @@ void Model::draw(GLSLProgram* shader)
 		-origin.x, -origin.y, -origin.z, 1.0f
 	);
 
+
+	s = glm::mat4(
+		scale.x, 0.0f, 0.0f, 0.0f,
+		0.0f, scale.y, 0.0f, 0.0f,
+		0.0f, 0.0f, scale.z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+
 	//Pass Uniform model transform variables to shader program
 	shader->setUniform("mOrigin", o);
-	shader->setUniform("mOriginMinus", o);
-	shader->setUniform("mTranslate", o);
-	shader->setUniform("mRotate", o);
-	shader->setUniform("mScale", o);
+	shader->setUniform("mOriginMinus", oM);
+	shader->setUniform("mTranslate", t);
+	shader->setUniform("mRotate", r);
+	shader->setUniform("mScale", s);
 	
 	///////////Draw Model////////////////////////
 	//Has Texture

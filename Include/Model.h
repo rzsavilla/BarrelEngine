@@ -14,6 +14,9 @@ private:
 	//Render Data
 	GLuint VAO, VBO, EBO;
 
+	glm::vec3 scale;
+
+
 	glm::mat4 t, r, s;	//Translation,rotation and scale matrix;
 	glm::vec3 origin;	
 	Mesh* mesh;	//!< Store points to mesh model data

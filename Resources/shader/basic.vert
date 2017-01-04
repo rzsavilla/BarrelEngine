@@ -1,8 +1,8 @@
 #version 430
 
 layout (location=0) in vec3 VertexPosition;
-layout (location=1) in vec3 VertexColour;
-layout (location=2) in vec2 VertexUV;
+layout (location=2) in vec3 VertexColour;
+layout (location=1) in vec2 VertexUV;
 
 in vec4 vertPosition;
 
@@ -23,6 +23,6 @@ void main()
 {
     Colour = VertexColour;
 	texCoord = VertexUV;
-	gl_Position = mProjection * mView * vec4(VertexPosition,1.0);
-    //gl_Position = mProjection * mView * mTranslate * mOriginMinus * mRotate * mOrigin * mScale * vec4(VertexPosition,1.0);
+	//gl_Position = mProjection * mView * vec4(VertexPosition,1.0);
+    gl_Position = mProjection * mView * mTranslate * mOriginMinus * mRotate * mOrigin * mScale * vec4(VertexPosition,1.0);
 }
