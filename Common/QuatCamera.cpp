@@ -190,10 +190,14 @@ void QuatCamera::updateView()
 	//This deals with the rotation and scale part of the view matrix
 	_view = glm::mat4_cast(_orientation); // Rotation and Scale
 
-										  //Extract the camera coordinate axes from this matrix
+	//Extract the camera coordinate axes from this matrix
 	_xaxis = glm::vec3(_view[0][0], _view[1][0], _view[2][0]);
 	_yaxis = glm::vec3(_view[0][1], _view[1][1], _view[2][1]);
 	_zaxis = glm::vec3(_view[0][2], _view[1][2], _view[2][2]);
+
+	if (m_bHasTarget) {
+		_view = glm::lookAt(_position,target,glm::vec3(0.0f,1.0f,0.0f));
+	}
 
 	//And use this and current camera position to set the translate part of the view matrix
 	_view[3][0] = -glm::dot(_xaxis, _position); //Translation x
@@ -264,4 +268,9 @@ glm::mat4 QuatCamera::view()
 glm::mat4 QuatCamera::projection()
 {
 	return _projection;
+}
+
+void QuatCamera::lookAt(glm::vec3 pos)
+{
+	target = pos;
 }

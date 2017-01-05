@@ -40,6 +40,8 @@ public:
 
 	glm::mat4 projection(); //Get the Projection matrix
 
+	
+	void lookAt(glm::vec3 pos);
 
 private:
 
@@ -60,5 +62,7 @@ private:
 	glm::mat4 _view;
 	glm::mat4 _projection;
 
+	bool m_bHasTarget;
+	glm::vec3 target;
 
 };
