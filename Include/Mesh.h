@@ -15,6 +15,7 @@ private:
 
 	std::vector<GLfloat> vf_expandedVertices;	//Expanded vertices
 	std::vector<GLfloat> vf_expandedTexCoords;	//Expanded texture coordinates
+	std::vector<GLfloat> vf_expandedNormals;	//Expanded vertex normals;
 public:
 	Mesh();	//!< Default Constructor
 	Mesh(std::string sFilename);	//!< Constructor set to parse obj file
@@ -31,4 +32,5 @@ public:
 
 	const std::vector<GLfloat>& getExpandedVertices();		//!< Returns expanded vertices
 	const std::vector<GLfloat>& getExpandedTexCoords();		//!< Returns expanded texture coordinates
+	const std::vector<GLfloat>& getExpandedNormals();		//!< Returns expanded vertex normals;
 };

@@ -140,10 +140,19 @@ bool Mesh::load(std::string sFilename)
 		vf_expandedVertices.push_back(vf_vertices.at(iIndex+2));
 	}
 
+	//Expand Texture coordinates
 	for (std::vector<GLuint>::iterator it = vi_textIndices.begin(); it != vi_textIndices.end(); ++it) {
 		GLuint iIndex = *it * 2;	//Vertex index
 		vf_expandedTexCoords.push_back(vf_textCoords.at(iIndex));
 		vf_expandedTexCoords.push_back(vf_textCoords.at(iIndex + 1));
+	}
+
+	//Expand vertex normals
+	for (std::vector<GLuint>::iterator it = vi_vertNormIndices.begin(); it != vi_vertNormIndices.end(); ++it) {
+		GLuint iIndex = *it * 3;	//Vertex index
+		vf_expandedNormals.push_back(vf_vertNormals.at(iIndex));
+		vf_expandedNormals.push_back(vf_vertNormals.at(iIndex + 1));
+		vf_expandedNormals.push_back(vf_vertNormals.at(iIndex + 2));
 	}
 
 	delete[] file;
@@ -166,6 +175,10 @@ const std::vector<GLfloat>& Mesh::getExpandedVertices()
 const std::vector<GLfloat>& Mesh::getExpandedTexCoords()
 {
 	return this->vf_expandedTexCoords;
+}
+const std::vector<GLfloat>& Mesh::getExpandedNormals()
+{
+	return vf_expandedNormals;
 }
 const std::vector<GLfloat>& Mesh::getVertNormals()
 {
