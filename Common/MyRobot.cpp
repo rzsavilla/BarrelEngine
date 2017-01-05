@@ -79,6 +79,11 @@ void MyRobot::moveBackward()
 	m_bBackwards = true;
 }
 
+void MyRobot::setPosition(float x, float y, float z)
+{
+	m_vPosition = glm::vec3(x, y, z);
+}
+
 void MyRobot::setMoveSpeed(float newSpeed)
 {
 	m_fMoveSpeed = newSpeed;

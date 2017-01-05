@@ -49,7 +49,7 @@ public:
 	void moveForward();		//!< Moves robot towards facing
 	void moveBackward();	//!< Moves robot back
 
-
+	void setPosition(float x, float y, float z);
 	void setMoveSpeed(float newSpeed);
 	void setTurnSpeed(float newTurnSpeed);
 
