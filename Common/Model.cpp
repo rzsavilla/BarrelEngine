@@ -46,11 +46,11 @@ void Model::setBuffers()
 		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(0);
 
-		//Expanded Texture Coordinates
-		gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
-		gl::BufferData(gl::ARRAY_BUFFER, mesh->getExpandedTexCoords().size() * sizeof(GLfloat), mesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
-		gl::VertexAttribPointer((GLuint)1, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
-		gl::EnableVertexAttribArray(1);
+		////Expanded Texture Coordinates
+		//gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
+		//gl::BufferData(gl::ARRAY_BUFFER, mesh->getExpandedTexCoords().size() * sizeof(GLfloat), mesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
+		//gl::VertexAttribPointer((GLuint)1, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
+		//gl::EnableVertexAttribArray(1);
 
 		//Normals
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[2]);
@@ -71,8 +71,6 @@ void Model::setBuffers()
 		gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (mesh->getVertIndices().size()) * sizeof(GLfloat), mesh->getVertIndices().data(), gl::STATIC_DRAW);
 	}
 
-
-	
 	gl::BindVertexArray(0);		//Unbind
 }
 
@@ -258,6 +256,8 @@ Model::Model()
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 
+	scale = glm::vec3(1.0f, 1.0f, 1.0f);
+
 	origin = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
@@ -303,13 +303,13 @@ void Model::draw(GLSLProgram* shader)
 	///////////Draw Model////////////////////////
 	//Has Texture
 	if ((!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL)) {
-		gl::BindVertexArray(this->handle[0]);
+		gl::BindVertexArray(this->VAO);
 		gl::BindTexture(gl::TEXTURE_2D, m_Texture->object());					//Bind Texture
 		gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
-		gl::BindTexture(gl::TEXTURE_2D, 0);										//Unbind Texture
+									
 	}
 	else if (!mesh->getExpandedNormals().empty()) {
-		gl::BindVertexArray(this->handle[0]);
+		gl::BindVertexArray(this->VAO);
 		gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
 	}
 	else {
@@ -317,4 +317,5 @@ void Model::draw(GLSLProgram* shader)
 		gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
 	}
 	gl::BindVertexArray(0);													//Unbind VAO
+	gl::BindTexture(gl::TEXTURE_2D, 0);										//Unbind Texture				
 }

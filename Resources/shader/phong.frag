@@ -45,8 +45,7 @@ void main() {
 
 	//////Light Attenuation//////
 	//Gradual loss of light intensity over distance
-	float radius = 100.0f;		//Light radius
-	float att = smoothstep(radius, 0, length(lightPosition - fragVert));
+	float att = smoothstep(lightRadius, 0, length(lightPosition - fragVert));
 
 	//Apply attenuation
 	ambient *= att;

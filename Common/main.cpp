@@ -84,6 +84,7 @@ void updateLight(GLSLProgram& prog, Light light,Material material , QuatCamera c
 
 	//Light
 	prog.setUniform("lightPosition", light.getPosition());
+	prog.setUniform("lightRadius", light.getRadius());
 
 	//Material reflectivity
 	prog.setUniform("Ka", material.getAmbient());		//Ambient material reflection
@@ -175,7 +176,8 @@ int main() {
 	roomLight.setIntensity(
 		glm::vec3(0.5f, 0.5f, 0.5f),	//Ambient
 		glm::vec3(0.8f, 0.8f, 0.8f),	//Diffuse
-		glm::vec3(1.0f, 1.0f, 1.0f)		//Specular
+		glm::vec3(1.0f, 1.0f, 1.0f),	//Specular
+		100.0f							//Light radius
 	);
 
 	roomLight.setPosition(0.0f, 30.0f, 0.0f);
@@ -203,23 +205,29 @@ int main() {
 		return 0;
 	}
 
-	Bitmap bearBmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\bear.png");
+	Bitmap cubeBMP = Bitmap::bitmapFromFile("Source\\Resources\\textures\\cube.bmp");
+	cubeBMP.flipVertically();
 
-	//Texture* gBear = new Texture(bearBmp);
+	Bitmap bearBMP = Bitmap::bitmapFromFile("Source\\Resources\\textures\\bear.png");
+	bearBMP.flipVertically();
 
 	//Load Texture
 	Bitmap bmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\room.png");
 	bmp.flipVertically();
 	Texture* gTexture = new Texture(bmp);
+	Texture* cubeTexture = new Texture(cubeBMP);
+	Texture* bearTexture = new Texture(bearBMP);
 
 	Model box;
 	box.setMesh(&roomMesh,gTexture);
 	box.setScale(glm::vec3(1.0, 1.0, 1.0));
 	box.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
-	GLuint textureID;
-	gl::ActiveTexture(gl::TEXTURE0);
-	gl::BindTexture(gl::TEXTURE_2D, gTexture->object());
+	Model bear;
+	bear.setMesh(&bearMesh, bearTexture);
+	//bear.setScale(glm::vec3(1.0, 1.0, 1.0));
+	bear.setPosition(glm::vec3(0.0f, -1.0f, 75.0f));
+	bear.setRotation(180,Axis::yAxis);
 
 	glfwSetCursorPosCallback(window, mouseMove);
 	glfwSetCursorPosCallback(window, mouseStop);
@@ -235,7 +243,7 @@ int main() {
 	Mesh cubeMesh;
 	cubeMesh.load("cube.obj");
 	MyRobot robot(&cubeMesh);
-	robot.setPosition(0.0f, 0.0f, 0.0f);
+	robot.setPosition(0.0f, 7.8f, 0.0f);
 
 	//Delta time
 	float dt, time, oldTime = 0;
@@ -317,10 +325,11 @@ int main() {
 		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
+		bear.draw(&phongShader);
 		box.draw(&phongShader);
 		robot.draw(&colourShader);
 
-		//glfwSwapInterval(1);		//VSYNC
+		glfwSwapInterval(1);		//VSYNC OFF
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		time = glfwGetTime();
