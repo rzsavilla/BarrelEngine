@@ -22,21 +22,46 @@ void Model::setBuffers()
 
 	if (!mesh->getExpandedTexCoords().empty() && m_Texture) {
 		//Expanded Vertices
-		gl::BindBuffer(gl::ARRAY_BUFFER, VBO);
+		gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
 		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(0);
 
 		//Expanded Texture Coordinates
-		gl::BindBuffer(gl::ARRAY_BUFFER, EBO);
+		gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
 		gl::BufferData(gl::ARRAY_BUFFER, mesh->getExpandedTexCoords().size() * sizeof(GLfloat), mesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)1, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
 		gl::EnableVertexAttribArray(1);
+
+		//Normals
+		gl::BindBuffer(gl::ARRAY_BUFFER, handle[2]);
+		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedNormals().size()) * sizeof(GLfloat), mesh->getExpandedNormals().data(), gl::STATIC_DRAW);
+		gl::VertexAttribPointer((GLuint)2, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
+		gl::EnableVertexAttribArray(2);
+	}
+	else if (!mesh->getExpandedNormals().empty()) {
+		//Expanded Vertices
+		gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
+		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
+		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
+		gl::EnableVertexAttribArray(0);
+
+		//Expanded Texture Coordinates
+		gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
+		gl::BufferData(gl::ARRAY_BUFFER, mesh->getExpandedTexCoords().size() * sizeof(GLfloat), mesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
+		gl::VertexAttribPointer((GLuint)1, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
+		gl::EnableVertexAttribArray(1);
+
+		//Normals
+		gl::BindBuffer(gl::ARRAY_BUFFER, handle[2]);
+		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedNormals().size()) * sizeof(GLfloat), mesh->getExpandedNormals().data(), gl::STATIC_DRAW);
+		gl::VertexAttribPointer((GLuint)2, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
+		gl::EnableVertexAttribArray(2);
 	}
 	//Use Element Array buffer (Indices) 
 	else {
 		//Vertices
-		gl::BindBuffer(gl::ARRAY_BUFFER, VBO);
+		gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
 		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getVertices().size()) * sizeof(GLfloat), mesh->getVertices().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(0);
@@ -45,6 +70,8 @@ void Model::setBuffers()
 		gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, EBO);
 		gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (mesh->getVertIndices().size()) * sizeof(GLfloat), mesh->getVertIndices().data(), gl::STATIC_DRAW);
 	}
+
+
 	
 	gl::BindVertexArray(0);		//Unbind
 }
@@ -132,6 +159,37 @@ void Model::setOrigin(glm::vec3 newOrigin)
 	origin = newOrigin;
 }
 
+glm::mat4 Model::getTransform()
+{
+	glm::mat4 translate,rotate,s, o, originMinus;
+
+	translate = t;
+	rotate = r;
+
+
+	o = glm::mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		origin.x, origin.y, origin.z, 1.0f
+	);
+	//Origin minus matrix to move vertices to 0;
+	originMinus = glm::mat4(
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		-origin.x, -origin.y, -origin.z, 1.0f
+	);
+
+	s = glm::mat4(
+		scale.x, 0.0f, 0.0f, 0.0f,
+		0.0f, scale.y, 0.0f, 0.0f,
+		0.0f, 0.0f, scale.z, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	);
+	return t * o * originMinus * r * o * s;
+}
+
 void Model::rotate(float degrees, Axis Axis)
 {
 	glm::mat4 s = r;
@@ -173,7 +231,10 @@ Model::Model()
 	//Generate Buffer handles
 	gl::GenVertexArrays(1, &VAO);
 
-	gl::GenBuffers(1, &VBO);
+	gl::GenBuffers(3, handle);
+
+	gl::GenBuffers(1, &VBO[0]);
+	gl::GenBuffers(1, &VBO[1]);
 	gl::GenBuffers(1, &EBO);
 
 	 t = glm::mat4(
@@ -206,23 +267,9 @@ void Model::draw(GLSLProgram* shader)
 
 	/////////////Model Transform variables///////////////////
 	//Transform
-	glm::mat4 M;	//Model matrix
+	glm::mat4 M(1.0f);	//Model matrix
 
 	glm::mat4 o,oM;
-	//Origin matrix to move vertices to origin
-	//o = glm::mat4(								
-	//	1.0f, 0.0f, 0.0f, 0.0f,
-	//	0.0f, 1.0f, 0.0f, 0.0f,
-	//	0.0f, 0.0f, 1.0f, 0.0f,
-	//	origin.x * scale.x, origin.y * scale.y, origin.z * scale.z, 1.0f
-	//);
-	////Origin minus matrix to move vertices to 0;
-	//oM = glm::mat4(
-	//	1.0f, 0.0f, 0.0f, 0.0f,
-	//	0.0f, 1.0f, 0.0f, 0.0f,
-	//	0.0f, 0.0f, 1.0f, 0.0f,
-	//	-origin.x * scale.x, -origin.y * scale.y, -origin.z * scale.z, 1.0f
-	//);
 
 	o = glm::mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
@@ -238,7 +285,6 @@ void Model::draw(GLSLProgram* shader)
 		-origin.x, -origin.y, -origin.z, 1.0f
 	);
 
-
 	s = glm::mat4(
 		scale.x, 0.0f, 0.0f, 0.0f,
 		0.0f, scale.y, 0.0f, 0.0f,
@@ -252,19 +298,23 @@ void Model::draw(GLSLProgram* shader)
 	shader->setUniform("mTranslate", t);
 	shader->setUniform("mRotate", r);
 	shader->setUniform("mScale", s);
-	
+
+	shader->setUniform("mModel", getTransform());
 	///////////Draw Model////////////////////////
 	//Has Texture
-	if (!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL) {
-		gl::BindVertexArray(this->VBO);
+	if ((!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL)) {
+		gl::BindVertexArray(this->handle[0]);
 		gl::BindTexture(gl::TEXTURE_2D, m_Texture->object());					//Bind Texture
+		gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
+		gl::BindTexture(gl::TEXTURE_2D, 0);										//Unbind Texture
+	}
+	else if (!mesh->getExpandedNormals().empty()) {
+		gl::BindVertexArray(this->handle[0]);
 		gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
 	}
 	else {
 		gl::BindVertexArray(this->VAO);
 		gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
 	}
-
-	gl::BindTexture(gl::TEXTURE_2D, 0);										//Unbind Texture
 	gl::BindVertexArray(0);													//Unbind VAO
 }

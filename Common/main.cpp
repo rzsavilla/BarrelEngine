@@ -8,6 +8,9 @@
 #include "QuatCamera.h"
 #include "MyRobot.h"
 
+#include "Light.h"
+#include "Material.h"
+
 bool bW, bS, bA, bD,
 bUp, bDown, bLeft, bRight,
 bSpace, bLShift, bLeftMouse, bRightMouse;
@@ -72,6 +75,27 @@ static void mouseStop(GLFWwindow* window, double xpos, double ypos) {
 	prevMousePos[1] = mousePos[1];
 }
 
+void updateLight(GLSLProgram& prog, Light light,Material material , QuatCamera cam) {
+	//Camera
+	prog.use();
+	prog.setUniform("mView", cam.view());					//View matrix
+	prog.setUniform("mProjection", cam.projection());		//Projection matrix
+	prog.setUniform("viewPos", cam.position());
+
+	//Light
+	prog.setUniform("lightPosition", light.getPosition());
+
+	//Material reflectivity
+	prog.setUniform("Ka", material.getAmbient());		//Ambient material reflection
+	prog.setUniform("Kd", material.getDiffuse());		//Diffuse
+	prog.setUniform("Ks", material.getSpecular());		//Specular
+	prog.setUniform("shininess", material.getShininess());
+	//Light intensity
+	prog.setUniform("La", light.getAmbient());	//Ambient light
+	prog.setUniform("Ld", light.getDiffuse());	//Diffuse light
+	prog.setUniform("Ls", light.getSpecular());	//Specular light
+}
+
 int main() {
 
 	unsigned int uiWidth = 1024;
@@ -130,33 +154,72 @@ int main() {
 	}
 	catch (GLSLProgramException & e) {
 		cerr << e.what() << endl;
+ 		exit(EXIT_FAILURE);
+	}
+
+	GLSLProgram phongShader;
+	try {
+		phongShader.compileShader("Source\\Resources\\shader\\phong.frag");
+		phongShader.compileShader("Source\\Resources\\shader\\phong.vert");
+		phongShader.link();
+		phongShader.validate();
+		phongShader.use();
+	}
+	catch (GLSLProgramException & e) {
+		cerr << e.what() << endl;
 		exit(EXIT_FAILURE);
 	}
 
-	//Delta time
-	float dt,time,oldTime = 0;
+	/////////////Create Lights/////////////
+	Light roomLight;
+	roomLight.setIntensity(
+		glm::vec3(0.5f, 0.5f, 0.5f),	//Ambient
+		glm::vec3(0.8f, 0.8f, 0.8f),	//Diffuse
+		glm::vec3(1.0f, 1.0f, 1.0f)		//Specular
+	);
+
+	roomLight.setPosition(0.0f, 30.0f, 0.0f);
+
+	////////////Create Material//////////
+	Material material;
+	material.setReflectivity(
+		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.8f, 0.8f, 0.8f),
+		glm::vec3(1.0f, 1.0f, 1.0f),
+		100.0f
+	);
+
+	
 
 	QuatCamera cam;
+
+	Mesh roomMesh;
+	if (!roomMesh.load("room.obj")) {
+		return 0;
+	}
 
 	Mesh bearMesh;
 	if (!bearMesh.load("bear.obj")) {
 		return 0;
 	}
 
+	Bitmap bearBmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\bear.png");
+
+	//Texture* gBear = new Texture(bearBmp);
+
 	//Load Texture
-	Bitmap bmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\bear.png");
+	Bitmap bmp = Bitmap::bitmapFromFile("Source\\Resources\\textures\\room.png");
 	bmp.flipVertically();
 	Texture* gTexture = new Texture(bmp);
 
 	Model box;
-	box.setMesh(&bearMesh,gTexture);
+	box.setMesh(&roomMesh,gTexture);
 	box.setScale(glm::vec3(1.0, 1.0, 1.0));
+	box.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
 
 	GLuint textureID;
 	gl::ActiveTexture(gl::TEXTURE0);
 	gl::BindTexture(gl::TEXTURE_2D, gTexture->object());
-	//GLint loc = gl::GetUniformLocation(graphics->programHandle,"tex");
-	//gl::Uniform1f(loc, 0);
 
 	glfwSetCursorPosCallback(window, mouseMove);
 	glfwSetCursorPosCallback(window, mouseStop);
@@ -164,31 +227,38 @@ int main() {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
-	oldTime = glfwGetTime();
+	
 	
 	double mX = 0, mY = 0, prevX = 0, prevY = 0;
+
 
 	Mesh cubeMesh;
 	cubeMesh.load("cube.obj");
 	MyRobot robot(&cubeMesh);
+	robot.setPosition(0.0f, 0.0f, 0.0f);
+
+	//Delta time
+	float dt, time, oldTime = 0;
+	oldTime = glfwGetTime();
 
 	gl::Enable(gl::DEPTH_TEST);
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-
 		////////////UPDATE//////////////////////
-
 		//Calculate time step
 		time = glfwGetTime();
 		dt = time - oldTime;
 		oldTime = time;
 		//std::cout << dt << "\n";
 
+		float fS = 10.0f;
 
 		if (bUp) {
 			robot.moveForward();
+			//box.translate(glm::vec3(fS * dt, 0.0f, 0.0f));
 		}
 		else if (bDown) {
 			robot.moveBackward();
+			//box.translate(glm::vec3(-fS * dt, 0.0f, 0.0f));
 		}
 
 		if (bLeft) {
@@ -222,43 +292,40 @@ int main() {
 
 		else if (bSpace) {
 			cam.reset();
+			cam.setPosition(glm::vec3(3.0, 5.0f, 5.0f));
+			cam.rotate(glm::radians(-25.0f), glm::radians(45.0f));
 		}
-
+		//cam.lookAt(robot.getPosition());
 		robot.update(dt);
 
 		//Mouse//Camera rotation
 		double dX, dY;
-		float rotateVel = 0.01f;	//Camera rotation velocity
+		float rotateVel = 0.1f;	//Camera rotation velocity
 		glfwGetCursorPos(window, &mX, &mY);
 		dX = prevX - mX;
 		dY = prevY - mY;
 		prevX = mX;
 		prevY = mY;
-		//printf_s("DX: %f Prev: %i Cur: %i\n", dX, prevMousePos[0], mousePos[0]);
-		cam.rotate((-dX * rotateVel) * dt, (-dY * rotateVel) * dt);
+		cam.rotate((-dX * rotateVel) * (1 / 60.0f), (-dY * rotateVel) * (1 / 60.0f));
 
-		//Camera View and Projection matrices to shader
-		shader.use();
-		shader.setUniform("mView", cam.view());
-		shader.setUniform("mProjection", cam.projection());
-		colourShader.use();
-		colourShader.setUniform("mView", cam.view());
-		colourShader.setUniform("mProjection", cam.projection());
+		//////////////////LIGHTS//////////
+		updateLight(phongShader, roomLight, material, cam);
+		updateLight(colourShader, roomLight, material, cam);
 
 		//////////////////RENDER//////////
 
 		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-		box.draw(&shader);
+		box.draw(&phongShader);
 		robot.draw(&colourShader);
 
-		glfwSwapInterval(1);		//VSYNC
+		//glfwSwapInterval(1);		//VSYNC
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 		time = glfwGetTime();
 	}
-
+	delete gTexture;
 	//Close window and terminate GLFW
 	glfwTerminate();
 	return 0;

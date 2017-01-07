@@ -203,7 +203,7 @@ void QuatCamera::updateView()
 	_view[3][0] = -glm::dot(_xaxis, _position); //Translation x
 	_view[3][1] = -glm::dot(_yaxis, _position); //Translation y
 	_view[3][2] = -glm::dot(_zaxis, _position); //Translation z
-
+	m_bHasTarget = false;
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -223,7 +223,6 @@ void QuatCamera::roll(const float z)
 	_orientation = glm::normalize(_orientation);
 	updateView();
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 // Reset the camera
@@ -273,4 +272,5 @@ glm::mat4 QuatCamera::projection()
 void QuatCamera::lookAt(glm::vec3 pos)
 {
 	target = pos;
+	m_bHasTarget = true;
 }

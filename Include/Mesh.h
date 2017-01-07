@@ -32,5 +32,5 @@ public:
 
 	const std::vector<GLfloat>& getExpandedVertices();		//!< Returns expanded vertices
 	const std::vector<GLfloat>& getExpandedTexCoords();		//!< Returns expanded texture coordinates
-	const std::vector<GLfloat>& getExpandedNormals();		//!< Returns expanded vertex normals;
+	const std::vector<GLfloat>& getExpandedNormals();		//!< Returns expanded vertex normals
 };

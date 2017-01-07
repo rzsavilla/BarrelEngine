@@ -1,8 +1,8 @@
 #version 430
 
 //Light intensity
-uniform vec3 La;			//Ambient intensity
 uniform vec3 Ld;            //Diffuse light intensity
+uniform vec3 La;			//Ambient intensity
 uniform vec3 Ls;			//Specular intensity
 uniform vec3 lightPosition;	//Light Position
 uniform float lightRadius;	//Radius of the light
@@ -20,8 +20,9 @@ uniform vec3 viewPos;		//Camera position
 in vec3 fragVert;			//Vertex position in eye space
 in vec3 fragNormal;			//Normal position in eye space
 
-//Colour
-uniform vec3 myColour;		//Vertex Colour
+//Texture
+uniform sampler2D tex;
+in vec2 texCoord;			//Texture coordinates
 
 out vec4 Colour;			//Returns fragment - Data used to render pixel
 
@@ -44,7 +45,7 @@ void main() {
 
 	//////Light Attenuation//////
 	//Gradual loss of light intensity over distance
-	float radius = 50.0f;		//Light radius
+	float radius = 100.0f;		//Light radius
 	float att = smoothstep(radius, 0, length(lightPosition - fragVert));
 
 	//Apply attenuation
@@ -53,5 +54,5 @@ void main() {
 	specular *= att;
 
 	//Calculate fragment colour
-	Colour = vec4(ambient + diffuse + specular,1.0) * vec4(myColour,1.0);
+	Colour = vec4(ambient + diffuse + specular,1.0) * texture(tex,texCoord);
 }

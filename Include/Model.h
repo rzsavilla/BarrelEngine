@@ -12,7 +12,9 @@ enum Axis { xAxis, yAxis, zAxis };
 class Model {
 private:
 	//Render Data
-	GLuint VAO, VBO, EBO;
+	GLuint VAO, VBO[2], EBO;
+
+	GLuint handle[3];
 
 	glm::vec3 scale;
 
@@ -34,7 +36,9 @@ public:
 	void setRotation(float degrees, Axis axis); /*!< Set model rotation on choosen axis */
 	void setOrigin(glm::vec3 newOrigin);		/*!< Set models origin*/
 
+	glm::mat4 getTransform();					//!< Returns model transformation matrix ;
+
 	void translate(glm::vec3 translate);		/*!< Move model */
 	void rotate(float degrees, Axis Axis);		/*!< Rotate model */
-	void draw(GLSLProgram* shader);		/*!< Draw model */
+	void draw(GLSLProgram* shader);				/*!< Draw model */
 };
