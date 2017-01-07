@@ -11,6 +11,8 @@
 #include "Light.h"
 #include "Material.h"
 
+#include <Engine.h>
+
 bool bW, bS, bA, bD,
 bUp, bDown, bLeft, bRight,
 bSpace, bLShift, bLeftMouse, bRightMouse;
@@ -174,7 +176,7 @@ int main() {
 	/////////////Create Lights/////////////
 	Light roomLight;
 	roomLight.setIntensity(
-		glm::vec3(0.5f, 0.5f, 0.5f),	//Ambient
+		glm::vec3(0.7f, 0.7f, 0.7f),	//Ambient
 		glm::vec3(0.8f, 0.8f, 0.8f),	//Diffuse
 		glm::vec3(1.0f, 1.0f, 1.0f),	//Specular
 		100.0f							//Light radius
@@ -185,13 +187,11 @@ int main() {
 	////////////Create Material//////////
 	Material material;
 	material.setReflectivity(
-		glm::vec3(0.5f, 0.5f, 0.5f),
+		glm::vec3(0.7f, 0.7f, 0.7f),
 		glm::vec3(0.8f, 0.8f, 0.8f),
 		glm::vec3(1.0f, 1.0f, 1.0f),
-		100.0f
+		200.0f							//Specular highlight
 	);
-
-	
 
 	QuatCamera cam;
 
@@ -248,6 +248,8 @@ int main() {
 	//Delta time
 	float dt, time, oldTime = 0;
 	oldTime = glfwGetTime();
+
+	std::shared_ptr<Engine> engine = Engine::getInstance();
 
 	gl::Enable(gl::DEPTH_TEST);
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
@@ -321,7 +323,6 @@ int main() {
 		updateLight(colourShader, roomLight, material, cam);
 
 		//////////////////RENDER//////////
-
 		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
