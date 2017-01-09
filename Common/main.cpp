@@ -13,6 +13,9 @@
 
 #include <Engine.h>
 
+#include "GameObject.h"
+#include "Transformable.h"
+
 bool bW, bS, bA, bD,
 bUp, bDown, bLeft, bRight,
 bSpace, bLShift, bLeftMouse, bRightMouse;
@@ -250,6 +253,9 @@ int main() {
 	oldTime = glfwGetTime();
 
 	std::shared_ptr<Engine> engine = Engine::getInstance();
+
+	GameObject myObject;
+	myObject.attachComponent(std::make_unique<Transformable>());
 
 	gl::Enable(gl::DEPTH_TEST);
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
