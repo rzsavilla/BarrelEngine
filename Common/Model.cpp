@@ -164,19 +164,11 @@ glm::mat4 Model::getTransform()
 	translate = t;
 	rotate = r;
 
-
 	o = glm::mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
 		origin.x, origin.y, origin.z, 1.0f
-	);
-	//Origin minus matrix to move vertices to 0;
-	originMinus = glm::mat4(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		-origin.x, -origin.y, -origin.z, 1.0f
 	);
 
 	s = glm::mat4(
@@ -185,7 +177,10 @@ glm::mat4 Model::getTransform()
 		0.0f, 0.0f, scale.z, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
-	return t * o * originMinus * r * o * s;
+
+	//Scale -> translate to origin -> rotate -> translate to position
+	//Translates to origin first in order to cause rotation around that origin
+	return t * r * o * s;
 }
 
 void Model::rotate(float degrees, Axis Axis)
