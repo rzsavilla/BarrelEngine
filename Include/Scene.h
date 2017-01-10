@@ -4,7 +4,7 @@
 class Scene
 {
 public:
-	Scene() : m_animate(true) { }
+	Scene();	//!< Default constructor
 
 	/**
 	Load textures, initialize shaders, etc.
@@ -15,7 +15,7 @@ public:
 	This is called prior to every frame.  Use this
 	to update your animation.
 	*/
-	virtual void update(float t) = 0;
+	virtual void update(float dt) = 0;
 
 	/**
 	Draw your scene.
@@ -26,9 +26,6 @@ public:
 	Called when screen is resized
 	*/
 	virtual void resize(int, int) = 0;
-
-	void animate(bool value) { m_animate = value; }
-	bool animating() { return m_animate; }
 
 protected:
 	bool m_animate;

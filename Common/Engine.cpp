@@ -3,7 +3,16 @@
 
 Engine::Engine()
 {
-	this->i = 22;
+
+}
+
+void Engine::gameLoop()
+{
+
+}
+
+void Engine::render()
+{
 }
 
 Engine::~Engine()
@@ -31,6 +40,3 @@ void Engine::update(float dt)
 {
 
 }
-
-
-

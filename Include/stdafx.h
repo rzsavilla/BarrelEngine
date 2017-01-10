@@ -13,7 +13,7 @@
 #include <string>
 #include <string.h>
 #include <vector>
-
+#include <memory>
 
 #include "Scene.h"
 
