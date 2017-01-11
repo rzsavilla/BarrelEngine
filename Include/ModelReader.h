@@ -56,7 +56,6 @@ public:
 	void ProcessVertexTextureLine(istringstream& iss);
 	void ProcessFaceLine(istringstream& iss);
 
-
 	void CreateExpandedVertices();
 	void CreateExpandedNormals();
 	void CreateExpandedTextureCoordinates();

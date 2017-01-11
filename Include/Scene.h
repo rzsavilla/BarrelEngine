@@ -26,7 +26,4 @@ public:
 	Called when screen is resized
 	*/
 	virtual void resize(int, int) = 0;
-
-protected:
-	bool m_animate;
 };
