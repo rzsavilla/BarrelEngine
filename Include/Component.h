@@ -1,6 +1,7 @@
 /*!
 	\class Component
 	Abstract class
+	A base/Super/parent class for GameObject Components
 */
 
 //http://www.randygaul.net/tag/c/
@@ -8,26 +9,33 @@
 #pragma once
 
 #include <stdafx.h>
-
-class Component;
-
-struct Message {
-	Message(const Component& obj, const std::string& msg)
-		: m_obj(&obj)
-		, m_msg(msg)
-	{}
-	const Component* m_obj;
-	std::string m_msg;
-};
+#include <Message.h>
 
 class Component {
-
+protected: 
+	std::string m_sComponentID;
+	/*!
+		Pointer to vector of message pointers	
+		//Allows pointer to pass messages to object for other components to read
+	*/
+	std::vector<Message*>* m_ptrLocalMessages;
+	void sendMessage(Message* msg);		//!< Creates local message for components in GameObject to read
 public:
-	virtual void init(void) = 0;						//!< Initialize component
+	virtual void init() = 0;							//!< Initialize component
 	
+	virtual void handleMessage(Message* msg) = 0;		//!< Each component will read and ignore Messages depending on implementation of this function
+
 	virtual void update(float dt) = 0;					//!< Updates component during game loop
 
-	virtual void sendMessage(const Message& msg) = 0;
+	/*!
+		Allows component to access all local messages
+	*/
+	void setLocalMsgPtr(std::vector<Message*>* ptr);
+
+	/*!
+		Returns ComponentID/ Component Type eg Transformable Movable etc in string
+	*/
+	std::string getComponentID() { return m_sComponentID; }
 
 	virtual ~Component() {};		//!< Destructor
 };

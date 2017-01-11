@@ -14,12 +14,23 @@ void Transformable::init()
 
 void Transformable::update(float dt)
 {
+	std::cout << m_vPosition.x << "\n";
+}
+
+void Transformable::sendMessage(const Message msg)
+{
 
 }
 
-void Transformable::sendMessage(const Message & msg)
+void Transformable::handleMessage(Message* msg) 
 {
+	if (msg->sID == "SetPosition") {
+		glm::vec3 newPos = static_cast<SetPositionMessage*>(msg)->vPos;
+		setPosition(newPos);
+	}
+	else {
 
+	}
 }
 
 void Transformable::move(glm::vec3 vector)

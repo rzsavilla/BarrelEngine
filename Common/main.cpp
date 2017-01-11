@@ -13,8 +13,6 @@
 
 #include <Engine.h>
 
-#include "GameObject.h"
-#include "Transformable.h"
 
 bool bW, bS, bA, bD,
 bUp, bDown, bLeft, bRight,
@@ -238,8 +236,6 @@ int main() {
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	
-	
-	
 	double mX = 0, mY = 0, prevX = 0, prevY = 0;
 
 
@@ -254,11 +250,9 @@ int main() {
 
 	std::shared_ptr<Engine> engine = Engine::getInstance();
 
-	GameObject myObject;
-	myObject.attachComponent(std::make_unique<Transformable>());
-
 	gl::Enable(gl::DEPTH_TEST);
 	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+
 		////////////UPDATE//////////////////////
 		//Calculate time step
 		time = glfwGetTime();

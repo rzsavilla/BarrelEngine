@@ -1,6 +1,5 @@
 #pragma once
 
-
 /*! \class Transformable
 Abstract class that gives object attributes to move around in 3D Space and apply transformations to it
 */
@@ -23,8 +22,10 @@ public:
 
 	void init();
 
+
 	void update(float dt);
-	void sendMessage(const Message& msg);
+	void sendMessage(const Message msg);
+	void handleMessage(Message* msg);
 
 	void move(glm::vec3 vector);	//!< Adds vector to current position
 	void rotate(glm::vec3 vector);	//!< Adds vector to current rotation
