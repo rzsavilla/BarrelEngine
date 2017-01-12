@@ -1,29 +1,24 @@
 #pragma once
 #include "stdafx.h"
+#include "ResourceManager.h"
 /* Abstract Scene class*/
 class Scene
 {
 public:
-	Scene();	//!< Default constructor
-
 	/**
 	Load textures, initialize shaders, etc.
 	*/
-	virtual void initScene() = 0;
+	virtual void initScene(ResourceManager* res, int screenWidth,int screenHeight) = 0;
 
-	/**
-	This is called prior to every frame.  Use this
-	to update your animation.
+	/** Update scene
 	*/
 	virtual void update(float dt) = 0;
 
-	/**
-	Draw your scene.
+	/** Draw scene.
 	*/
 	virtual void render() = 0;
 
-	/**
-	Called when screen is resized
+	/** Called when screen is resized
 	*/
 	virtual void resize(int, int) = 0;
 };
