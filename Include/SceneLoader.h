@@ -10,6 +10,7 @@
 #include "Model.h"
 
 #include "tinyxml2.h"
+
 class SceneLoader {
 private:
 	ResourceManager* m_res;
@@ -19,12 +20,16 @@ private:
 	std::vector<QuatCamera> m_vCamera;		//!< Store Cameras
 	std::vector<GLSLProgram> m_vShaders;	//!< Store Shaders
 
+	void loadMesh(tinyxml2::XMLElement* e);
+	void loadTexture(tinyxml2::XMLElement* e);
+	void loadMaterial(tinyxml2::XMLElement* e);
+
 	void loadModel(tinyxml2::XMLElement* e);
 	void loadLight(tinyxml2::XMLElement* e);
 	void loadCamera(tinyxml2::XMLElement* e);
 
-	void readScene(tinyxml2::XMLElement* e);
-	void readResources(tinyxml2::XMLElement* e);
+	void readScene(tinyxml2::XMLNode* node);
+	void readResources(tinyxml2::XMLNode* node);
 public:
 	SceneLoader();							//!< Default constructor
 	SceneLoader(std::string sFilename);		//!< Constructor loads file

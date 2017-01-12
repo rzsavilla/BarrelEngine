@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<Resources dir="Source\\Resources\\">
+	<Mesh>
+		<file>"models//cube.obj</file>
+	</Mesh>
+	<Texture>
+		<file></file>
+	</Texture>
+	<Material>
+	
+	</Material>
+</Resources>
+
 <Scene>
 	<Model>
 		<Mesh>
 			<Index>0</Index>
 		</Mesh>
 		<Position>
-			<posX>1.0</posX>
-			<posY>2.0</posY>
-			<posZ>3.0</posZ>
+			<posX>1.0f</posX>
+			<posY>2.0f</posY>
+			<posZ>3.0f</posZ>
 		</Position>
+		<Scale>
+			<scaleX>1.0f</scaleX>
+			<scaleY>2.0f</scaleY>
+			<scaleZ>3.0f</scaleZ>
+		</Scale>
+		<Origin>
+			<originX>0.0f</originX>
+			<originY>0.0f</originY>
+			<originZ>0.0f</originZ>
+		</Origin>
 	</Model>
 	<Light>
 	

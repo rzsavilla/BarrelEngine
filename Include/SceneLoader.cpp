@@ -2,6 +2,32 @@
 #include "SceneLoader.h"
 #include <cstdlib>
 
+void SceneLoader::loadMesh(tinyxml2::XMLElement * e)
+{
+	using namespace tinyxml2;
+	for (XMLElement* meshChild = e->FirstChildElement(); meshChild != NULL; meshChild = meshChild->NextSiblingElement()) {
+		std::cout << " " << meshChild->Value() << "\n";
+		const char* childValue = meshChild->Value();
+		if (strcmp(childValue, "File") == 0) {
+			//Add mesh to model
+			std::cout << "  " << "MeshChild" << "\n";
+		}
+		else if (strcmp(childValue, "Id") == 0) {
+
+		}
+	}
+}
+
+void SceneLoader::loadTexture(tinyxml2::XMLElement * e)
+{
+
+}
+
+void SceneLoader::loadMaterial(tinyxml2::XMLElement * e)
+{
+
+}
+
 void SceneLoader::loadModel(tinyxml2::XMLElement * e)
 {
 	using namespace tinyxml2;
@@ -23,6 +49,7 @@ void SceneLoader::loadModel(tinyxml2::XMLElement * e)
 				atof(modelChild->FirstChildElement("posZ")->GetText())
 			);
 			m_vModels.back().setPosition(vec);
+			std::cout << vec.x << "\n";
 		}
 		else if (strcmp(childValue, "Scale") == 0) {
 			//Set model scale
@@ -47,18 +74,49 @@ void SceneLoader::loadModel(tinyxml2::XMLElement * e)
 
 void SceneLoader::loadLight(tinyxml2::XMLElement * e)
 {
+
 }
 
 void SceneLoader::loadCamera(tinyxml2::XMLElement * e)
 {
 }
 
-void SceneLoader::readScene(tinyxml2::XMLElement * e)
+void SceneLoader::readScene(tinyxml2::XMLNode * node)
 {
+	using namespace tinyxml2;
+	for (XMLElement* element = node->FirstChildElement(); element != NULL; element = element->NextSiblingElement())
+	{
+		if (strcmp(element->Value(), "Model") == 0) {
+			loadModel(element);
+		}
+		else if (strcmp(element->Value(), "Light") == 0) {
+			loadLight(element);
+		}
+		else if (strcmp(element->Value(), "Camera") == 0) {
+			loadCamera(element);
+		}
+		else if (strcmp(element->Value(), "Robot") == 0) {
+
+		}
+	}
 }
 
-void SceneLoader::readResources(tinyxml2::XMLElement * e)
+void SceneLoader::readResources(tinyxml2::XMLNode* node)
 {
+	using namespace tinyxml2;
+	for (XMLElement* element = node->FirstChildElement(); element != NULL; element = element->NextSiblingElement())
+	{
+		if (strcmp(element->Value(), "Mesh") == 0) {
+
+		}
+		else if (strcmp(element->Value(), "Texture") == 0) {
+
+		}
+		else if (strcmp(element->Value(), "Material") == 0) {
+
+		}
+
+	}
 }
 
 SceneLoader::SceneLoader()
@@ -67,6 +125,7 @@ SceneLoader::SceneLoader()
 
 SceneLoader::SceneLoader(std::string sFilename)
 {
+	load(sFilename);
 }
 
 SceneLoader::~SceneLoader()
@@ -89,27 +148,20 @@ int SceneLoader::load(std::string sFilename, ResourceManager * res, Scene * scen
 		std::cout << "Could not load file: " << sFilename << "\n";
 		return false;
 	}
-	XMLElement *ptrRoot = doc.FirstChildElement("Scene");
+	XMLNode *ptrRoot = doc.FirstChild();
 	if (ptrRoot == nullptr) {
 		std::cout << "No root: " << sFilename << "\n";
 		return false;
 	}
 
-	const char *rootValue = ptrRoot->Value();
+	for (XMLNode* node = ptrRoot; node != NULL; node = node->NextSiblingElement()) {
+		const char* value = node->Value();
 
-	for (XMLElement* element = ptrRoot->FirstChildElement(); element != NULL; element = element->NextSiblingElement())
-	{
-		if (strcmp(element->Value(), "Model") == 0) {
-			loadModel(element);
+		if (strcmp(node->Value(), "Resources") == 0) {
+			readResources(node);
 		}
-		else if (strcmp(element->Value(), "Light") == 0) {
-
-		}
-		else if (strcmp(element->Value(), "Camera") == 0) {
-
-		}
-		else if (strcmp(element->Value(), "Robot") == 0) {
-
+		else if (strcmp(node->Value(), "Scene") == 0) {
+			readScene(node);
 		}
 	}
 
