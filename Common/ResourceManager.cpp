@@ -6,35 +6,65 @@ ResourceManager::ResourceManager()
 
 }
 
-int ResourceManager::addMesh(Mesh newMesh)
+void ResourceManager::addMesh(std::string ID, Mesh newMesh)
 {
-	m_vMeshes.push_back(newMesh);
-	return (int)m_vMeshes.size() - 1;		//-1 for 0 index
+	m_vMeshes.push_back(std::pair<std::string,Mesh>(ID,newMesh));
 }
 
-int ResourceManager::addTexture(Texture* newTexture)
+void ResourceManager::addTexture(std::string ID,Texture* newTexture)
 {
-	m_vTextures.push_back(newTexture);
-	return (int)m_vTextures.size() - 1;		//-1 for 0 index
+	m_vTextures.push_back(std::pair<std::string,Texture*>(ID,newTexture));
 }
 
-int ResourceManager::addMaterial(Material newMaterial)
+void ResourceManager::addMaterial(std::string ID, Material newMaterial)
 {
-	m_vMaterials.push_back(newMaterial);
-	return (int)m_vMaterials.size() - 1;		//-1 for 0 index
+	m_vMaterials.push_back(std::pair<std::string, Material>(ID, newMaterial));
 }
 
-Mesh * ResourceManager::getMesh(int index)
+void ResourceManager::addShader(std::string ID, std::shared_ptr<GLSLProgram> newShader)
 {
-	return &m_vMeshes.at(index);
+	m_vShaders.push_back(std::pair<std::string, std::shared_ptr<GLSLProgram>>(ID,newShader));
 }
 
-Texture * ResourceManager::getTexture(int index)
+Mesh* ResourceManager::getMesh(std::string ID)
 {
-	return m_vTextures.at(index);
+	//Look through vector
+	for (auto it = m_vMeshes.begin(); it != m_vMeshes.end(); ++it) {
+		if ((*it).first == ID) {
+			return &(*it).second;		//Returns mesh pointer
+		}
+	}
+	return NULL;
 }
 
-Material * ResourceManager::getMaterial(int index)
+Texture* ResourceManager::getTexture(std::string ID)
 {
-	return &m_vMaterials.at(index);
+	//Look through vector
+	for (auto it = m_vTextures.begin(); it != m_vTextures.end(); ++it) {
+		if ((*it).first == ID) {
+			return (*it).second;		//Returns texture pointer
+		}
+	}
+	return NULL;
+}
+
+Material* ResourceManager::getMaterial(std::string ID)
+{
+	//Look through vector
+	for (auto it = m_vMaterials.begin(); it != m_vMaterials.end(); ++it) {
+		if ((*it).first == ID) {
+			return &(*it).second;		//Returns material pointer
+		}
+	}
+	return NULL;
+}
+
+std::shared_ptr<GLSLProgram> ResourceManager::getShader(std::string ID)
+{
+	//Look through vector
+	for (auto it = m_vShaders.begin(); it != m_vShaders.end(); ++it) {
+		if ((*it).first == ID) {
+			return (*it).second;		//Returns shader pointer
+		}
+	}
 }

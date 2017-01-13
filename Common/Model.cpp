@@ -87,6 +87,11 @@ void Model::setTexture(Texture* texture)
 	setBuffers();
 }
 
+void Model::setShader(std::shared_ptr<GLSLProgram> shader)
+{
+	m_ptrShader = shader;
+}
+
 void Model::setPosition(glm::vec3 newPos)
 {
 	t = glm::mat4(
@@ -258,7 +263,7 @@ Model::Model()
 
 void Model::draw(GLSLProgram* shader)
 {
-	shader->use();	//Ensure correct shader is used
+	m_ptrShader->use();	//Ensure correct m_ptrShader is used
 
 	/////////////Model Transform variables///////////////////
 	//Transform
@@ -287,14 +292,14 @@ void Model::draw(GLSLProgram* shader)
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 
-	//Pass Uniform model transform variables to shader program
-	shader->setUniform("mOrigin", o);
-	shader->setUniform("mOriginMinus", oM);
-	shader->setUniform("mTranslate", t);
-	shader->setUniform("mRotate", r);
-	shader->setUniform("mScale", s);
+	//Pass Uniform model transform variables to m_ptrShader program
+	m_ptrShader->setUniform("mOrigin", o);
+	m_ptrShader->setUniform("mOriginMinus", oM);
+	m_ptrShader->setUniform("mTranslate", t);
+	m_ptrShader->setUniform("mRotate", r);
+	m_ptrShader->setUniform("mScale", s);
 
-	shader->setUniform("mModel", getTransform());
+	m_ptrShader->setUniform("mModel", getTransform());
 	///////////Draw Model////////////////////////
 	//Has Texture
 	if ((!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL)) {

@@ -134,9 +134,11 @@ int main() {
 		exit(EXIT_FAILURE);
 	}
 
-	SceneLoader loader;
-	ResourceManager res;
-	loader.load("Source\\Resources\\scenes\\test.xml",&res);
+	std::vector<std::pair<std::string, std::shared_ptr<Scene>>> m_scenes;
+	ResourceManager m_res;
+	std::string sFile = "Source\\Resources\\scenes\\test.xml";
+
+	SceneLoader sceneLoader(sFile, &m_res, &m_scenes);
 
 	//XMLDocument doc;
 	//doc.LoadFile("Source\\Resources\\scenes\\test.xml");

@@ -4,12 +4,13 @@
 #include "QuatCamera.h"
 #include "Texture.h"
 #include "GLSLProgram.h"
+#include "ID.h"
 
 /* http://learnopengl.com/#!Model-Loading/Mesh */
 
 enum Axis { xAxis, yAxis, zAxis };
 
-class Model {
+class Model : public ID {
 private:
 	//Render Data
 	GLuint VAO, VBO[2], EBO;
@@ -18,7 +19,7 @@ private:
 
 	glm::vec3 scale;
 
-
+	std::shared_ptr<GLSLProgram> m_ptrShader;
 	glm::mat4 t, r, s;	//Translation,rotation and scale matrix;
 	glm::vec3 origin;	
 	Mesh* mesh;	//!< Store points to mesh model data
@@ -30,6 +31,7 @@ public:
 
 	void setMesh(Mesh * newMesh,Texture* newTexture = NULL);				
 	void setTexture(Texture* texture);
+	void setShader(std::shared_ptr<GLSLProgram> shader);
 	
 	void setPosition(glm::vec3 newPos);			/*!< Set model position */
 	void setScale(glm::vec3 newScale);			/*!< Set model scale */

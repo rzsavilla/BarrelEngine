@@ -3,7 +3,7 @@
 #include <stdafx.h>
 #include "ID.h"
 
-class Mesh: public ID {
+class Mesh {
 private:
 	std::vector<GLfloat> vf_vertices;		//Store models vertices
 	std::vector<GLuint> vi_vertIndices;		//Store model vertex indices

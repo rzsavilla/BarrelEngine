@@ -5,10 +5,11 @@
 class Scene
 {
 public:
+	~Scene() {};
 	/**
 	Load textures, initialize shaders, etc.
 	*/
-	virtual void initScene(ResourceManager* res, int screenWidth,int screenHeight) = 0;
+	virtual void initScene() = 0;
 
 	/** Update scene
 	*/

@@ -4,52 +4,55 @@
 #include "Texture.h"
 #include "QuatCamera.h"
 #include "Material.h"
+#include "GLSLProgram.h"
 
 
 class ResourceManager {
 private:
-	std::vector<Mesh> m_vMeshes;			//!< Stores meshes
-	std::vector<Texture*> m_vTextures;		//!< Stores textures
-	std::vector<Material> m_vMaterials;		//!< Stores materials
+	std::vector<std::pair<std::string, Mesh>> m_vMeshes;			//!< Stores meshes
+	std::vector<std::pair<std::string, Texture*>> m_vTextures;		//!< Stores textures
+	std::vector<std::pair<std::string, Material>> m_vMaterials;		//!< Stores materials
+	std::vector<std::pair<std::string, std::shared_ptr<GLSLProgram>>> m_vShaders;
 public:
 	ResourceManager();	//!< Default constructor
 
 	/**	Store a mesh
 		Stores mesh into a vector of meshes.
-		\param newMesh Mesh object to be stored
-		\return Returns the index of the mesh
 	*/
-	int addMesh(Mesh newMesh);
+	void addMesh(std::string ID, Mesh newMesh);
 
 	/**	Store a mesh
 		Stores texture into a vector of texture.
-		\param newTexture Texture object to be stored
-		\return Returns the index of the texture
 	*/
-	int addTexture(Texture* newTexture);
+	void addTexture(std::string ID,Texture* newTexture);
 
 	/**	Store a material
 		Stores material into a vector of material.
-		\param newMaterial Material Object to be stored
-		\return Returns the index of the material
 	*/
-	int addMaterial(Material newMaterial);
+	void addMaterial(std::string ID, Material newMaterial);
 
-	/** Returns pointer to indexed mesh
-		\param index Index to identy mesh element to return
+	/**	Store a shader program
+	Stores shader program into a vector of GLSLShader.
+	*/
+	void addShader(std::string ID, std::shared_ptr<GLSLProgram> newShader);
+
+	/** Returns pointer to pointer mesh
 		\return Returns pointer to mesh element
 	*/
-	Mesh* getMesh(int index);
+	Mesh* getMesh(std::string ID);
 
-	/** Returns pointer to indexed texture
-	\param index Index to identy texture element to return
-	\return Returns pointer to texture element
+	/** Returns pointer to pointer texture
+		\return Returns pointer to texture element
 	*/
-	Texture* getTexture(int index);
+	Texture* getTexture(std::string ID);
 
-	/** Returns pointer to indexed material
-	\param index Index to identy material element to return
-	\return Returns pointer to material element
+	/** Returns pointer to pointer material
+		\return Returns pointer to material element
 	*/
-	Material* getMaterial(int index);
+	Material* getMaterial(std::string ID);
+
+	/** Returns pointer to shader pointer
+		\return Returns pointer to shader element
+	*/
+	std::shared_ptr<GLSLProgram> getShader(std::string ID);
 };
