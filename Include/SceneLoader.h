@@ -27,7 +27,7 @@ private:
 
 	std::pair<std::string, Model> loadModel(tinyxml2::XMLElement* e);
 	std::pair<std::string, Light> loadLight(tinyxml2::XMLElement* e);
-	QuatCamera loadCamera(tinyxml2::XMLElement* e);
+	std::pair<std::string, QuatCamera> loadCamera(tinyxml2::XMLElement* e);
 
 	void readScene(tinyxml2::XMLNode* node);
 	void readResources(tinyxml2::XMLNode* node);

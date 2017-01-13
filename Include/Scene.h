@@ -17,7 +17,7 @@ public:
 
 	/** Draw scene.
 	*/
-	virtual void render() = 0;
+	virtual void render(GLFWwindow* window) = 0;
 
 	/** Called when screen is resized
 	*/

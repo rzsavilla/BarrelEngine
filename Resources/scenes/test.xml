@@ -29,9 +29,9 @@
 		<Shininess>100.0f</Shininess>
 	</Material>
 	<Shader>
-		<ID>default_shader</ID>
-		<Vertex></Vertex>
-		<Fragment></Fragment>
+		<ID>phong_shader</ID>
+		<Vertex>Source\Resources\shader\phong.vert</Vertex>
+		<Fragment>Source\Resources\shader\phong.frag</Fragment>
 	</Shader>
 </Resources>
 
@@ -56,12 +56,44 @@
 			<Y>0.0f</Y>
 			<Z>0.0f</Z>
 		</Origin>
+		<Material>phong_shader</Material>
+		<Shader>phong_shader</Shader>
 	</Model>
 	<Light>
-	
+		<ID>room_light</ID>
+		<Ambient>
+			<X>1.0f</X>
+			<Y>2.0f</Y>
+			<Z>3.0f</Z>
+		</Ambient>
+		<Diffuse>
+			<X>1.0f</X>
+			<Y>2.0f</Y>
+			<Z>3.0f</Z>
+		</Diffuse>
+		<Specular>
+			<X>1.0f</X>
+			<Y>2.0f</Y>
+			<Z>3.0f</Z>
+		</Specular>
+		<Radius>100.0f</Radius>
 	</Light>
 	<Camera>
-	
+		<ID>default_material</ID>
+		<Position>
+			<X>1.0f</X>
+			<Y>2.0f</Y>
+			<Z>3.0f</Z>
+		</Position>
+		<Orientation>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Orientation>
+		<FOV>90.0f</FOV>
+		<AspectRatio>90.0f</AspectRatio>
+		<FarPlane>0.0f</FarPlane>
+		<NearPlane>1000.0f</NearPlane>
 	</Camera>
 	<Shader>
 	

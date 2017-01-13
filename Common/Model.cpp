@@ -81,6 +81,11 @@ void Model::setMesh(Mesh * newMesh, Texture* newTexture)
 	setBuffers();
 }
 
+void Model::setMaterial(Material * material)
+{
+	m_Material = material;
+}
+
 void Model::setTexture(Texture* texture)
 {
 	m_Texture = texture;
@@ -145,6 +150,11 @@ void Model::setRotation(float degrees, Axis axis)
 	default:
 		break;
 	}
+}
+
+std::shared_ptr<GLSLProgram> Model::getShader()
+{
+	return m_ptrShader;
 }
 
 void Model::translate(glm::vec3 translate)
@@ -300,6 +310,15 @@ void Model::draw(GLSLProgram* shader)
 	m_ptrShader->setUniform("mScale", s);
 
 	m_ptrShader->setUniform("mModel", getTransform());
+
+
+	//Pass material
+	//Material reflectivity
+	m_ptrShader->setUniform("Ka", m_Material->getAmbient());		//Ambient material reflection
+	m_ptrShader->setUniform("Kd", m_Material->getDiffuse());		//Diffuse
+	m_ptrShader->setUniform("Ks", m_Material->getSpecular());		//Specular
+	m_ptrShader->setUniform("shininess", m_Material->getShininess());
+
 	///////////Draw Model////////////////////////
 	//Has Texture
 	if ((!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL)) {

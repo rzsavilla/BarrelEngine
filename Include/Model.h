@@ -24,12 +24,13 @@ private:
 	glm::vec3 origin;	
 	Mesh* mesh;	//!< Store points to mesh model data
 	Texture* m_Texture;	//!< Points to texture
-
+	Material* m_Material;
 	void setBuffers(); //!< Pass mesh data to OpenGL buffers
 public:
 	Model();									/*!< Default Constructor */
 
-	void setMesh(Mesh * newMesh,Texture* newTexture = NULL);				
+	void setMesh(Mesh * newMesh,Texture* newTexture = NULL);
+	void setMaterial(Material* material);
 	void setTexture(Texture* texture);
 	void setShader(std::shared_ptr<GLSLProgram> shader);
 	
@@ -39,6 +40,9 @@ public:
 	void setOrigin(glm::vec3 newOrigin);		/*!< Set models origin*/
 
 	glm::mat4 getTransform();					//!< Returns model transformation matrix ;
+
+
+	std::shared_ptr<GLSLProgram> getShader();
 
 	void translate(glm::vec3 translate);		/*!< Move model */
 	void rotate(float degrees, Axis Axis);		/*!< Rotate model */

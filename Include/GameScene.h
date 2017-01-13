@@ -13,6 +13,8 @@ private:
 	std::vector<std::pair<std::string, Light>> m_vLights;			//Store Lights
 	std::vector<std::pair<std::string, QuatCamera>> m_vCamera;		//Store Cameras
 	std::vector<std::pair<std::string, MyRobot>> m_vRobots;		//Store Cameras
+
+	void updateLight(std::unique_ptr<GLSLProgram> prog, Light light, QuatCamera cam);
 public:
 	GameScene();		//!< Default Constructor
 
@@ -25,7 +27,9 @@ public:
 	void addCamera(std::pair<std::string, QuatCamera> camera);
 	void addRobot(std::pair<std::string, MyRobot> robot);
 
-	void render();
+	void render(GLFWwindow* window);
 
 	void resize(int, int);
+
+	
 };

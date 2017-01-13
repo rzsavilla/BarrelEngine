@@ -31,7 +31,6 @@ public:
 	void roll(const float z); //Roll camera
 	void zoom(const float z); //Zoom camera
 
-
 	void updateView();  //Update the camera
 
 	void reset(void); //Reset the camera

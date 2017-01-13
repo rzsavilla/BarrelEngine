@@ -140,6 +140,38 @@ int main() {
 
 	SceneLoader sceneLoader(sFile, &m_res, &m_scenes);
 
+
+	gl::Enable(gl::DEPTH_TEST);
+	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+
+		////////////UPDATE//////////////////////
+		//Calculate time step
+
+		float fS = 10.0f;
+
+		
+		for (auto it = m_scenes.begin(); it != m_scenes.end(); ++it) {
+			(*it).second->update(0.1);	//Update Scene
+			(*it).second->render(window);
+		}
+
+		//////////////////LIGHTS//////////
+
+		//////////////////RENDER//////////
+
+
+		//gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+		//gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+
+		//glfwSwapInterval(1);		//VSYNC OFF
+		//glfwSwapBuffers(window);
+		//glfwPollEvents();
+	}
+	//Close window and terminate GLFW
+	glfwTerminate();
+
+
+	int w = 0;
 	//XMLDocument doc;
 	//doc.LoadFile("Source\\Resources\\scenes\\test.xml");
 
@@ -384,7 +416,6 @@ int main() {
 	//delete gTexture;
 	////Close window and terminate GLFW
 	//glfwTerminate();
-	
 
 	return 0;
 }
