@@ -14,7 +14,7 @@ private:
 	std::vector<std::pair<std::string, QuatCamera>> m_vCamera;		//Store Cameras
 	std::vector<std::pair<std::string, MyRobot>> m_vRobots;		//Store Cameras
 
-	void updateLight(std::unique_ptr<GLSLProgram> prog, Light light, QuatCamera cam);
+	void updateLight(std::shared_ptr<GLSLProgram> shader, Light light);
 public:
 	GameScene();		//!< Default Constructor
 

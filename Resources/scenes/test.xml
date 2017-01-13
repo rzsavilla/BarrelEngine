@@ -56,7 +56,7 @@
 			<Y>0.0f</Y>
 			<Z>0.0f</Z>
 		</Origin>
-		<Material>phong_shader</Material>
+		<Material>default_material</Material>
 		<Shader>phong_shader</Shader>
 	</Model>
 	<Light>

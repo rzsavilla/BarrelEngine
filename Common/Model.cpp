@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "Model.h"
 
 #include <../glm/gtc/type_ptr.hpp>
@@ -314,10 +314,12 @@ void Model::draw(GLSLProgram* shader)
 
 	//Pass material
 	//Material reflectivity
-	m_ptrShader->setUniform("Ka", m_Material->getAmbient());		//Ambient material reflection
-	m_ptrShader->setUniform("Kd", m_Material->getDiffuse());		//Diffuse
-	m_ptrShader->setUniform("Ks", m_Material->getSpecular());		//Specular
-	m_ptrShader->setUniform("shininess", m_Material->getShininess());
+	if (m_Material != NULL) {
+		m_ptrShader->setUniform("Ka", &m_Material->getAmbient());		//Ambient material reflection
+		m_ptrShader->setUniform("Kd", &m_Material->getDiffuse());		//Diffuse
+		m_ptrShader->setUniform("Ks", &m_Material->getSpecular());		//Specular
+		m_ptrShader->setUniform("shininess", m_Material->getShininess());
+	}
 
 	///////////Draw Model////////////////////////
 	//Has Texture

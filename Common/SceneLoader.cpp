@@ -185,6 +185,12 @@ std::pair<std::string, Model> SceneLoader::loadModel(tinyxml2::XMLElement * e)
 			model.setOrigin(v);
 			if (m_bDebug) std::cout << "Origin Set : " << v.x << ", " << v.y << ", " << v.z << "\n  ";
 		}
+		else if (strcmp(childValue, "Material") == 0) {
+			if (readElementText(modelChild, cData)) {
+				model.setMaterial(m_res->getMaterial(std::string(cData, strlen(cData))));
+			}
+			
+		}
 	}
 
 	return std::pair<std::string, Model>(sID,model);
@@ -359,7 +365,6 @@ void SceneLoader::readResources(tinyxml2::XMLNode* node)
 		else if (strcmp(c, "Shader") == 0) {
 			loadShader(element);
 		}
-
 	}
 }
 
