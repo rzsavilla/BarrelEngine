@@ -1,36 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Resources dir="Source\\Resources\\">
+<Resources>
 	<Mesh>
-		<file>"models//cube.obj</file>
+		<ID>cube_mesh</ID>
+		<File>Source\Resources\models\cube.obj</File>
 	</Mesh>
 	<Texture>
-		<file></file>
+		<ID>cube_texture</ID>
+		<File>Source\Resources\textures\cube.bmp</File>
 	</Texture>
 	<Material>
-	
+		<ID>default_material</ID>
+		<AmbientReflect>
+			<X>1.0f</X>
+			<Y>2.0f</Y>
+			<Z>3.0f</Z>
+		</AmbientReflect>
+		<DiffuseReflect>
+			<X>1.0f</X>
+			<Y>2.0f</Y>
+			<Z>3.0f</Z>
+		</DiffuseReflect>
+		<SpecularReflect>
+			<X>1.0f</X>
+			<Y>2.0f</Y>
+			<Z>3.0f</Z>
+		</SpecularReflect>
+		<Shininess>100.0f</Shininess>
 	</Material>
+	<Shader>
+		<ID>default_shader</ID>
+		<Vertex></Vertex>
+		<Fragment></Fragment>
+	</Shader>
 </Resources>
 
 <Scene>
+	<Type>Game</Type>
 	<Model>
 		<Mesh>
-			<Index>0</Index>
+			<ID>cube_mesh</ID>
 		</Mesh>
 		<Position>
-			<posX>1.0f</posX>
-			<posY>2.0f</posY>
-			<posZ>3.0f</posZ>
+			<X>1.0f</X>
+			<Y>2.0f</Y>
+			<Z>3.0f</Z>
 		</Position>
 		<Scale>
-			<scaleX>1.0f</scaleX>
-			<scaleY>2.0f</scaleY>
-			<scaleZ>3.0f</scaleZ>
+			<X>1.0f</X>
+			<Y>1.0f</Y>
+			<Z>1.0f</Z>
 		</Scale>
 		<Origin>
-			<originX>0.0f</originX>
-			<originY>0.0f</originY>
-			<originZ>0.0f</originZ>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
 		</Origin>
 	</Model>
 	<Light>
@@ -43,4 +67,3 @@
 	
 	</Shader>
 </Scene>
-
