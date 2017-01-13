@@ -1,10 +1,10 @@
 #pragma once
 
 #include <stdafx.h>
+#include "ID.h"
 
-class Mesh {
+class Mesh: public ID {
 private:
-	const std::string ks_ModelPath = "Source\\Resources\\models\\";	//!< Obj model resource folder
 	std::vector<GLfloat> vf_vertices;		//Store models vertices
 	std::vector<GLuint> vi_vertIndices;		//Store model vertex indices
 	

@@ -32,11 +32,11 @@ void removeChar(char str[], char t)
 	}
 }
 
-bool Mesh::load(std::string sFilename)
+bool Mesh::load(std::string sFile)
 {
 	FILE* infile;
 
-	std::string sFileLocation = ks_ModelPath + sFilename;
+	std::string sFileLocation = sFile;
 	
 	char *file = new char[100];
 	strcpy_s(file,100, sFileLocation.c_str());
