@@ -46,5 +46,5 @@ public:
 
 	void translate(glm::vec3 translate);		/*!< Move model */
 	void rotate(float degrees, Axis Axis);		/*!< Rotate model */
-	void draw(GLSLProgram* shader);				/*!< Draw model */
+	void draw();				/*!< Draw model */
 };

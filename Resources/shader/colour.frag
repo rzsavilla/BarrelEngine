@@ -43,14 +43,15 @@ void main() {
 	vec3 specular =  Ls * Ks * spec;
 
 	//////Light Attenuation//////
-	//Gradual loss of light intensity over distance
-	float radius = 50.0f;		//Light radius
-	float att = smoothstep(radius, 0, length(lightPosition - fragVert));
+	if (lightRadius > 0) {
+		//Gradual loss of light intensity over distance
+		float att = smoothstep(lightRadius, 0, length(lightPosition - fragVert));
 
-	//Apply attenuation
-	ambient *= att;
-	diffuse *= att;
-	specular *= att;
+		//Apply attenuation
+		ambient *= att;
+		diffuse *= att;
+		specular *= att;
+	}
 
 	//Calculate fragment colour
 	Colour = vec4(ambient + diffuse + specular,1.0) * vec4(myColour,1.0);

@@ -12,24 +12,24 @@ private:
 	std::vector<std::pair<std::string, Model>> m_vModels;			//Store Models
 	std::vector<std::pair<std::string, Light>> m_vLights;			//Store Lights
 	std::vector<std::pair<std::string, QuatCamera>> m_vCamera;		//Store Cameras
-	std::vector<std::pair<std::string, MyRobot>> m_vRobots;		//Store Cameras
+	std::vector<std::pair<std::string, MyRobot>> m_vRobots;			//Store Cameras
+	std::vector<std::pair<std::string, std::shared_ptr<GLSLProgram>>>	m_vShaders;	//Store pointers to shader programs
 
+	void updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam);
 	void updateLight(std::shared_ptr<GLSLProgram> shader, Light light);
 public:
 	GameScene();		//!< Default Constructor
-
-	void initScene();
-
-	void update(float dt);
 
 	void addModel(std::pair<std::string, Model> model);
 	void addLight(std::pair<std::string, Light> light);
 	void addCamera(std::pair<std::string, QuatCamera> camera);
 	void addRobot(std::pair<std::string, MyRobot> robot);
 
+	void initScene();
+
+	void update(float dt);
+
 	void render(GLFWwindow* window);
 
 	void resize(int, int);
-
-	
 };

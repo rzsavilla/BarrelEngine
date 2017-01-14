@@ -43,14 +43,16 @@ void main() {
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
 	vec3 specular =  Ls * Ks * spec;
 
-	//////Light Attenuation//////
-	//Gradual loss of light intensity over distance
-	float att = smoothstep(lightRadius, 0, length(lightPosition - fragVert));
-
-	//Apply attenuation
-	ambient *= att;
-	diffuse *= att;
-	specular *= att;
+	////Light Attenuation//////
+	if (lightRadius > 0) {
+		//Gradual loss of light intensity over distance
+		float att = smoothstep(lightRadius, 0, length(lightPosition - fragVert));
+		
+		//Apply attenuation
+		ambient *= att;
+		diffuse *= att;
+		specular *= att;
+	}
 
 	//Calculate fragment colour
 	Colour = vec4(ambient + diffuse + specular,1.0) * texture(tex,texCoord);

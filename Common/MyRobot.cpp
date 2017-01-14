@@ -94,6 +94,37 @@ void MyRobot::setTurnSpeed(float newTurnSpeed)
 	m_fTurnSpeed = newTurnSpeed;
 }
 
+void MyRobot::setShader(std::shared_ptr<GLSLProgram> shader)
+{
+	m_ptrShader = shader;
+	Head.setShader(m_ptrShader);
+	Torso.setShader(m_ptrShader);
+	ArmLeft.setShader(m_ptrShader);
+	ArmRight.setShader(m_ptrShader);
+	LegLeft.setShader(m_ptrShader);
+	LegRight.setShader(m_ptrShader);
+	FootLeft.setShader(m_ptrShader);
+	FootRight.setShader(m_ptrShader);
+}
+
+void MyRobot::setMaterial(Material * material)
+{
+	m_Material = material;
+	Head.setMaterial(m_Material);
+	Torso.setMaterial(m_Material);
+	ArmLeft.setMaterial(m_Material);
+	ArmRight.setMaterial(m_Material);
+	LegLeft.setMaterial(m_Material);
+	LegRight.setMaterial(m_Material);
+	FootLeft.setMaterial(m_Material);
+	FootRight.setMaterial(m_Material);
+}
+
+std::shared_ptr<GLSLProgram> MyRobot::getShader()
+{
+	return Head.getShader();
+}
+
 void MyRobot::update(const float dt)
 {
 	//Set Velocity
@@ -127,8 +158,7 @@ void MyRobot::update(const float dt)
 	m_bAnimate = false;
 }
 
-float i = 0;
-void MyRobot::draw(GLSLProgram* shader)
+void MyRobot::draw()
 {
 	//m_fRotationY += 0.1f;
 	glm::vec3 pos = m_vPosition;
@@ -164,9 +194,6 @@ void MyRobot::draw(GLSLProgram* shader)
 	FootLeft.setRotation(m_fRotationY, Axis::yAxis);
 	FootRight.setRotation(m_fRotationY, Axis::yAxis);
 
-	Head.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-	Torso.translate(glm::vec3(0.0f, 0.0f, 0.0f));
-
 	ArmLeft.translate(glm::vec3(0.0f, 2.0f, 0.0f));
 	ArmLeft.rotate(armAngles[LEFT], Axis::xAxis);
 
@@ -183,26 +210,22 @@ void MyRobot::draw(GLSLProgram* shader)
 	FootRight.translate(glm::vec3(0.0f, 0.5f, -0.5f));
 	FootRight.rotate(legAngles[RIGHT], Axis::xAxis);
 	
-	//LegLeft.translate(glm::vec3(-0.0f, -0.5f, -0.0f));
-	////////////Draw
-	shader->use();
-	glm::vec3 white = glm::vec3(1.0f, 1.0f, 1.0f);
-	float red[] = { 1.0f,0.0f,0.0f };
-	float blue[] = { 0.0f,0.0f,1.0f };
-	float yellow[] = { 1.0f,1.0f,0.0f };
-	shader->setUniform("myColour", glm::vec3(1.0f,1.0f,1.0f));		//White
-	Head.draw(shader);
-	FootLeft.draw(shader);
-	FootRight.draw(shader);
-	shader->use();
-	shader->setUniform("myColour", glm::vec3(0.0f, 0.0f, 1.0f));	//Blue
-	Torso.draw(shader);
-	shader->setUniform("myColour", glm::vec3(1.0f, 0.0f, 0.0f));	//Red
-	ArmLeft.draw(shader);
-	ArmRight.draw(shader);
-	shader->setUniform("myColour", glm::vec3(1.0f, 1.0f, 0.0f));	//Yellow
-	LegLeft.draw(shader);
-	LegRight.draw(shader);
+	LegLeft.translate(glm::vec3(-0.0f, -0.5f, -0.0f));
+
+	//////////Draw///////
+	m_ptrShader->use();
+	m_ptrShader->setUniform("myColour", glm::vec3(1.0f,1.0f,1.0f));		//White
+	Head.draw();
+	FootLeft.draw();
+	FootRight.draw();
+	m_ptrShader->setUniform("myColour", glm::vec3(0.0f, 0.0f, 1.0f));	//Blue
+	Torso.draw();
+	m_ptrShader->setUniform("myColour", glm::vec3(1.0f, 0.0f, 0.0f));	//Red
+	ArmLeft.draw();
+	ArmRight.draw();
+	m_ptrShader->setUniform("myColour", glm::vec3(1.0f, 1.0f, 0.0f));	//Yellow
+	LegLeft.draw();
+	LegRight.draw();
 }
 
 void MyRobot::animate(float dt)

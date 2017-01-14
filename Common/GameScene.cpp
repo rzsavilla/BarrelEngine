@@ -1,27 +1,26 @@
 #include <stdafx.h>
 #include "GameScene.h"
 
+void GameScene::updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam)
+{
+	//Pass camera uniforms to shader
+	shader->setUniform("mView", cam.view());				//View matrix
+	shader->setUniform("mProjection", cam.projection());	//Projection matrix
+	shader->setUniform("viewPos", cam.position());			//Camera position
+}
+
 void GameScene::updateLight(std::shared_ptr<GLSLProgram> shader, Light light)
 {
 	shader->setUniform("lightPosition", light.getPosition());
-	shader->setUniform("lightRadius", light.getPosition());
+	shader->setUniform("lightRadius", light.getRadius());
 
+	//Pass light intesity
 	shader->setUniform("La", light.getAmbient());	//Ambient light
 	shader->setUniform("Ld", light.getDiffuse());	//Diffuse light
 	shader->setUniform("Ls", light.getSpecular());	//Specular light
 }
 
 GameScene::GameScene()
-{
-
-}
-
-void GameScene::initScene()
-{
-
-}
-
-void GameScene::update(float dt)
 {
 
 }
@@ -46,57 +45,47 @@ void GameScene::addRobot(std::pair<std::string, MyRobot> robot)
 	m_vRobots.push_back(robot);
 }
 
+void GameScene::initScene()
+{
+
+}
+
+void GameScene::update(float dt)
+{
+	m_vModels.at(0).second.rotate(0.1f, Axis::yAxis);
+	m_vModels.at(0).second.rotate(0.1f,Axis::zAxis);
+	m_vCamera.at(m_iActiveCamera).second.rotate(0.001f, 0.0f);
+}
+
 void GameScene::render(GLFWwindow* window)
 {
-	////////////////RENDER//////////
-	gl::Enable(gl::DEPTH_BUFFER_BIT);
-	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
-	gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
-
-
+	//////////////////RENDER//////////
 	for (auto modelIt = m_vModels.begin(); modelIt != m_vModels.end(); ++modelIt) {
+		(*modelIt).second.getShader()->use();
+		//Pass camera uniforms to shader (For active camera)
+		updateCamera((*modelIt).second.getShader(), m_vCamera.at(m_iActiveCamera).second);
+		//Pass light uniforms to shaders
 		for (auto lightIt = m_vLights.begin(); lightIt != m_vLights.end(); ++lightIt) {
-			//Pass lights to shaders
-			//Light
 			updateLight((*modelIt).second.getShader(), (*lightIt).second);
 		}
+		//Draw model
+		(*modelIt).second.draw();
 	}
 
-
-	//Update lights 
-	//for (auto modelIt = m_vModels.begin(); modelIt != m_vModels.end(); ++modelIt) {
-	//	for (auto lightIt = m_vLights.begin(); lightIt != m_vLights.end(); ++modelIt) {
-	//		//Pass lights to shaders
-	//		//Light
-	//		/*(*modelIt).second.getShader()->setUniform("lightPosition", (*lightIt).second.getPosition());
-	//		(*modelIt).second.getShader()->setUniform("lightRadius", (*lightIt).second.getRadius());*/
-	//	}
-	//}
-	////Light intensity
-	//prog.setUniform("La", (*lightIt).second.getAmbient());	//Ambient light
-	//prog.setUniform("Ld", (*lightIt).second.getDiffuse());	//Diffuse light
-	//prog.setUniform("Ls", (*lightIt).second.getSpecular());	//Specular light
-
-
-	//(*modelIt).second.getShader();
-
-	//}
-
-	//
-
-	GLSLProgram p;
-	for (auto it = m_vModels.begin(); it != m_vModels.end(); ++it) {
-		(*it).second.draw(&p);
+	for (auto robotIt = m_vRobots.begin(); robotIt != m_vRobots.end(); ++robotIt) {
+		(*robotIt).second.getShader()->use();
+		//Pass camera uniforms to shader (For active camera)
+		updateCamera((*robotIt).second.getShader(), m_vCamera.at(m_iActiveCamera).second);
+		//Pass light uniforms to shaders
+		for (auto lightIt = m_vLights.begin(); lightIt != m_vLights.end(); ++lightIt) {
+			updateLight((*robotIt).second.getShader(), (*lightIt).second);
+		}
+		//Draw model
+		(*robotIt).second.draw();
 	}
-
-	//glfwSwapInterval(1);		//VSYNC OFF
-	glfwSwapBuffers(window);
-	gl::Disable(gl::DEPTH_BUFFER_BIT);
 }
 
 void GameScene::resize(int, int)
 {
 	
 }
-
-void updateLight(GLSLProgram& prog, Light light, Material material, QuatCamera cam);

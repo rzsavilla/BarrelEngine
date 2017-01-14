@@ -20,6 +20,7 @@ void Model::setBuffers()
 		ttt = 1;
 	}
 
+	//Mesh with UVs
 	if (!mesh->getExpandedTexCoords().empty() && m_Texture) {
 		//Expanded Vertices
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
@@ -39,18 +40,13 @@ void Model::setBuffers()
 		gl::VertexAttribPointer((GLuint)2, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(2);
 	}
+	//Mesh with normals but no UVs
 	else if (!mesh->getExpandedNormals().empty()) {
 		//Expanded Vertices
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
 		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(0);
-
-		////Expanded Texture Coordinates
-		//gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
-		//gl::BufferData(gl::ARRAY_BUFFER, mesh->getExpandedTexCoords().size() * sizeof(GLfloat), mesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
-		//gl::VertexAttribPointer((GLuint)1, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
-		//gl::EnableVertexAttribArray(1);
 
 		//Normals
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[2]);
@@ -271,9 +267,9 @@ Model::Model()
 	origin = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-void Model::draw(GLSLProgram* shader)
+void Model::draw()
 {
-	m_ptrShader->use();	//Ensure correct m_ptrShader is used
+	m_ptrShader->use();	//Ensure correct shader is used
 
 	/////////////Model Transform variables///////////////////
 	//Transform
@@ -311,32 +307,31 @@ void Model::draw(GLSLProgram* shader)
 
 	m_ptrShader->setUniform("mModel", getTransform());
 
-
-	//Pass material
 	//Material reflectivity
-	if (m_Material != NULL) {
-		m_ptrShader->setUniform("Ka", &m_Material->getAmbient());		//Ambient material reflection
-		m_ptrShader->setUniform("Kd", &m_Material->getDiffuse());		//Diffuse
-		m_ptrShader->setUniform("Ks", &m_Material->getSpecular());		//Specular
+	if (m_Material != NULL) {	//Has material
+		m_ptrShader->setUniform("Ka", m_Material->getAmbient());		//Ambient material reflection
+		m_ptrShader->setUniform("Kd", m_Material->getDiffuse());		//Diffuse
+		m_ptrShader->setUniform("Ks", m_Material->getSpecular());		//Specular
 		m_ptrShader->setUniform("shininess", m_Material->getShininess());
 	}
 
-	///////////Draw Model////////////////////////
-	//Has Texture
-	if ((!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL)) {
-		gl::BindVertexArray(this->VAO);
-		gl::BindTexture(gl::TEXTURE_2D, m_Texture->object());					//Bind Texture
-		gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
-									
+	///////////Draw Mesh////////////////////////
+	if (mesh != NULL) {		//Has pointer to mesh
+		//Has Texture
+		if ((!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL)) {
+			gl::BindVertexArray(this->VAO);
+			gl::BindTexture(gl::TEXTURE_2D, m_Texture->object());					//Bind Texture
+			gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
+		}
+		else if (!mesh->getExpandedNormals().empty()) {
+			gl::BindVertexArray(this->VAO);
+			gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
+		}
+		else {
+			gl::BindVertexArray(this->VAO);
+			gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
+		}
+		gl::BindVertexArray(0);													//Unbind VAO
+		gl::BindTexture(gl::TEXTURE_2D, 0);										//Unbind Texture	
 	}
-	else if (!mesh->getExpandedNormals().empty()) {
-		gl::BindVertexArray(this->VAO);
-		gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
-	}
-	else {
-		gl::BindVertexArray(this->VAO);
-		gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
-	}
-	gl::BindVertexArray(0);													//Unbind VAO
-	gl::BindTexture(gl::TEXTURE_2D, 0);										//Unbind Texture				
 }

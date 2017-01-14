@@ -38,6 +38,10 @@ private:
 	glm::mat4 m_translateMatrix;
 	glm::vec3 m_Velocity;
 
+	std::shared_ptr<GLSLProgram> m_ptrShader;
+
+	Material* m_Material;
+
 	// updates the robot data
 	void animate(float dt);
 public:
@@ -53,10 +57,15 @@ public:
 	void setMoveSpeed(float newSpeed);
 	void setTurnSpeed(float newTurnSpeed);
 
+	void setShader(std::shared_ptr<GLSLProgram> shader);
+	void setMaterial(Material* material);
+
+	std::shared_ptr<GLSLProgram> getShader();
+
 	void update(const float dt);
 
 	// draws the entire robot
-	void draw(GLSLProgram* shader);
+	void draw();
 
 	
 };

@@ -4,6 +4,8 @@
 /* Abstract Scene class*/
 class Scene
 {
+protected:
+	unsigned int m_iActiveCamera;	//!< index of camera being used
 public:
 	~Scene() {};
 	/**

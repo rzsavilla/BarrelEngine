@@ -1,50 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Resources>
-	<Mesh>
-		<ID>cube_mesh</ID>
+	<Mesh> <ID>cube_mesh</ID>
 		<File>Source\Resources\models\cube.obj</File>
 	</Mesh>
-	<Texture>
-		<ID>cube_texture</ID>
+	<Mesh> <ID>room_mesh</ID>
+		<File>Source\Resources\models\room.obj</File>
+	</Mesh>
+	<Texture> <ID>cube_texture</ID>
 		<File>Source\Resources\textures\cube.bmp</File>
 	</Texture>
-	<Material>
-		<ID>default_material</ID>
+	<Texture> <ID>room_texture</ID>
+		<File>Source\Resources\textures\room.png</File>
+	</Texture>
+	<Material> <ID>default_material</ID>
 		<AmbientReflect>
-			<X>1.0f</X>
-			<Y>2.0f</Y>
-			<Z>3.0f</Z>
+			<X>0.5f</X>
+			<Y>0.5f</Y>
+			<Z>0.5f</Z>
 		</AmbientReflect>
 		<DiffuseReflect>
-			<X>1.0f</X>
-			<Y>2.0f</Y>
-			<Z>3.0f</Z>
+			<X>0.8f</X>
+			<Y>0.8f</Y>
+			<Z>0.8f</Z>
 		</DiffuseReflect>
 		<SpecularReflect>
-			<X>1.0f</X>
-			<Y>2.0f</Y>
-			<Z>3.0f</Z>
+			<X>0.9f</X>
+			<Y>0.9f</Y>
+			<Z>0.9f</Z>
 		</SpecularReflect>
-		<Shininess>100.0f</Shininess>
+		<Shininess>100.0</Shininess>
 	</Material>
-	<Shader>
-		<ID>phong_shader</ID>
+	<Shader> <ID>phong_shader</ID>
 		<Vertex>Source\Resources\shader\phong.vert</Vertex>
 		<Fragment>Source\Resources\shader\phong.frag</Fragment>
 	</Shader>
-</Resources>
-
+	<Shader> <ID>colour_shader</ID>
+		<Vertex>Source\Resources\shader\colour.vert</Vertex>
+		<Fragment>Source\Resources\shader\colour.frag</Fragment>
+	</Shader>
+	</Resources>
+	
 <Scene>
 	<Type>Game</Type>
-	<Model>
-		<Mesh>
-			<ID>cube_mesh</ID>
-		</Mesh>
+	<Model> <ID>cube_model</ID>
+		<Mesh>cube_mesh</Mesh>
+		<Material>default_material</Material>
+		<Shader>phong_shader</Shader>
+		<Texture>cube_texture</Texture>
 		<Position>
-			<X>1.0f</X>
-			<Y>2.0f</Y>
-			<Z>3.0f</Z>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
 		</Position>
 		<Scale>
 			<X>1.0f</X>
@@ -56,34 +63,65 @@
 			<Y>0.0f</Y>
 			<Z>0.0f</Z>
 		</Origin>
+	</Model>
+	<Model> <ID>room_model</ID>
+		<Mesh>room_mesh</Mesh>
 		<Material>default_material</Material>
 		<Shader>phong_shader</Shader>
-	</Model>
-	<Light>
-		<ID>room_light</ID>
-		<Ambient>
+		<Texture>room_texture</Texture>
+		<Position>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Position>
+		<Scale>
 			<X>1.0f</X>
-			<Y>2.0f</Y>
-			<Z>3.0f</Z>
+			<Y>1.0f</Y>
+			<Z>1.0f</Z>
+		</Scale>
+		<Origin>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Origin>
+	</Model>
+	<Robot> <ID>first_robot</ID>
+		<Material>default_material</Material>
+		<Shader>colour_shader</Shader>
+		<Position>
+			<X>0.0f</X>
+			<Y>7.8f</Y>
+			<Z>0.0f</Z>
+		</Position>
+	</Robot>
+	<Light> <ID>room_light</ID>
+		<Position>
+			<X>0.0f</X>
+			<Y>5.0f</Y>
+			<Z>0.0f</Z>
+		</Position>
+		<Ambient>
+			<X>0.5f</X>
+			<Y>0.5f</Y>
+			<Z>0.5f</Z>
 		</Ambient>
 		<Diffuse>
-			<X>1.0f</X>
-			<Y>2.0f</Y>
-			<Z>3.0f</Z>
+			<X>0.8f</X>
+			<Y>0.8f</Y>
+			<Z>0.8f</Z>
 		</Diffuse>
 		<Specular>
 			<X>1.0f</X>
-			<Y>2.0f</Y>
-			<Z>3.0f</Z>
+			<Y>1.0f</Y>
+			<Z>1.0f</Z>
 		</Specular>
-		<Radius>100.0f</Radius>
+		<Radius>50.0f</Radius>
 	</Light>
-	<Camera>
-		<ID>default_material</ID>
+	<Camera> <ID>cam1</ID>
 		<Position>
-			<X>1.0f</X>
-			<Y>2.0f</Y>
-			<Z>3.0f</Z>
+			<X>0.0f</X>
+			<Y>1.0f</Y>
+			<Z>10.0f</Z>
 		</Position>
 		<Orientation>
 			<X>0.0f</X>
@@ -91,11 +129,8 @@
 			<Z>0.0f</Z>
 		</Orientation>
 		<FOV>90.0f</FOV>
-		<AspectRatio>90.0f</AspectRatio>
+		<AspectRatio>1.0f</AspectRatio>
 		<FarPlane>0.0f</FarPlane>
 		<NearPlane>1000.0f</NearPlane>
 	</Camera>
-	<Shader>
-	
-	</Shader>
 </Scene>
