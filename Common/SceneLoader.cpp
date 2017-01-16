@@ -306,7 +306,7 @@ std::pair<std::string, QuatCamera> SceneLoader::loadCamera(tinyxml2::XMLElement 
 			if (m_bDebug) std::cout << "NearPlane: " << c << "\n  ";
 		}
 	}
-
+	camera.setNearAndFarPlanes(fNear, fFar);
 	return std::pair<std::string, QuatCamera>(sID, camera);
 }
 
