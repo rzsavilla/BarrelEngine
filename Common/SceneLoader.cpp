@@ -305,6 +305,18 @@ std::pair<std::string, QuatCamera> SceneLoader::loadCamera(tinyxml2::XMLElement 
 			}
 			if (m_bDebug) std::cout << "NearPlane: " << c << "\n  ";
 		}
+		else if (strcmp(childValue, "RotSpeed") == 0) {
+			if (readElementText(child, c)) {
+				camera.setRotateSpeed(atof(c));
+			}
+			if (m_bDebug) std::cout << "Rotation Speed: " << c << "\n  ";
+		}
+		else if (strcmp(childValue, "MoveSpeed") == 0) {
+			if (readElementText(child, c)) {
+				camera.setMoveSpeed(atof(c));
+			}
+			if (m_bDebug) std::cout << "MoveSpeed Speed: " << c << "\n  ";
+		}
 	}
 	camera.setNearAndFarPlanes(fNear, fFar);
 	return std::pair<std::string, QuatCamera>(sID, camera);

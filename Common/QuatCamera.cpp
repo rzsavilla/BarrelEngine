@@ -56,7 +56,8 @@ float QuatCamera::fieldOfView() const
 void QuatCamera::setFieldOfView(float fieldOfView)
 {
 	assert(fieldOfView>0.0f && fieldOfView <180.0f);
-	_fieldOfView = fieldOfView;
+	_fieldOfView = glm::radians(fieldOfView);
+	_projection = glm::perspective(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,6 +75,7 @@ void QuatCamera::setAspectRatio(float aspectRatio)
 {
 	assert(aspectRatio >0.0f);
 	_aspectRatio = aspectRatio;
+	_projection = glm::perspective(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
 }
 
 
@@ -103,6 +105,7 @@ void QuatCamera::setNearAndFarPlanes(float nearPlane, float farPlane)
 	assert(farPlane > nearPlane);
 	_nearPlane = nearPlane;
 	_farPlane = farPlane;
+	_projection = glm::perspective(_fieldOfView, _aspectRatio, _nearPlane, _farPlane);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -114,11 +117,6 @@ glm::quat fromAxisAngle(glm::vec3 axis, float angle)
 {
 	glm::quat rotation;
 
-	/*TO DO */
-	/*Need to return a Quaternion which will be used to change the camera orientation
-	It will represent a rotation by 'angle' radians around the vector 'axis'
-	*/
-	//float r = glm::radians(angle);
 	float r = (angle);
 
 	rotation.w = cos(angle / 2);
@@ -134,18 +132,6 @@ glm::quat fromAxisAngle(glm::vec3 axis, float angle)
 /////////////////////////////////////////////////////////////////////////////////////////////
 void QuatCamera::rotate(const float yaw, const float pitch)
 {
-	/* TODO */
-	/* Use method fromAxisAngle(...) to obtain a 'rotation' quaternion to rotate pitch around WORLDX
-	then update camera orientation by multiplying rotation * _orientation.
-	normalize the result.
-
-	Then use method fromAxisAngle(...) to obtain a 'rotation' quaternion to rotate yaw around WORLDY
-	then again update camera orientation by multiplying _orientation * rotation.
-	Note the order of multiplication
-
-	Lastly call updateView() to update the View matrix.
-	*/
-
 	glm::quat xPitch = fromAxisAngle(WORLDX, pitch);
 	glm::quat yYaw = fromAxisAngle(WORLDY, yaw);
 
@@ -273,4 +259,24 @@ void QuatCamera::lookAt(glm::vec3 pos)
 {
 	target = pos;
 	m_bHasTarget = true;
+}
+
+void QuatCamera::setRotateSpeed(float newSpeed)
+{
+	_rotateSpeed = newSpeed;
+}
+
+void QuatCamera::setMoveSpeed(float newSpeed)
+{
+	_moveSpeed = newSpeed;
+}
+
+float QuatCamera::getRotateSpeed()
+{
+	return _rotateSpeed;
+}
+
+float QuatCamera::getMoveSpeed()
+{
+	return _moveSpeed;
 }

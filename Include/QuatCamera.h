@@ -42,7 +42,16 @@ public:
 	
 	void lookAt(glm::vec3 pos);
 
+	void setRotateSpeed(float newSpeed);
+	void setMoveSpeed(float newSpeed);
+
+	float getRotateSpeed();
+	float getMoveSpeed();
+
 private:
+
+	float _rotateSpeed;
+	float _moveSpeed;
 
 	float _fieldOfView;
 	float _nearPlane;

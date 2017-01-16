@@ -23,12 +23,12 @@ void GameScene::updateLight(std::shared_ptr<GLSLProgram> shader, Light light)
 
 void GameScene::nextCamera()
 {
-	if (m_uiCameraActive < m_vCamera.size()-1) m_uiCameraActive += 1;
+	if (m_uiCameraActive < m_vCamera.size()-1) m_uiCameraActive++;
 }
 
 void GameScene::prevCamera()
 {
-	if (m_uiCameraActive > 0) m_uiCameraActive -= 1;
+	if (m_uiCameraActive > 0 && m_iKey_Q > 0) m_uiCameraActive--;
 }
 
 GameScene::GameScene()
@@ -73,10 +73,13 @@ void GameScene::handleInput(GLFWwindow* window)
 	m_iKey_A = glfwGetKey(window, GLFW_KEY_A);
 	m_iKey_D = glfwGetKey(window, GLFW_KEY_D);
 
-	m_iKey_Escape = glfwGetKey(window, GLFW_KEY_ESCAPE);
-	m_iKey_Space = glfwGetKey(window, GLFW_KEY_ESCAPE);
 	m_iKey_Q = glfwGetKey(window, GLFW_KEY_Q);
 	m_iKey_E = glfwGetKey(window, GLFW_KEY_E);
+	m_iKey_R = glfwGetKey(window, GLFW_KEY_R);
+
+	m_iKey_Escape = glfwGetKey(window, GLFW_KEY_ESCAPE);
+	m_iKey_Space = glfwGetKey(window, GLFW_KEY_ESCAPE);
+	
 
 	//Mouse movement
 	glfwGetCursorPos(window, &m_dMouseX, &m_dMouseY);
@@ -88,10 +91,6 @@ void GameScene::handleInput(GLFWwindow* window)
 
 void GameScene::update(float dt)
 {
-	float rotateVel = 10.0f * dt;
-	m_vModels.at(0).second.rotate(0.1f, Axis::yAxis);
-	m_vModels.at(0).second.rotate(0.1f,Axis::zAxis);
-
 	//Robot movement
 	if (m_iKey_W) m_vRobots.begin()->second.moveForward();
 	else if (m_iKey_S) m_vRobots.begin()->second.moveBackward();
@@ -99,20 +98,32 @@ void GameScene::update(float dt)
 	else if (m_iKey_D) m_vRobots.begin()->second.turnRight();
 
 	//Switch Camera
-	if (m_iKey_Q) prevCamera();
-	else if (m_iKey_E) nextCamera();
-	m_iKey_Q = false;
-	m_iKey_E = false;
+	if (m_camSwitchDelay.getElapsed() > 0.2f) {
+		if (m_iKey_Q) {
+			prevCamera();
+			m_camSwitchDelay.reset();
+		}
+		else if (m_iKey_E) { 
+			nextCamera(); 
+			m_camSwitchDelay.reset();
+			std::cout << "Prev\n";
+		}
+	}
 
 	//Reload Scene
-	if (m_iKey_Escape) m_ptrMessages->push_back(std::make_shared<SceneMessage::Reload>());
+	if (m_iKey_R) m_ptrMessages->push_back(std::make_shared<SceneMessage::Reload>());
 
 	//Close Game
-	//if (m_iKey_Escape) m_ptrMessages->push_back(std::make_shared<SceneMessage::Exit>());
+	if (m_iKey_Escape) m_ptrMessages->push_back(std::make_shared<SceneMessage::Exit>());
+
 
 	//Rotate camera based on mouse movement
 	if (!m_vCamera.empty()) {
-		m_vCamera.at(m_uiCameraActive).second.rotate((-m_dDeltaMouseX * rotateVel) * (1 / 60.0f), (-m_dDeltaMouseY * rotateVel) * (1 / 60.0f));
+		float fSpeed = m_vCamera.at(m_uiCameraActive).second.getRotateSpeed();
+		m_vCamera.at(m_uiCameraActive).second.rotate(
+			(-m_dDeltaMouseX * fSpeed * dt),
+			(-m_dDeltaMouseY * fSpeed * dt)
+		);
 	}
 	//Update Robot
 	for (auto robotIt = m_vRobots.begin(); robotIt != m_vRobots.end(); ++robotIt) {
