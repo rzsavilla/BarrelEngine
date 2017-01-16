@@ -289,7 +289,7 @@ std::pair<std::string, QuatCamera> SceneLoader::loadCamera(tinyxml2::XMLElement 
 		}
 		else if (strcmp(childValue, "AspectRatio") == 0) {
 			if (readElementText(child, c)) {
-				camera.setFieldOfView(atof(c));
+				camera.setAspectRatio(atof(c));
 			}
 			if (m_bDebug) std::cout << "Aspect Ratio: " << c << "\n  ";
 		}
