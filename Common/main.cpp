@@ -13,6 +13,9 @@
 
 #include <Engine.h>
 
+#include "SceneComponent.h"
+#include "InputHandler.h"
+
 
 bool bW, bS, bA, bD,
 bUp, bDown, bLeft, bRight,
@@ -100,71 +103,81 @@ void updateLight(GLSLProgram& prog, Light light,Material material , QuatCamera c
 	prog.setUniform("Ls", light.getSpecular());	//Specular light
 }
 
-#include "SceneLoader.h";
+#include "Transformable.h"
+#include "SceneLoader.h"
 
 int main() {
+	
+	Engine engine;
+	engine.attachComponent(std::make_unique<SceneComponent>());
+	engine.attachComponent(std::make_unique<Render>());
+	engine.attachComponent(std::make_unique<InputHandler>());
+	engine.init();
+	engine.run();
 
-	// Initialize GLFW
-	if (!glfwInit()) exit(EXIT_FAILURE);
+	//Engine::getInstance()->attachComponent(std::make_unique<SceneComponent>());
+	//Engine::getInstance()->attachComponent(std::make_unique<Render>());
+	//Engine::getInstance()->attachComponent(std::make_unique<InputHandler>());
+	//Engine::getInstance()->init();
+	//Engine::getInstance()->run();
 
-	// Select OpenGL 4.3 with a forward compatible core profile.
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, TRUE);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, FALSE);
-	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, TRUE);
-	glfwWindowHint(GLFW_DEPTH_BITS, 32);
+	//// Initialize GLFW
+	//if (!glfwInit()) exit(EXIT_FAILURE);
 
-	//Open window
-	GLFWwindow *window = glfwCreateWindow(1024, 768, "Barrel Engine" , NULL, NULL);
-	if (window == NULL) {
-		std::cout << "Failed to load window\n";
-		system("pause");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
-	glfwMakeContextCurrent(window);
+	//// Select OpenGL 4.3 with a forward compatible core profile.
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	//glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, TRUE);
+	//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//glfwWindowHint(GLFW_RESIZABLE, FALSE);
+	//glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, TRUE);
+	//glfwWindowHint(GLFW_DEPTH_BITS, 32);
 
-	//Load OpenGL functions
-	gl::exts::LoadTest didLoad = gl::sys::LoadFunctions();
-	if (!didLoad) {
-		//Clean up and abort
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
+	////Open window
+	//GLFWwindow *window = glfwCreateWindow(1024, 768, "Barrel Engine" , NULL, NULL);
+	//if (window == NULL) {
+	//	std::cout << "Failed to load window\n";
+	//	system("pause");
+	//	glfwTerminate();
+	//	exit(EXIT_FAILURE);
+	//}
+	//glfwMakeContextCurrent(window);
 
-	std::vector<std::pair<std::string, std::shared_ptr<Scene>>> m_scenes;
-	ResourceManager m_res;
-	std::string sFile = "Source\\Resources\\scenes\\test.xml";
+	////Load OpenGL functions
+	//gl::exts::LoadTest didLoad = gl::sys::LoadFunctions();
+	//if (!didLoad) {
+	//	//Clean up and abort
+	//	glfwTerminate();
+	//	exit(EXIT_FAILURE);
+	//}
 
-	SceneLoader sceneLoader(sFile, &m_res, &m_scenes);
+	//std::vector<std::pair<std::string, std::shared_ptr<Scene>>> m_scenes;
+	//ResourceManager m_res;
+	//std::string sFile = "Source\\Resources\\scenes\\test.xml";
 
-	gl::Enable(gl::DEPTH_TEST);
-	while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+	//SceneLoader sceneLoader(sFile, &m_res, &m_scenes);
 
-		////////////UPDATE//////////////////////
-		//Calculate time step
-		gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
-		gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+	//gl::Enable(gl::DEPTH_TEST);
+	//while (!glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 
-		m_scenes.begin()->second->update(1.0f);
-		m_scenes.begin()->second->render(window);
+	//	////////////UPDATE//////////////////////
+	//	//Calculate time step
+	//	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
+	//	gl::ClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
-		//////////////////LIGHTS//////////
+	//	m_scenes.begin()->second->update(1.0f);
+	//	m_scenes.begin()->second->render(window);
 
-		//////////////////RENDER//////////
-		
+	//	//////////////////LIGHTS//////////
 
-		glfwSwapInterval(1);		//VSYNC OFF
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-	//Close window and terminate GLFW
-	glfwTerminate();
+	//	//////////////////RENDER//////////
+	//	glfwSwapInterval(1);		//VSYNC OFF
+	//	glfwSwapBuffers(window);
+	//	glfwPollEvents();
+	//}
+	////Close window and terminate GLFW
+	//glfwTerminate();
 
-
-	int w = 0;
 	//XMLDocument doc;
 	//doc.LoadFile("Source\\Resources\\scenes\\test.xml");
 

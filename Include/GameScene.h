@@ -6,6 +6,7 @@
 #include "Light.h"
 #include "QuatCamera.h"
 #include "MyRobot.h"
+#include "Component.h"
 
 class GameScene :public Scene {
 private:
@@ -17,6 +18,12 @@ private:
 
 	void updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam);
 	void updateLight(std::shared_ptr<GLSLProgram> shader, Light light);
+
+	double m_dDeltaMouseX;	//!< Mouse position difference X
+	double m_dDeltaMouseY;	//!< Mouse position difference Y
+
+	void nextCamera();		//!< Switch active camera
+	void prevCamera();		//!< Switch active camera
 public:
 	GameScene();		//!< Default Constructor
 
@@ -27,9 +34,11 @@ public:
 
 	void initScene();
 
+	void handleInput(GLFWwindow* window);
+
 	void update(float dt);
 
-	void render(GLFWwindow* window);
+	void draw();
 
 	void resize(int, int);
 };

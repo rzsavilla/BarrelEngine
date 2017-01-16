@@ -67,4 +67,6 @@ std::shared_ptr<GLSLProgram> ResourceManager::getShader(std::string ID)
 			return (*it).second;		//Returns shader pointer
 		}
 	}
+
+	return NULL;
 }

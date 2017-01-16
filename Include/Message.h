@@ -35,3 +35,69 @@ struct KeyEvent : public Message {
 	unsigned int iKey;
 	bool isDown;
 };
+
+namespace InputMessage {
+	struct KeyPress : public Message {
+		KeyPress(int key, int action)
+			: iKey(key)
+			, iAction(action)
+		{
+			sID = "Input_KeyPress";
+		}
+		int iKey;
+		int iAction;
+	};
+
+	struct MouseMove : public Message {
+		MouseMove(double x, double y)
+			: dXPos(x)
+			, dYPos(y)
+		{
+			sID = "Input_MouseMove";
+		}
+		double dXPos;
+		double dYPos;
+	};
+
+	struct MouseClick : public Message {
+		MouseClick(bool isDown, int button)
+			: bIsDown(isDown)
+			, iButton(button)
+		{
+			sID = "Input_MouseClick";
+		}
+		bool bIsDown;
+		int iButton;
+	};
+};
+
+struct SetWindow : public Message {
+	SetWindow(GLFWwindow* obj)
+		:window(obj)
+	{
+		sID = "SetWindow";
+	}
+	GLFWwindow* window;		//Object to be drawn
+};
+
+namespace SceneMessage {
+	struct SplashScene : public Message {
+		SplashScene() { sID = "Scene_Splash"; }
+	};
+
+	struct StartScene : public Message {
+		StartScene() { sID = "Scene_Start"; }
+	};
+
+	struct GameScene : public Message {
+		GameScene() { sID = "Scene_Game"; }
+	};
+
+	struct Reload : public Message {
+		Reload() { sID = "Scene_Reload"; }
+	};
+
+	struct Exit : public Message {
+		Exit() { sID = "Scene_Exit"; }
+	};
+}

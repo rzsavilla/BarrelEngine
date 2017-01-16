@@ -5,12 +5,13 @@
 #include "Texture.h"
 #include "GLSLProgram.h"
 #include "ID.h"
+#include "Drawable.h"
 
 /* http://learnopengl.com/#!Model-Loading/Mesh */
 
 enum Axis { xAxis, yAxis, zAxis };
 
-class Model : public ID {
+class Model: public Drawable {
 private:
 	//Render Data
 	GLuint VAO, VBO[2], EBO;

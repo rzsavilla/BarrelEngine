@@ -7,7 +7,7 @@ void PlayerInput::handleKeyPress(KeyEvent* e)
 	switch ((unsigned int)e->iKey)
 	{	
 	case GLFW_KEY_W:
-		m_ptrLocalMessages->push_back(&SetPositionMessage(glm::vec3(100.0f, 100.0f, 100.0f)));
+		m_ptrLocalMessages->push_back(std::make_shared<SetPositionMessage>(glm::vec3(100.0f, 100.0f, 100.0f)));
 		break;
 	case GLFW_KEY_S:
 

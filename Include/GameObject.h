@@ -17,7 +17,7 @@ private:
 		for (auto it = m_ptrComponents.begin(); it != m_ptrComponents.end(); ++it) {
 			//Send messages to components to handle
 			for (int i = 0; i < m_vMessages.size(); i++) {
-				(*it)->handleMessage(m_vMessages.at(i));
+				//(*it)->handleMessage(m_vMessages.at(i));
 			}
 		}
 		m_vMessages.clear();
@@ -29,7 +29,7 @@ private:
 		for (auto it = m_ptrComponents.begin(); it != m_ptrComponents.end(); ++it) {
 			//Send messages to components to handle
 			for (int i = 0; i < m_vLocalMessages.size(); i++) {
-				(*it)->handleMessage(m_vLocalMessages.at(i));
+				//(*it)->handleMessage(m_vLocalMessages.at(i));
 			}
 		}
 		m_vLocalMessages.clear();		//Remove all local messages
@@ -47,7 +47,7 @@ public:
 
 	}
 
-	//! used to add a message to the vector of messages
+	//! Used to add a message to the vector of messages from outside the object
 	void sendMessage(Message* msg) {
 		m_vMessages.push_back(msg);
 	}
@@ -63,6 +63,6 @@ public:
 	//! Attaches a component to this object
 	void attachComponent(std::unique_ptr<Component> newComponent) {
 		m_ptrComponents.push_back(std::move(newComponent));
-		m_ptrComponents.back()->setLocalMsgPtr(&m_vLocalMessages);
+		//m_ptrComponents.back()->setLocalMsgPtr(&m_vLocalMessages);
 	}
 };

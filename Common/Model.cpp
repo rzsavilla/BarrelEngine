@@ -271,41 +271,7 @@ void Model::draw()
 {
 	m_ptrShader->use();	//Ensure correct shader is used
 
-	/////////////Model Transform variables///////////////////
-	//Transform
-	glm::mat4 M(1.0f);	//Model matrix
-
-	glm::mat4 o,oM;
-
-	o = glm::mat4(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		origin.x, origin.y, origin.z, 1.0f
-	);
-	//Origin minus matrix to move vertices to 0;
-	oM = glm::mat4(
-		1.0f, 0.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f, 0.0f,
-		0.0f, 0.0f, 1.0f, 0.0f,
-		-origin.x, -origin.y, -origin.z, 1.0f
-	);
-
-	s = glm::mat4(
-		scale.x, 0.0f, 0.0f, 0.0f,
-		0.0f, scale.y, 0.0f, 0.0f,
-		0.0f, 0.0f, scale.z, 0.0f,
-		0.0f, 0.0f, 0.0f, 1.0f
-	);
-
-	//Pass Uniform model transform variables to m_ptrShader program
-	m_ptrShader->setUniform("mOrigin", o);
-	m_ptrShader->setUniform("mOriginMinus", oM);
-	m_ptrShader->setUniform("mTranslate", t);
-	m_ptrShader->setUniform("mRotate", r);
-	m_ptrShader->setUniform("mScale", s);
-
-	m_ptrShader->setUniform("mModel", getTransform());
+	m_ptrShader->setUniform("mModel", getTransform());	//Pass model transformation matrix
 
 	//Material reflectivity
 	if (m_Material != NULL) {	//Has material

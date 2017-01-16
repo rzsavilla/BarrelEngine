@@ -119,9 +119,25 @@
 	</Light>
 	<Camera> <ID>cam1</ID>
 		<Position>
+			<X>40.0f</X>
+			<Y>40.0f</Y>
+			<Z>-40.0f</Z>
+		</Position>
+		<Orientation>
 			<X>0.0f</X>
-			<Y>1.0f</Y>
-			<Z>10.0f</Z>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Orientation>
+		<FOV>90.0f</FOV>
+		<AspectRatio>1.0f</AspectRatio>
+		<FarPlane>0.0f</FarPlane>
+		<NearPlane>1000.0f</NearPlane>
+	</Camera>
+	<Camera> <ID>cam2</ID>
+		<Position>
+			<X>10.0f</X>
+			<Y>27.0f</Y>
+			<Z>125.0f</Z>
 		</Position>
 		<Orientation>
 			<X>0.0f</X>
