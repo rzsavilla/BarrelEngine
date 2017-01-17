@@ -31,6 +31,10 @@
 		</SpecularReflect>
 		<Shininess>100.0</Shininess>
 	</Material>
+	<Shader> <ID>text_shader</ID>
+		<Vertex>Source\Resources\shader\text.vert</Vertex>
+		<Fragment>Source\Resources\shader\text.frag</Fragment>
+	</Shader>
 	<Shader> <ID>phong_shader</ID>
 		<Vertex>Source\Resources\shader\phong.vert</Vertex>
 		<Fragment>Source\Resources\shader\phong.frag</Fragment>
@@ -39,8 +43,8 @@
 		<Vertex>Source\Resources\shader\colour.vert</Vertex>
 		<Fragment>Source\Resources\shader\colour.frag</Fragment>
 	</Shader>
-	</Resources>
-	
+</Resources>
+
 <Scene>
 	<Type>Game</Type>
 	<Model> <ID>cube_model</ID>
@@ -128,10 +132,11 @@
 			<Y>0.0f</Y>
 			<Z>0.0f</Z>
 		</Orientation>
-		<FOV>90.0f</FOV>
-		<AspectRatio>1.0f</AspectRatio>
-		<FarPlane>0.0f</FarPlane>
-		<NearPlane>1000.0f</NearPlane>
+		<FOV>50.0f</FOV>
+		<AspectRatio>1.33333</AspectRatio>
+		<FarPlane>1000.0f</FarPlane>
+		<NearPlane>0.1f</NearPlane>
+		<RotSpeed>0.5f</RotSpeed>
 	</Camera>
 	<Camera> <ID>cam2</ID>
 		<Position>
@@ -144,9 +149,122 @@
 			<Y>0.0f</Y>
 			<Z>0.0f</Z>
 		</Orientation>
-		<FOV>90.0f</FOV>
-		<AspectRatio>1.0f</AspectRatio>
-		<FarPlane>0.0f</FarPlane>
-		<NearPlane>1000.0f</NearPlane>
+		<FOV>50.0f</FOV>
+		<AspectRatio>1.3333f</AspectRatio>
+		<FarPlane>1000.0f</FarPlane>
+		<NearPlane>0.1f</NearPlane>
+		<RotSpeed>0.5f</RotSpeed>
+	</Camera>
+	<Camera> <ID>cam3</ID>
+		<Position>
+			<X>-125.0f</X>
+			<Y>28.0f</Y>
+			<Z>125.0f</Z>
+		</Position>
+		<Orientation>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Orientation>
+		<FOV>50.0f</FOV>
+		<AspectRatio>1.33333</AspectRatio>
+		<FarPlane>1000.0f</FarPlane>
+		<NearPlane>0.1f</NearPlane>
+		<RotSpeed>0.5f</RotSpeed>
+	</Camera>
+</Scene>
+
+<Scene>
+	<Type>Start</Type>
+	<Model> <ID>cube_model</ID>
+		<Mesh>cube_mesh</Mesh>
+		<Material>default_material</Material>
+		<Shader>phong_shader</Shader>
+		<Texture>cube_texture</Texture>
+		<Position>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Position>
+		<Scale>
+			<X>1.0f</X>
+			<Y>1.0f</Y>
+			<Z>1.0f</Z>
+		</Scale>
+		<Origin>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Origin>
+	</Model>
+	<Model> <ID>room_model</ID>
+		<Mesh>room_mesh</Mesh>
+		<Material>default_material</Material>
+		<Shader>phong_shader</Shader>
+		<Texture>room_texture</Texture>
+		<Position>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Position>
+		<Scale>
+			<X>1.0f</X>
+			<Y>1.0f</Y>
+			<Z>1.0f</Z>
+		</Scale>
+		<Origin>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Origin>
+	</Model>
+	<Robot> <ID>first_robot</ID>
+		<Material>default_material</Material>
+		<Shader>colour_shader</Shader>
+		<Position>
+			<X>0.0f</X>
+			<Y>7.8f</Y>
+			<Z>0.0f</Z>
+		</Position>
+	</Robot>
+	<Light> <ID>room_light</ID>
+		<Position>
+			<X>0.0f</X>
+			<Y>5.0f</Y>
+			<Z>0.0f</Z>
+		</Position>
+		<Ambient>
+			<X>0.5f</X>
+			<Y>0.5f</Y>
+			<Z>0.5f</Z>
+		</Ambient>
+		<Diffuse>
+			<X>0.8f</X>
+			<Y>0.8f</Y>
+			<Z>0.8f</Z>
+		</Diffuse>
+		<Specular>
+			<X>1.0f</X>
+			<Y>1.0f</Y>
+			<Z>1.0f</Z>
+		</Specular>
+		<Radius>50.0f</Radius>
+	</Light>
+	<Camera> <ID>cam1</ID>
+		<Position>
+			<X>40.0f</X>
+			<Y>40.0f</Y>
+			<Z>-40.0f</Z>
+		</Position>
+		<Orientation>
+			<X>0.0f</X>
+			<Y>0.0f</Y>
+			<Z>0.0f</Z>
+		</Orientation>
+		<FOV>50.0f</FOV>
+		<AspectRatio>1.33333</AspectRatio>
+		<FarPlane>1000.0f</FarPlane>
+		<NearPlane>0.1f</NearPlane>
+		<RotSpeed>0.5f</RotSpeed>
 	</Camera>
 </Scene>

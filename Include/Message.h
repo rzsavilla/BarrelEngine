@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "SplashScene.h"
 
 /*! 
 	Message stores an ID which indicates its purpose
@@ -81,8 +82,8 @@ struct SetWindow : public Message {
 };
 
 namespace SceneMessage {
-	struct SplashScene : public Message {
-		SplashScene() { sID = "Scene_Splash"; }
+	struct SceneSplash : public Message {
+		SceneSplash() { sID = "Scene_Splash"; }
 	};
 
 	struct StartScene : public Message {
@@ -99,5 +100,14 @@ namespace SceneMessage {
 
 	struct Exit : public Message {
 		Exit() { sID = "Scene_Exit"; }
+	};
+}
+
+namespace EngineMessage {
+	struct FrameCount : public Message {
+		FrameCount(int fps)
+			: iFrames(fps)
+		{ sID = "Engine_FrameCount"; }
+		int iFrames;
 	};
 }

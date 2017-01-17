@@ -4,8 +4,8 @@
 #include "QuatCamera.h"
 #include "Texture.h"
 #include "GLSLProgram.h"
-#include "ID.h"
 #include "Drawable.h"
+#include "Transformable.h"
 
 /* http://learnopengl.com/#!Model-Loading/Mesh */
 
@@ -18,14 +18,18 @@ private:
 
 	GLuint handle[3];
 
-	glm::vec3 scale;
+	glm::vec3 m_vPosition;
+	glm::vec3 m_vScale;
+	glm::vec3 m_vOrigin;
+
+	glm::mat4 t, r, s;	//Translation,rotation and scale matrix;
 
 	std::shared_ptr<GLSLProgram> m_ptrShader;
-	glm::mat4 t, r, s;	//Translation,rotation and scale matrix;
-	glm::vec3 origin;	
-	Mesh* mesh;	//!< Store points to mesh model data
-	Texture* m_Texture;	//!< Points to texture
+	
+	Mesh* mesh;				//!< Store points to mesh model data
+	Texture* m_Texture;		//!< Points to texture
 	Material* m_Material;
+
 	void setBuffers(); //!< Pass mesh data to OpenGL buffers
 public:
 	Model();									/*!< Default Constructor */
@@ -40,6 +44,7 @@ public:
 	void setRotation(float degrees, Axis axis); /*!< Set model rotation on choosen axis */
 	void setOrigin(glm::vec3 newOrigin);		/*!< Set models origin*/
 
+	glm::vec3 getPosition();
 	glm::mat4 getTransform();					//!< Returns model transformation matrix ;
 
 

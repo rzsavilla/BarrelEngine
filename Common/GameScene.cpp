@@ -31,6 +31,13 @@ void GameScene::prevCamera()
 	if (m_uiCameraActive > 0 && m_iKey_Q > 0) m_uiCameraActive--;
 }
 
+bool GameScene::collision(MyRobot * robot, Model * model)
+{
+	glm::vec3 a = robot->getPosition();
+	glm::vec3 b = model->getPosition();
+	return false;
+}
+
 GameScene::GameScene()
 {
 
@@ -125,6 +132,19 @@ void GameScene::update(float dt)
 			(-m_dDeltaMouseY * fSpeed * dt)
 		);
 	}
+
+	//Update models
+	for (auto modelIt = m_vModels.begin(); modelIt != m_vModels.end(); ++modelIt) {
+		if ((*modelIt).first == "pickup_model") {
+			(*modelIt).second.rotate(100.0f * dt, xAxis);
+			(*modelIt).second.rotate(100.0f * dt, yAxis);
+
+		}
+		else {
+
+		}
+	}
+
 	//Update Robot
 	for (auto robotIt = m_vRobots.begin(); robotIt != m_vRobots.end(); ++robotIt) {
 		(*robotIt).second.update(dt);

@@ -4,6 +4,10 @@
 #include "Drawable.h"
 #include "Message.h"
 
+#include "Model.h"
+#include "Light.h"
+
+
 /* Abstract Scene class*/
 class Scene: public Drawable
 {
@@ -15,6 +19,7 @@ protected:
 	int m_iKey_Space;
 	int m_iKey_Q;
 	int m_iKey_E;
+	int m_iKey_R;
 
 	double m_dMouseX, m_dMouseY;
 	double m_dPrevMouseX, m_dPrevMouseY;
@@ -38,10 +43,6 @@ public:
 	/** Draw scene.
 	*/
 	virtual void draw() = 0;
-
-	/** Called when screen is resized
-	*/
-	virtual void resize(int, int) = 0;
 
 	/*! Allow seen to create messages
 	*/

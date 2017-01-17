@@ -57,6 +57,8 @@ public:
 	void setMoveSpeed(float newSpeed);
 	void setTurnSpeed(float newTurnSpeed);
 
+	glm::vec3 getPosition();
+
 	void setShader(std::shared_ptr<GLSLProgram> shader);
 	void setMaterial(Material* material);
 

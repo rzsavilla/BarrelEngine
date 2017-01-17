@@ -105,7 +105,7 @@ void Model::setPosition(glm::vec3 newPos)
 
 void Model::setScale(glm::vec3 newScale)
 {
-	scale = newScale;
+	m_vScale = newScale;
 	s = glm::mat4(
 		newScale.x, 0.0f, 0.0f, 0.0f,
 		0.0f, newScale.y, 0.0f, 0.0f,
@@ -165,7 +165,12 @@ void Model::translate(glm::vec3 translate)
 
 void Model::setOrigin(glm::vec3 newOrigin)
 {
-	origin = newOrigin;
+	m_vOrigin = newOrigin;
+}
+
+glm::vec3 Model::getPosition()
+{
+	return m_vPosition;
 }
 
 glm::mat4 Model::getTransform()
@@ -179,13 +184,13 @@ glm::mat4 Model::getTransform()
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
 		0.0f, 0.0f, 1.0f, 0.0f,
-		origin.x, origin.y, origin.z, 1.0f
+		m_vOrigin.x, m_vOrigin.y, m_vOrigin.z, 1.0f
 	);
 
 	s = glm::mat4(
-		scale.x, 0.0f, 0.0f, 0.0f,
-		0.0f, scale.y, 0.0f, 0.0f,
-		0.0f, 0.0f, scale.z, 0.0f,
+		m_vScale.x, 0.0f, 0.0f, 0.0f,
+		0.0f, m_vScale.y, 0.0f, 0.0f,
+		0.0f, 0.0f, m_vScale.z, 0.0f,
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 
@@ -262,9 +267,9 @@ Model::Model()
 		0.0f, 0.0f, 0.0f, 1.0f
 	);
 
-	scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	m_vScale = glm::vec3(1.0f, 1.0f, 1.0f);
 
-	origin = glm::vec3(0.0f, 0.0f, 0.0f);
+	m_vOrigin = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 void Model::draw()
@@ -288,16 +293,18 @@ void Model::draw()
 			gl::BindVertexArray(this->VAO);
 			gl::BindTexture(gl::TEXTURE_2D, m_Texture->object());					//Bind Texture
 			gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
+			gl::BindVertexArray(0);					//Unbind VAO
+			gl::BindTexture(gl::TEXTURE_2D, 0);		//Unbind Texture	
 		}
 		else if (!mesh->getExpandedNormals().empty()) {
 			gl::BindVertexArray(this->VAO);
 			gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
+			gl::BindVertexArray(0);				//Unbind VAO
 		}
 		else {
 			gl::BindVertexArray(this->VAO);
 			gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
+			gl::BindVertexArray(0);				//Unbind VAO
 		}
-		gl::BindVertexArray(0);													//Unbind VAO
-		gl::BindTexture(gl::TEXTURE_2D, 0);										//Unbind Texture	
 	}
 }

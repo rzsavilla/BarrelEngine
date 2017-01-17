@@ -7,13 +7,15 @@
 #include "QuatCamera.h"
 #include "MyRobot.h"
 #include "Component.h"
+#include "MyTimer.h"
+#include "Text.h"
 
 class GameScene :public Scene {
 private:
-	std::vector<std::pair<std::string, Model>> m_vModels;			//Store Models
-	std::vector<std::pair<std::string, Light>> m_vLights;			//Store Lights
-	std::vector<std::pair<std::string, QuatCamera>> m_vCamera;		//Store Cameras
-	std::vector<std::pair<std::string, MyRobot>> m_vRobots;			//Store Cameras
+	std::vector<std::pair<std::string, Model>> m_vModels;		//Store Models
+	std::vector<std::pair<std::string, Light>> m_vLights;		//Store Lights
+	std::vector<std::pair<std::string, QuatCamera>> m_vCamera;	//Store Cameras
+	std::vector<std::pair<std::string, MyRobot>> m_vRobots;		//Store Robots
 	std::vector<std::pair<std::string, std::shared_ptr<GLSLProgram>>>	m_vShaders;	//Store pointers to shader programs
 
 	void updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam);
@@ -24,6 +26,11 @@ private:
 
 	void nextCamera();		//!< Switch active camera
 	void prevCamera();		//!< Switch active camera
+
+	MyTimer m_camSwitchDelay;//Delay for  switching camers
+
+	bool collision(MyRobot* robot, Model* model);
+
 public:
 	GameScene();		//!< Default Constructor
 

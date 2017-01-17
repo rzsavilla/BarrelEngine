@@ -14,8 +14,6 @@
 #include "Render.h"
 #include "SceneLoader.h"
 
-
-
 class Engine {
 private:
 	//////Singleton///////

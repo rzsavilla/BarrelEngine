@@ -59,6 +59,9 @@ void Render::handleMessage(std::shared_ptr<Message> msg)
 		//Get data from message
 		m_ptrWindow = static_cast<SetWindow*>(msg.get())->window;
 	}
+	else if (msg->sID == "Scene_Reload") {
+		m_ptrDrawObjects.clear();
+	}
 	else {
 
 	}
@@ -67,16 +70,12 @@ void Render::handleMessage(std::shared_ptr<Message> msg)
 
 void Render::update(float dt)
 {
-	gl::Enable(gl::DEPTH_TEST);
 	gl::Clear(gl::COLOR_BUFFER_BIT | gl::DEPTH_BUFFER_BIT);
 	for (auto objIt = m_ptrDrawObjects.begin(); objIt != m_ptrDrawObjects.end(); ++objIt) {
 		(*objIt)->draw();
 	}
 	m_ptrDrawObjects.clear();
-	gl::Disable(gl::DEPTH_TEST);
 
-	glfwSwapInterval(1);		//VSYNC OFF
-	if (m_ptrWindow) {
-		glfwSwapBuffers(m_ptrWindow);
-	}
+	glfwSwapInterval(1);		//VSYNC
+	glfwSwapBuffers(m_ptrWindow);
 }

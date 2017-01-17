@@ -1,6 +1,7 @@
 #include <stdafx.h>
 #include "SceneLoader.h"
 #include <cstdlib>
+#include "StartScene.h"
 
 void SceneLoader::loadMesh(tinyxml2::XMLElement * e)
 {
@@ -369,13 +370,12 @@ void SceneLoader::readScene(tinyxml2::XMLNode * node)
 	if (readElementText(node->FirstChildElement("Type"), c)) {
 		str = std::string(c, strlen(c));
 	}
-
+	using namespace tinyxml2;
 	std::string sID;
 	if (str == "Game") {
 		std::shared_ptr<GameScene> gameScene = std::make_unique<GameScene>();	//Create scene
 
 		if (m_bDebug) std::cout << "\nLoading Scene elements\n ";
-		using namespace tinyxml2;
 		for (XMLElement* element = node->FirstChildElement(); element != NULL; element = element->NextSiblingElement())
 		{
 			if (strcmp(element->Value(), "ID") == 0) {
@@ -397,6 +397,30 @@ void SceneLoader::readScene(tinyxml2::XMLNode * node)
 			}
 		}
 		m_scenes->push_back(std::pair<std::string, std::shared_ptr<Scene>>(sID,gameScene));
+	}
+	else if (str == "Start") {
+		std::shared_ptr<StartScene> startScene = std::make_unique<StartScene>();
+		for (XMLElement* element = node->FirstChildElement(); element != NULL; element = element->NextSiblingElement())
+		{
+			if (strcmp(element->Value(), "ID") == 0) {
+				if (readElementText(element, c)) {
+					sID = std::string(c, strlen(c));		//ID
+				}
+			}
+			else if (strcmp(element->Value(), "Model") == 0) {
+				//startScene->addModel(loadModel(element));
+			}
+			else if (strcmp(element->Value(), "Light") == 0) {
+				//startScene->addLight(loadLight(element));
+			}
+			else if (strcmp(element->Value(), "Camera") == 0) {
+				//startScene->addCamera(loadCamera(element));
+			}
+			else if (strcmp(element->Value(), "Robot") == 0) {
+				//startScene->addRobot(loadRobot(element));
+			}
+		}
+		m_scenes->push_back(std::pair<std::string, std::shared_ptr<Scene>>(sID, startScene));
 	}
 	else {
 

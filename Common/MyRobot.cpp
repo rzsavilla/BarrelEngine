@@ -94,6 +94,11 @@ void MyRobot::setTurnSpeed(float newTurnSpeed)
 	m_fTurnSpeed = newTurnSpeed;
 }
 
+glm::vec3 MyRobot::getPosition()
+{
+	return m_vPosition;
+}
+
 void MyRobot::setShader(std::shared_ptr<GLSLProgram> shader)
 {
 	m_ptrShader = shader;
