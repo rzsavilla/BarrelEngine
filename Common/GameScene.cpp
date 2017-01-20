@@ -47,8 +47,16 @@ void GameScene::prevCamera()
 
 bool GameScene::collision(MyRobot * robot, Model * model)
 {
+	// c = sqrt(a^2 + b^2)
 	glm::vec3 a = robot->getPosition();
 	glm::vec3 b = model->getPosition();
+
+	float distance = sqrt(pow(b.x - a.x, 2) + pow(b.z - a.z, 2));
+
+	//std::cout << distance << "\n";
+	if (distance <= 7.0f) {
+		return true;				//Collision has occured
+	}
 	return false;
 }
 
@@ -117,7 +125,7 @@ void GameScene::update(float dt)
 	else if (m_iKey_S) m_vRobots.begin()->second.moveBackward();
 	if (m_iKey_A) m_vRobots.begin()->second.turnLeft();
 	else if (m_iKey_D) m_vRobots.begin()->second.turnRight();
-	std::cout << m_vRobots.begin()->second.getPosition().x << " " << m_vRobots.begin()->second.getPosition().z << "\n";
+	//std::cout << m_vRobots.begin()->second.getPosition().x << " " << m_vRobots.begin()->second.getPosition().z << "\n";
 	//Switch Camera
 	if (m_camSwitchDelay.getElapsed() > 0.2f) {
 		if (m_iKey_Q) {
@@ -127,7 +135,6 @@ void GameScene::update(float dt)
 		else if (m_iKey_E) { 
 			nextCamera(); 
 			m_camSwitchDelay.reset();
-			std::cout << "Prev\n";
 		}
 	}
 
@@ -147,16 +154,27 @@ void GameScene::update(float dt)
 		);
 	}
 
+	std::vector<int> viDelete;	//Stores model index for models to be deleted
 	//Update models
-	for (auto modelIt = m_vModels.begin(); modelIt != m_vModels.end(); ++modelIt) {
-		if ((*modelIt).first == "pickup_model") {
-			(*modelIt).second.rotate(100.0f * dt, xAxis);
-			(*modelIt).second.rotate(100.0f * dt, yAxis);
+	for (int i = 0; i < m_vModels.size(); i++) {
+		//Update pickup models
+		if (m_vModels.at(i).first == "pickup_model") {
+			m_vModels.at(i).second.rotate(100.0f * dt, xAxis);
+			m_vModels.at(i).second.rotate(100.0f * dt, yAxis);
 
+			//Check for collision with robot
+			if (collision(&m_vRobots.begin()->second, &m_vModels.at(i).second)) {
+				viDelete.push_back(i);	//Push model index, ready to be deleted
+			}
 		}
 		else {
 
 		}
+	}
+
+	//Delete models
+	for (int i = 0; i < viDelete.size(); i++) {
+		m_vModels.erase(m_vModels.begin() + viDelete[i]);
 	}
 
 	//Update Robot

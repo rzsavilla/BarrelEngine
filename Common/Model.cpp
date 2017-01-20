@@ -95,6 +95,7 @@ void Model::setShader(std::shared_ptr<GLSLProgram> shader)
 
 void Model::setPosition(glm::vec3 newPos)
 {
+	m_vPosition = newPos;
 	t = glm::mat4(
 		1.0f, 0.0f, 0.0f, 0.0f,
 		0.0f, 1.0f, 0.0f, 0.0f,
@@ -161,6 +162,8 @@ void Model::translate(glm::vec3 translate)
 		0.0f, 0.0f, 1.0f, 0.0f,
 		translate.x, translate.y, translate.z, 1.0f
 	);
+	//m_vPosition = glm::vec3(t[3].x, t[3].y, t[3].z);	//Update position
+	m_vPosition = (glm::vec3) t[3];
 }
 
 void Model::setOrigin(glm::vec3 newOrigin)

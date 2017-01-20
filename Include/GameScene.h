@@ -27,8 +27,9 @@ private:
 	void nextCamera();		//!< Switch active camera
 	void prevCamera();		//!< Switch active camera
 
-	MyTimer m_camSwitchDelay;//Delay for  switching camers
+	MyTimer m_camSwitchDelay;	//!<Delay for switching cameras
 
+	//! Calculates distance between robot and model to determine if a collision has occured
 	bool collision(MyRobot* robot, Model* model);
 
 public:
