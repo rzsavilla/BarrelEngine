@@ -149,8 +149,8 @@ void GameScene::update(float dt)
 	if (!m_vCamera.empty()) {
 		float fSpeed = m_vCamera.at(m_uiCameraActive).second.getRotateSpeed();
 		m_vCamera.at(m_uiCameraActive).second.rotate(
-			(-m_dDeltaMouseX * fSpeed * dt),
-			(-m_dDeltaMouseY * fSpeed * dt)
+			(-m_dDeltaMouseX * dt),
+			(-m_dDeltaMouseY * dt)
 		);
 	}
 

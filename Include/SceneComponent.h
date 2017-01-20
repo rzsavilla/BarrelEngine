@@ -8,7 +8,7 @@ private:
 	GLFWwindow *m_ptrWindow;
 	ResourceManager m_res;
 	std::vector<std::pair<std::string, std::shared_ptr<Scene>>> m_scenes;
-	std::map<GLchar, Character> Characters;
+	std::map<GLchar, Character> m_Characters;
 
 	unsigned int m_uiActiveScene;
 

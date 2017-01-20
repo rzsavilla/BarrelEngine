@@ -6,7 +6,7 @@
 
 #include "Model.h"
 #include "Light.h"
-
+#include "Text.h"
 
 /* Abstract Scene class*/
 class Scene: public Drawable
@@ -25,6 +25,8 @@ protected:
 	double m_dPrevMouseX, m_dPrevMouseY;
 
 	std::vector<std::shared_ptr<Message>>* m_ptrMessages;
+	std::map<GLchar, Character>* m_ptrCharacters;			//Pointer to character used for create Text
+	ResourceManager* m_ptrResources;						//Points to resource manager
 public:
 	~Scene() {};
 	/**
@@ -49,4 +51,11 @@ public:
 	void setMessages(std::vector<std::shared_ptr<Message>>* messages) {
 		m_ptrMessages = messages;
 	}
+
+	/*!	Allows scene to create Text by passing pointer to characters texture
+	*/
+	void setCharacters(std::map<GLchar, Character>* characters);
+
+	//Pointer to resources/gives scene access to resources
+	void setResources(ResourceManager* res);
 };

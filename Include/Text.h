@@ -21,6 +21,7 @@ private:
 	std::shared_ptr<GLSLProgram> m_shader;
 	float m_fScale;
 	std::map<GLchar, Character>* m_Characters;
+	//Character m_Characters;
 
 	GLuint VAO, VBO;
 public:

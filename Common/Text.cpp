@@ -20,7 +20,6 @@ Text::Text(std::string string, std::map<GLchar, Character>* characters, float x,
 	gl::VertexAttribPointer(0, 4, gl::FLOAT, gl::FALSE_, 4 * sizeof(GLfloat), 0);
 	gl::BindBuffer(gl::ARRAY_BUFFER, 0);
 	gl::BindVertexArray(0);
-
 }
 
 void Text::setString(std::string string)
@@ -39,16 +38,17 @@ void Text::draw()
 	m_shader->use();
 	m_shader->setUniform("textColor", m_vColour.x, m_vColour.y, m_vColour.z);
 	m_shader->setUniform("projection", glm::ortho(0.0f, 1024.0f, 0.0f, 768.0f));
-	//gl::ActiveTexture(gl::TEXTURE0);
+	//m_shader->setUniform("projection", glm::ortho(0.0f, 800.0f, 0.0f, 600.0f));
+	gl::ActiveTexture(gl::TEXTURE0);
 	gl::BindVertexArray(VAO);
-
+	GLfloat x = m_vPos.x;
 	// Iterate through all characters
 	std::string::const_iterator c;
 	for (c = m_string.begin(); c != m_string.end(); c++)
 	{
 		Character ch = m_Characters->at(*c);
 
-		GLfloat xpos = m_vPos.x + ch.Bearing.x * m_fScale;
+		GLfloat xpos = x + ch.Bearing.x * m_fScale;
 		GLfloat ypos = m_vPos.y - (ch.Size.y - ch.Bearing.y) * m_fScale;
 
 		GLfloat w = ch.Size.x * m_fScale;
@@ -68,12 +68,11 @@ void Text::draw()
 		// Update content of VBO memory
 		gl::BindBuffer(gl::ARRAY_BUFFER, VBO);
 		gl::BufferSubData(gl::ARRAY_BUFFER, 0, sizeof(vertices), vertices); // Be sure to use glBufferSubData and not glBufferData
-
 		gl::BindBuffer(gl::ARRAY_BUFFER, 0);
 		// Render quad
 		gl::DrawArrays(gl::TRIANGLES, 0, 6);
 		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		m_vPos.x += (ch.Advance >> 6) * m_fScale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		x += (ch.Advance >> 6) * m_fScale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
 	gl::BindVertexArray(0);
 	gl::BindTexture(gl::TEXTURE_2D, 0);

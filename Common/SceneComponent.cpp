@@ -60,14 +60,15 @@ void SceneComponent::init()
 		m_bWindowLoaded = true;
 		//Pass GLFW window pointer to components
 		m_ptrLocalMessages->push_back(std::make_shared<SetWindow>(m_ptrWindow));
-	}
 
-	//////Freetype /////////
-	/*
-		https://learnopengl.com/#!In-Practice/Text-Rendering
-	*/
-	gl::Enable(gl::BLEND);
-	gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+		//////Freetype /////////
+		/*
+			https://learnopengl.com/#!In-Practice/Text-Rendering
+		*/
+		gl::Enable(gl::BLEND);
+		gl::BlendFunc(gl::SRC_ALPHA, gl::ONE_MINUS_SRC_ALPHA);
+
+	}
 
 	// FreeType
 	FT_Library ft;
@@ -122,15 +123,15 @@ void SceneComponent::init()
 			glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 			face->glyph->advance.x
 		};
-		Characters.insert(std::pair<GLchar, Character>(c, character));
+		m_Characters.insert(std::pair<GLchar, Character>(c, character));
 	}
 	gl::BindTexture(gl::TEXTURE_2D, 0);
-	// Destroy FreeType once we're finished
+	// Destroy FreeType once finished
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);
-
 	
 	//////Load Scenes//////
+	m_uiActiveScene = 0;
 	m_scenes.clear();
 	m_res = ResourceManager();
 	std::string sFile = "Source\\Resources\\scenes\\test.xml";
@@ -145,21 +146,21 @@ void SceneComponent::init()
 
 	//////Initialize loaded scenes//////
 	for (auto it = m_scenes.begin(); it != m_scenes.end(); ++it) {
-		(*it).second->initScene();
+		(*it).second->setCharacters(&m_Characters);		//Allows scene to create Text
+		(*it).second->setResources(&m_res);				//Access to resources
 		(*it).second->setMessages(m_ptrLocalMessages);	//Allow scene to create messages for components
+		(*it).second->initScene();
 	}
 	m_bReload = false;
 
-	//Text
-	//Create
-	m_vTexts.push_back(std::pair<std::string, std::shared_ptr<Text>>
-		("Text_FPS", std::make_shared<Text>("Hello World:", &Characters, 25.0f, 25.0f, glm::vec3(1.0f, 1.0f, 1.0f),5.0f)));
-	//Set Shader
+	////////Text//////
 	for (auto it = m_vTexts.begin(); it != m_vTexts.end(); ++it) {
+		//Set shader to all text objects
 		(*it).second->setShader(m_res.getShader("text_shader"));
 	}
 
-	m_FPSText = std::make_shared<Text>("Hello World:", &Characters, 25.0f, 25.0f, glm::vec3(1.0f, 1.0f, 1.0f), 5.0f);
+	//Create fps text
+	m_FPSText = std::make_shared<Text>("FPS:", &m_Characters, 0.0f, 750.0f, glm::vec3(1.0f, 1.0f, 1.0f), 0.5f);
 	m_FPSText->setShader(m_res.getShader("text_shader"));
 }
 
@@ -170,9 +171,17 @@ void SceneComponent::handleMessage(std::shared_ptr<Message> msg)
 		m_bReload = true;
 	}
 	else if (msg->sID == "Engine_FrameCount") {
-		int i = static_cast<EngineMessage::FrameCount*>(msg.get())->iFrames;
-		//getTextObject("Text_FPS")->setString(std::to_string(i));
-		//m_FPSText->setString(std::to_string(i));
+		int i = static_cast<EngineMessage::FrameCount*>(msg.get())->iFrames;	//get data from message
+		m_FPSText->setString("FPS: " + std::to_string(i));
+	}
+	else if (msg->sID == "Scene_Game") {
+		//Look for game scene index
+		for (int i = 0; i < m_scenes.size(); i++) {
+			if (m_scenes.at(i).first == "game_scene") {
+				m_uiActiveScene = i;	//Set active scene
+				return;
+			}
+		}
 	}
 }
 
@@ -189,10 +198,9 @@ void SceneComponent::update(float dt)
 		m_ptrLocalMessages->push_back(std::make_shared<RenderComponent::Draw>(m_scenes.at(m_uiActiveScene).second));
 		//Draw message for texts
 		for (auto it = m_vTexts.begin(); it != m_vTexts.end(); ++it) {
-			m_ptrLocalMessages->push_back(std::make_shared<RenderComponent::Draw>((*it).second));
+			//m_ptrLocalMessages->push_back(std::make_shared<RenderComponent::Draw>((*it).second));
 		}
 		m_ptrLocalMessages->push_back(std::make_shared<RenderComponent::Draw>(m_FPSText));
-
 	}
 	else {
 		init();	//Reload scenes

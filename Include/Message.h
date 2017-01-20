@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "SplashScene.h"
 
 /*! 
 	Message stores an ID which indicates its purpose
@@ -9,7 +8,6 @@
 
 	It is used to pass data/commands/instructions to or between components
 */
-
 
 //Abstract struct
 struct Message {

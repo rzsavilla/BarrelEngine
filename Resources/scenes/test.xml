@@ -74,8 +74,10 @@
 	
 </Resources>
 
-<Scene>
-	<Type>Game</Type>
+<Scene> <Type>Splash</Type> <ID>splash_scene</ID>
+</Scene>
+
+<Scene> <Type>Game</Type> <ID>game_scene</ID>
 	<Model> <ID>room_model</ID>
 		<Mesh>room_mesh</Mesh>
 		<Material>default_material</Material>
