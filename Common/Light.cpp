@@ -6,6 +6,7 @@ Light::Light()
 	m_vAmbient = glm::vec3(0.0f);
 	m_vDiffuse = glm::vec3(0.0f);
 	m_vSpecular = glm::vec3(0.0f);
+	m_fRadius = 0.0f;
 }
 
 Light::Light(glm::vec3 Ambient, glm::vec3 Diffuse, glm::vec3 Specular, float radius)
