@@ -11,9 +11,6 @@
 		<File>Source\Resources\models\room.obj</File>
 	</Mesh>
 	
-	<Texture> <ID>cube_texture</ID>
-		<File>Source\Resources\textures\cube.bmp</File>
-	</Texture>
 	<Texture> <ID>room_texture</ID>
 		<File>Source\Resources\textures\room.png</File>
 	</Texture>
