@@ -1,11 +1,22 @@
+/* https://learnopengl.com/ */
+
 #version 430
 
-//Light intensity
-uniform vec3 Ld;            //Diffuse light intensity
-uniform vec3 La;			//Ambient intensity
-uniform vec3 Ls;			//Specular intensity
-uniform vec3 lightPosition;	//Light Position
-uniform float lightRadius;	//Radius of the light
+//OpenGL required const number for arrays, must be manually changed when lights are changed
+#define POINT_LIGHT_COUNT 3  
+
+struct PointLight {
+	vec3 Ld;
+	vec3 La;
+	vec3 Ls;
+	vec3 position;
+	float radius;
+};
+
+uniform int pLightCount;
+uniform PointLight pLight[POINT_LIGHT_COUNT];	//Array of point lights
+
+vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);	//Declare function
 
 //Material
 uniform vec3 Ka;			//Ambient reflectivity
@@ -27,33 +38,51 @@ in vec2 texCoord;			//Texture coordinates
 out vec4 Colour;			//Returns fragment - Data used to render pixel
 
 void main() {
+
+	vec3 viewDir = normalize(viewPos - fragVert);
+
+	vec4 result;	//Result of all light calculations from array of lights
+	for (int i = 0; i < POINT_LIGHT_COUNT; i++) {
+		result += vec4(calcPointLight(pLight[i], fragNormal,fragVert, viewDir),1.0f);
+	}
+
+	Colour = result;
+}
+
+vec3 calcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+	
+	vec3 norm = normalize(normal);
+	vec3 lightDir = normalize(light.position - fragVert);
+	
 	//////Ambient//////
-	vec3 ambient = La * Ka;
+	vec3 ambient = light.La * Ka;
 
 	//////Diffuse//////
-	vec3 norm = normalize(fragNormal);
-	vec3 lightDir = normalize(lightPosition - fragVert);
 	float diff = max(dot(norm,lightDir),0.0);
-	vec3 diffuse = Ld * Kd * diff;
+	vec3 diffuse = light.Ld * Kd * diff;
 	diffuse = clamp(diffuse,0.0,1.0);
 
 	//////Specular//////
-	vec3 viewDir = normalize(viewPos - fragVert);
+	viewDir = normalize(viewPos - fragVert);
 	vec3 reflectDir = reflect(-lightDir, norm);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0), shininess);
-	vec3 specular =  Ls * Ks * spec;
+	vec3 specular =  light.Ls * Ks * spec;
+
+	//Apply Texture
+	ambient *= vec3(texture(tex, texCoord));
+	diffuse *= vec3(texture(tex, texCoord));
+	specular *= vec3(texture(tex, texCoord));
 
 	////Light Attenuation//////
-	if (lightRadius > 0) {
+	if (light.radius > 0) {
 		//Gradual loss of light intensity over distance
-		float att = smoothstep(lightRadius, 0, length(lightPosition - fragVert));
+		float att = smoothstep(light.radius, 0, length(light.position - fragVert));
 		
 		//Apply attenuation
 		ambient *= att;
 		diffuse *= att;
 		specular *= att;
 	}
-
-	//Calculate fragment colour
-	Colour = vec4(ambient + diffuse + specular,1.0) * texture(tex,texCoord);
+	return ambient + diffuse + specular;
+	//return vec3(1.0f,1.0f,1.0f);
 }

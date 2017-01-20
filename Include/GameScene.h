@@ -19,7 +19,7 @@ private:
 	std::vector<std::pair<std::string, std::shared_ptr<GLSLProgram>>>	m_vShaders;	//Store pointers to shader programs
 
 	void updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam);
-	void updateLight(std::shared_ptr<GLSLProgram> shader, Light light);
+	void updateLights(std::shared_ptr<GLSLProgram> shader);
 
 	double m_dDeltaMouseX;	//!< Mouse position difference X
 	double m_dDeltaMouseY;	//!< Mouse position difference Y

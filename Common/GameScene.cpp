@@ -10,15 +10,29 @@ void GameScene::updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam
 	shader->setUniform("viewPos", cam.position());			//Camera position
 }
 
-void GameScene::updateLight(std::shared_ptr<GLSLProgram> shader, Light light)
+void GameScene::updateLights(std::shared_ptr<GLSLProgram> shader)
 {
-	shader->setUniform("lightPosition", light.getPosition());
-	shader->setUniform("lightRadius", light.getRadius());
+	int iLightCount = m_vLights.size();
+	shader->setUniform("pLightCount", iLightCount);
 
-	//Pass light intesity
-	shader->setUniform("La", light.getAmbient());	//Ambient light
-	shader->setUniform("Ld", light.getDiffuse());	//Diffuse light
-	shader->setUniform("Ls", light.getSpecular());	//Specular light
+	for (int i = 0; i < m_vLights.size(); i++) {
+
+		Light light = m_vLights.at(i).second;
+
+		std::string sLA = "pLight[" + std::to_string(i) + std::string("].La");
+		std::string sLD = "pLight[" + std::to_string(i) + std::string("].Ld");
+		std::string sLS = "pLight[" + std::to_string(i) + std::string("].Ls");
+		std::string sPosition = "pLight[" + std::to_string(i) + std::string("].position");
+		std::string sRadius = "pLight[" + std::to_string(i) + std::string("].radius");
+
+		shader->setUniform(sPosition.data(), light.getPosition());
+		shader->setUniform(sRadius.data(), light.getRadius());
+
+		//Pass light intesity
+		shader->setUniform(sLA.data(), light.getAmbient());	//Ambient light
+		shader->setUniform(sLD.data(), light.getDiffuse());	//Diffuse light
+		shader->setUniform(sLS.data(), light.getSpecular());	//Specular light
+	}
 }
 
 void GameScene::nextCamera()
@@ -103,7 +117,7 @@ void GameScene::update(float dt)
 	else if (m_iKey_S) m_vRobots.begin()->second.moveBackward();
 	if (m_iKey_A) m_vRobots.begin()->second.turnLeft();
 	else if (m_iKey_D) m_vRobots.begin()->second.turnRight();
-
+	std::cout << m_vRobots.begin()->second.getPosition().x << " " << m_vRobots.begin()->second.getPosition().z << "\n";
 	//Switch Camera
 	if (m_camSwitchDelay.getElapsed() > 0.2f) {
 		if (m_iKey_Q) {
@@ -160,9 +174,8 @@ void GameScene::draw()
 		//Pass camera uniforms to shader (For active camera)
 		updateCamera((*modelIt).second.getShader(), m_vCamera.at(m_uiCameraActive).second);
 		//Pass light uniforms to shaders
-		for (auto lightIt = m_vLights.begin(); lightIt != m_vLights.end(); ++lightIt) {
-			updateLight((*modelIt).second.getShader(), (*lightIt).second);
-		}
+		updateLights((*modelIt).second.getShader());
+
 		//Draw model
 		(*modelIt).second.draw();
 	}
@@ -172,9 +185,7 @@ void GameScene::draw()
 		//Pass camera uniforms to shader (For active camera)
 		updateCamera((*robotIt).second.getShader(), m_vCamera.at(m_uiCameraActive).second);
 		//Pass light uniforms to shaders
-		for (auto lightIt = m_vLights.begin(); lightIt != m_vLights.end(); ++lightIt) {
-			updateLight((*robotIt).second.getShader(), (*lightIt).second);
-		}
+		updateLights((*robotIt).second.getShader());
 		//Draw model
 		(*robotIt).second.draw();
 	}
