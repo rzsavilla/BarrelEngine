@@ -119,7 +119,7 @@
 			<Y>1.0f</Y>
 			<Z>1.0f</Z>
 		</Specular>
-		<Radius>50.0f</Radius>
+		<Radius>150.0f</Radius>
 	</Light>
 	<Camera> <ID>cam1</ID>
 		<Position>

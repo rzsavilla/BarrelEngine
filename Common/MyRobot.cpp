@@ -137,7 +137,7 @@ void MyRobot::update(const float dt)
 	else if (m_bBackwards) { m_Velocity = glm::vec3(-m_fMoveSpeed, -m_fMoveSpeed, -m_fMoveSpeed); }
 
 	//Calculate direction/facing/heading vector
-	glm::vec4 forward(1.0f,.0f,1.0f,1.0f);
+	glm::vec4 forward(1.0f,0.0f,1.0f,1.0f);
 	//Calculate robots rotation
 	float rad = glm::radians(m_fRotationY + 45.0f);
 	glm::mat4 orientation(
