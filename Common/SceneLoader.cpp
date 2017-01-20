@@ -239,7 +239,7 @@ std::pair<std::string, Light> SceneLoader::loadLight(tinyxml2::XMLElement * e)
 			light.setSpecular(v);
 			if (m_bDebug) std::cout << "Specular intensity: " << v.x << ", " << v.y << ", " << v.z << "\n  ";
 		}
-		else if (strcmp(childValue, "Radius")) {
+		else if (strcmp(childValue, "Radius") == 0) {
 			if (readElementText(modelChild, cData)) {
 				light.setRadius(atof(cData));
 			}
