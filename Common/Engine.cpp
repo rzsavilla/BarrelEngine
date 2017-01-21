@@ -30,16 +30,6 @@ void Engine::handleMessages()
 	m_vMessages.clear();		//Remove all messages
 }
 
-void Engine::gameLoop()
-{
-
-}
-
-void Engine::render()
-{
-
-}
-
 Engine::~Engine()
 {
 

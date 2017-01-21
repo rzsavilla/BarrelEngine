@@ -4,11 +4,11 @@
 #include "SceneComponent.h"
 
 int main() {
-	Engine engine;
-	engine.attachComponent(std::make_unique<Render>());
-	engine.attachComponent(std::make_unique<SceneComponent>());
-	engine.init();
-	engine.run();
+	//Attach components to the engine
+	Engine::getInstance()->attachComponent(std::make_unique<Render>());
+	Engine::getInstance()->attachComponent(std::make_unique<SceneComponent>());
+	Engine::getInstance()->init();		//Initialize engine
+	Engine::getInstance()->run();		//Start engine
 
 	return 0;
 }
