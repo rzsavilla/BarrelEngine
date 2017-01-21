@@ -1,8 +1,8 @@
 /**
-* @class   GameScene
-* @brief  Game Scene updates, runs and draws game loop
-* Game Scenes stores game objects and updates game loop.
-* Scene contains and updates game logic.
+* @class	GameScene
+* @brief	Game Scene updates, runs and draws game loop
+* Game Scenes stores game objects and logic.
+* The Scene stores game objects, and updates objects and game logic.
 */
 
 #pragma once
@@ -23,10 +23,9 @@ private:
 	std::vector<std::pair<std::string, Light>> m_vLights;		//!< Store Lights with id
 	std::vector<std::pair<std::string, QuatCamera>> m_vCamera;	//!< Store Cameras with id
 	std::vector<std::pair<std::string, MyRobot>> m_vRobots;		//!< Store Robots with id
-	std::vector<std::pair<std::string, std::shared_ptr<GLSLProgram>>>	m_vShaders;		//Store pointers to shader programs with id
 
-	void updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam);		//!< Passes camera uniforms for shader program
-	void updateLights(std::shared_ptr<GLSLProgram> shader);						//!< Passes light uniforms  for shader program
+	void updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam);		//!< Passes camera uniforms to shader program
+	void updateLights(std::shared_ptr<GLSLProgram> shader);						//!< Passes lights uniforms  to shader program
 
 	double m_dDeltaMouseX;	//!< Mouse position difference X
 	double m_dDeltaMouseY;	//!< Mouse position difference Y
@@ -45,18 +44,13 @@ private:
 public:
 	GameScene();		//!< Default Constructor
 
-	void addModel(std::pair<std::string, Model> model);
-	void addLight(std::pair<std::string, Light> light);
-	void addCamera(std::pair<std::string, QuatCamera> camera);
-	void addRobot(std::pair<std::string, MyRobot> robot);
+	void addModel(std::pair<std::string, Model> model);				//!< Add model into the scene
+	void addLight(std::pair<std::string, Light> light);				//!< Add light into the scene
+	void addCamera(std::pair<std::string, QuatCamera> camera);		//!< Add light into the scene only one camera can be active
+	void addRobot(std::pair<std::string, MyRobot> robot);			//!< Add robot into the scene currenly only uses the first element
 
-	void initScene();
-
-	void handleInput(GLFWwindow* window);
-
-	void update(float dt);
-
-	void draw();
-
-	void resize(int, int);
+	void initScene();							//!< Initialize scene
+	void handleInput(GLFWwindow* window);		//!< Handle user inputs
+	void update(float dt);						//!< Update scene
+	void draw();								//!< Draw scene
 };

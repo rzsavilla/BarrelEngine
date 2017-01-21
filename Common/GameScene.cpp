@@ -1,6 +1,5 @@
 #include <stdafx.h>
 #include "GameScene.h"
-#include "SceneLoader.h"
 
 void GameScene::updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam)
 {
@@ -12,11 +11,8 @@ void GameScene::updateCamera(std::shared_ptr<GLSLProgram> shader, QuatCamera cam
 
 void GameScene::updateLights(std::shared_ptr<GLSLProgram> shader)
 {
-	int iLightCount = m_vLights.size();
-	shader->setUniform("pLightCount", iLightCount);
-
+	//Loop through vector of lights to pass light uniforms into shader
 	for (int i = 0; i < m_vLights.size(); i++) {
-
 		Light light = m_vLights.at(i).second;
 
 		std::string sLA = "pLight[" + std::to_string(i) + std::string("].La");
@@ -221,9 +217,4 @@ void GameScene::draw()
 		(*robotIt).second.draw();
 	}
 	gl::Disable(gl::DEPTH_TEST);
-}
-
-void GameScene::resize(int, int)
-{
-	
 }
