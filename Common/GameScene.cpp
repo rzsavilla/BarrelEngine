@@ -93,8 +93,15 @@ void GameScene::initScene()
 	m_uiCameraActive = 0;
 
 	//Create Text
-	m_PickupCounterText = std::make_shared<Text>("", m_ptrCharacters, 0.0f, 600.0f, glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
+	m_PickupCounterText = std::make_shared<Text>("", m_ptrCharacters, 1.0f, 10.0f, glm::vec3(1.0f, 1.0f, 1.0f), 0.5f);
 	m_PickupCounterText->setShader(m_ptrResources->getShader("text_shader"));
+
+	m_iTotalPickups = 0;
+	m_iCollected = 0;
+	//Count the number of pickups
+	for (int i = 0; i < m_vModels.size(); i++) {
+		if (m_vModels.at(i).first == "pickup_model") m_iTotalPickups++;
+	}
 }
 
 void GameScene::handleInput(GLFWwindow* window)
@@ -168,11 +175,9 @@ void GameScene::update(float dt)
 
 			//Check for collision with robot
 			if (collision(&m_vRobots.begin()->second, &m_vModels.at(i).second)) {
+				m_iCollected++;
 				viDelete.push_back(i);	//Push model index, ready to be deleted
 			}
-		}
-		else {
-
 		}
 	}
 
@@ -187,13 +192,13 @@ void GameScene::update(float dt)
 	}
 
 	//Update Text
-
+	m_PickupCounterText->setString("Collected:" + std::to_string(m_iCollected) + "/" + std::to_string(m_iTotalPickups));
 }
 
 void GameScene::draw()
 {
-	m_PickupCounterText->draw();
 	gl::Enable(gl::DEPTH_TEST);
+	m_PickupCounterText->draw();
 	//////////////////RENDER//////////
 	for (auto modelIt = m_vModels.begin(); modelIt != m_vModels.end(); ++modelIt) {
 		(*modelIt).second.getShader()->use();
