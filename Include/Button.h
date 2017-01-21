@@ -18,5 +18,4 @@ public:
 	void draw();
 
 	bool collision(glm::vec2 point);
-
 };
