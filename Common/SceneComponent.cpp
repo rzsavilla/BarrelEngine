@@ -4,6 +4,10 @@
 #include "Render.h"
 #include "Engine.h"
 
+/*
+	Text Rendering code
+	https://learnopengl.com/#!In-Practice/Text-Rendering
+*/
 
 #include <ft2build.h>
 #include FT_FREETYPE_H  

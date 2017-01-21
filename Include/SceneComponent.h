@@ -1,3 +1,15 @@
+/**
+* @class	SceneComponent
+* @brief	Stores scenes
+* Stores a list of scenes allowing for easy scene loading and switching.
+* Will update and load scenes as well as resources
+*/
+
+/*
+Text Rendering code
+https://learnopengl.com/#!In-Practice/Text-Rendering
+*/
+
 #pragma once
 
 #include "Component.h"
@@ -5,26 +17,22 @@
 
 class SceneComponent: public Component {
 private:
-	GLFWwindow *m_ptrWindow;
-	ResourceManager m_res;
-	std::vector<std::pair<std::string, std::shared_ptr<Scene>>> m_scenes;
-	std::map<GLchar, Character> m_Characters;
+	GLFWwindow *m_ptrWindow;			//!< Game window
+	ResourceManager m_res;				//!< Stores all game resources
+	std::vector<std::pair<std::string, std::shared_ptr<Scene>>> m_scenes;	//!<Stores all scenes with id
+	std::map<GLchar, Character> m_Characters;		//!< Freetype characters used to create text	
 
-	unsigned int m_uiActiveScene;
+	unsigned int m_uiActiveScene;		//!< Index for the active scene
+	bool m_bWindowLoaded = false;		//!< Flag for checking if window has already been loaded, prevents reinialization when reloading scenes
+	bool m_bReload = false;				//!<Flag for reloading the scene/ *fix ensures render component is empty
+	void handleInput();		//!< Process GLFW inputs for active scene
 
-	bool m_bWindowLoaded = false;
-	bool m_bReload = false;		//Flag for reloading the scene/ *fix ensures render component is empty
+	std::shared_ptr<Text> m_FPSText;	//!< Text displays FPS
 
-	/*! Process GLFW inputs for active scene
-	*/
-	void handleInput();
-
-	std::shared_ptr<Text> m_FPSText;
-
-	std::shared_ptr<Text> getTextObject(std::string id);
-	std::vector<std::pair<std::string,std::shared_ptr<Text>>> m_vTexts;
+	std::shared_ptr<Text> getTextObject(std::string id);		//!< Finds and returns text object
+	std::vector<std::pair<std::string,std::shared_ptr<Text>>> m_vTexts;		//!< Stores text
 public:
-	void init();
-	void handleMessage(std::shared_ptr<Message> msg);
-	void update(float dt);
+	void init();	//!< initialize component
+	void handleMessage(std::shared_ptr<Message> msg);	//!< Handle messages received
+	void update(float dt);								//!< Update component
 };
