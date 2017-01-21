@@ -11,46 +11,37 @@ void Model::setBuffers()
 	// Vertex position
 	//Use expanded vertices and texture coordinates if it has a texture
 
-	if (m_Texture) {
-		int www;
-		www = 1;
-	}
-	if (!mesh->getExpandedTexCoords().empty()) {
-		int ttt;
-		ttt = 1;
-	}
-
 	//Mesh with UVs
-	if (!mesh->getExpandedTexCoords().empty() && m_Texture) {
+	if (!m_ptrMesh->getExpandedTexCoords().empty() && m_ptrTexture) {
 		//Expanded Vertices
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
-		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
+		gl::BufferData(gl::ARRAY_BUFFER, (m_ptrMesh->getExpandedVertices().size()) * sizeof(GLfloat), m_ptrMesh->getExpandedVertices().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(0);
 
 		//Expanded Texture Coordinates
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[1]);
-		gl::BufferData(gl::ARRAY_BUFFER, mesh->getExpandedTexCoords().size() * sizeof(GLfloat), mesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
+		gl::BufferData(gl::ARRAY_BUFFER, m_ptrMesh->getExpandedTexCoords().size() * sizeof(GLfloat), m_ptrMesh->getExpandedTexCoords().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)1, 2, gl::FLOAT, FALSE, 0, ((GLubyte *)NULL + (0)));
 		gl::EnableVertexAttribArray(1);
 
 		//Normals
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[2]);
-		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedNormals().size()) * sizeof(GLfloat), mesh->getExpandedNormals().data(), gl::STATIC_DRAW);
+		gl::BufferData(gl::ARRAY_BUFFER, (m_ptrMesh->getExpandedNormals().size()) * sizeof(GLfloat), m_ptrMesh->getExpandedNormals().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)2, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(2);
 	}
 	//Mesh with normals but no UVs
-	else if (!mesh->getExpandedNormals().empty()) {
+	else if (!m_ptrMesh->getExpandedNormals().empty()) {
 		//Expanded Vertices
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
-		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedVertices().size()) * sizeof(GLfloat), mesh->getExpandedVertices().data(), gl::STATIC_DRAW);
+		gl::BufferData(gl::ARRAY_BUFFER, (m_ptrMesh->getExpandedVertices().size()) * sizeof(GLfloat), m_ptrMesh->getExpandedVertices().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(0);
 
 		//Normals
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[2]);
-		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getExpandedNormals().size()) * sizeof(GLfloat), mesh->getExpandedNormals().data(), gl::STATIC_DRAW);
+		gl::BufferData(gl::ARRAY_BUFFER, (m_ptrMesh->getExpandedNormals().size()) * sizeof(GLfloat), m_ptrMesh->getExpandedNormals().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)2, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(2);
 	}
@@ -58,13 +49,13 @@ void Model::setBuffers()
 	else {
 		//Vertices
 		gl::BindBuffer(gl::ARRAY_BUFFER, handle[0]);
-		gl::BufferData(gl::ARRAY_BUFFER, (mesh->getVertices().size()) * sizeof(GLfloat), mesh->getVertices().data(), gl::STATIC_DRAW);
+		gl::BufferData(gl::ARRAY_BUFFER, (m_ptrMesh->getVertices().size()) * sizeof(GLfloat), m_ptrMesh->getVertices().data(), gl::STATIC_DRAW);
 		gl::VertexAttribPointer((GLuint)0, 3, gl::FLOAT, gl::FALSE_, 0, NULL);
 		gl::EnableVertexAttribArray(0);
 
 		// Indices
 		gl::BindBuffer(gl::ELEMENT_ARRAY_BUFFER, EBO);
-		gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (mesh->getVertIndices().size()) * sizeof(GLfloat), mesh->getVertIndices().data(), gl::STATIC_DRAW);
+		gl::BufferData(gl::ELEMENT_ARRAY_BUFFER, (m_ptrMesh->getVertIndices().size()) * sizeof(GLfloat), m_ptrMesh->getVertIndices().data(), gl::STATIC_DRAW);
 	}
 
 	gl::BindVertexArray(0);		//Unbind
@@ -72,19 +63,19 @@ void Model::setBuffers()
 
 void Model::setMesh(Mesh * newMesh, Texture* newTexture)
 {
-	mesh = newMesh;
-	m_Texture = newTexture;
+	m_ptrMesh = newMesh;
+	m_ptrTexture = newTexture;
 	setBuffers();
 }
 
 void Model::setMaterial(Material * material)
 {
-	m_Material = material;
+	m_ptrMaterial = material;
 }
 
 void Model::setTexture(Texture* texture)
 {
-	m_Texture = texture;
+	m_ptrTexture = texture;
 	setBuffers();
 }
 
@@ -282,31 +273,31 @@ void Model::draw()
 	m_ptrShader->setUniform("mModel", getTransform());	//Pass model transformation matrix
 
 	//Material reflectivity
-	if (m_Material != NULL) {	//Has material
-		m_ptrShader->setUniform("Ka", m_Material->getAmbient());		//Ambient material reflection
-		m_ptrShader->setUniform("Kd", m_Material->getDiffuse());		//Diffuse
-		m_ptrShader->setUniform("Ks", m_Material->getSpecular());		//Specular
-		m_ptrShader->setUniform("shininess", m_Material->getShininess());
+	if (m_ptrMaterial != NULL) {	//Has material
+		m_ptrShader->setUniform("Ka", m_ptrMaterial->getAmbient());		//Ambient material reflection
+		m_ptrShader->setUniform("Kd", m_ptrMaterial->getDiffuse());		//Diffuse
+		m_ptrShader->setUniform("Ks", m_ptrMaterial->getSpecular());		//Specular
+		m_ptrShader->setUniform("shininess", m_ptrMaterial->getShininess());
 	}
 
 	///////////Draw Mesh////////////////////////
-	if (mesh != NULL) {		//Has pointer to mesh
+	if (m_ptrMesh != NULL) {		//Has pointer to mesh
 		//Has Texture
-		if ((!mesh->getExpandedTexCoords().empty() && !m_Texture == NULL)) {
+		if ((!m_ptrMesh->getExpandedTexCoords().empty() && !m_ptrTexture == NULL)) {
 			gl::BindVertexArray(this->VAO);
-			gl::BindTexture(gl::TEXTURE_2D, m_Texture->object());					//Bind Texture
-			gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
+			gl::BindTexture(gl::TEXTURE_2D, m_ptrTexture->object());					//Bind Texture
+			gl::DrawArrays(gl::TRIANGLES, 0, m_ptrMesh->getExpandedVertices().size());
 			gl::BindVertexArray(0);					//Unbind VAO
 			gl::BindTexture(gl::TEXTURE_2D, 0);		//Unbind Texture	
 		}
-		else if (!mesh->getExpandedNormals().empty()) {
+		else if (!m_ptrMesh->getExpandedNormals().empty()) {
 			gl::BindVertexArray(this->VAO);
-			gl::DrawArrays(gl::TRIANGLES, 0, mesh->getExpandedVertices().size());
+			gl::DrawArrays(gl::TRIANGLES, 0, m_ptrMesh->getExpandedVertices().size());
 			gl::BindVertexArray(0);				//Unbind VAO
 		}
 		else {
 			gl::BindVertexArray(this->VAO);
-			gl::DrawElements(gl::TRIANGLES, mesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
+			gl::DrawElements(gl::TRIANGLES, m_ptrMesh->getVertIndices().size(), gl::UNSIGNED_INT, 0);
 			gl::BindVertexArray(0);				//Unbind VAO
 		}
 	}
