@@ -1,3 +1,9 @@
+/**
+* @class	SplashScene
+* @brief	Displays a simple splash/loading screen
+* Briefly shows a scene then moves onto the game scene
+*/
+
 #pragma once
 
 #include "Scene.h"
@@ -6,13 +12,12 @@
 
 class SplashScene : public Scene {
 private:
-	MyTimer timer;
-	std::shared_ptr<Text> m_LoadingText;
+	MyTimer timer;							//!< Timer for when to switch scenes
+	std::shared_ptr<Text> m_LoadingText;	//!< Splash screen loading text
 public:
 	SplashScene();
-	void initScene();
-	void handleInput(GLFWwindow* window);
-	void update(float dt);
-
-	void draw();
+	void initScene();						//!< Initialize scene
+	void handleInput(GLFWwindow* window);	//!< Handle user input
+	void update(float dt);					//!< Update sene
+	void draw();							//!< Draw scene
 };
