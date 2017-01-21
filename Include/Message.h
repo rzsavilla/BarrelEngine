@@ -1,3 +1,8 @@
+/**
+* @file	Message
+* Message used to communicate with components or pass data
+*/
+
 #pragma once
 
 #include <string>
@@ -8,9 +13,8 @@
 
 	It is used to pass data/commands/instructions to or between components
 */
-
-//Abstract struct
 struct Message {
+	//Abstract struct
 	std::string sID;
 };
 
@@ -35,6 +39,7 @@ struct KeyEvent : public Message {
 	bool isDown;
 };
 
+//Messages for passing input
 namespace InputMessage {
 	struct KeyPress : public Message {
 		KeyPress(int key, int action)
@@ -79,6 +84,7 @@ struct SetWindow : public Message {
 	GLFWwindow* window;		//Object to be drawn
 };
 
+//Messages to change scenes or instructions for scenes
 namespace SceneMessage {
 	struct SceneSplash : public Message {
 		SceneSplash() { sID = "Scene_Splash"; }

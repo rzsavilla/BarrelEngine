@@ -1,6 +1,11 @@
 #include <stdafx.h>
 #include "Text.h"
 
+/*
+	Tutorial: https://learnopengl.com/#!In-Practice/Text-Rendering
+	Freetype: https://www.freetype.org/
+*/
+
 Text::Text(std::string string, std::map<GLchar, Character>* characters, float x, float y, glm::vec3 colour, float scale)
 {
 	m_string = string;
@@ -8,7 +13,7 @@ Text::Text(std::string string, std::map<GLchar, Character>* characters, float x,
 	m_vPos.y = y;
 	m_vColour = colour;
 	m_fScale = scale;
-	m_Characters = characters;
+	m_ptrCharacters = characters;
 
 	// Configure VAO/VBO for texture quads
 	gl::GenVertexArrays(1, &VAO);
@@ -46,7 +51,7 @@ void Text::draw()
 	std::string::const_iterator c;
 	for (c = m_string.begin(); c != m_string.end(); c++)
 	{
-		Character ch = m_Characters->at(*c);
+		Character ch = m_ptrCharacters->at(*c);
 
 		GLfloat xpos = x + ch.Bearing.x * m_fScale;
 		GLfloat ypos = m_vPos.y - (ch.Size.y - ch.Bearing.y) * m_fScale;
