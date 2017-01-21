@@ -1,4 +1,11 @@
+/**
+* @class	ResourceManager
+* @brief	Stores all resources
+* Used to store and retrieve resources by string id
+*/
+
 #pragma once
+
 #include <stdafx.h>
 #include "Mesh.h"
 #include "Texture.h"
@@ -6,13 +13,12 @@
 #include "Material.h"
 #include "GLSLProgram.h"
 
-
 class ResourceManager {
 private:
 	std::vector<std::pair<std::string, Mesh>> m_vMeshes;			//!< Stores meshes
 	std::vector<std::pair<std::string, Texture*>> m_vTextures;		//!< Stores textures
 	std::vector<std::pair<std::string, Material>> m_vMaterials;		//!< Stores materials
-	std::vector<std::pair<std::string, std::shared_ptr<GLSLProgram>>> m_vShaders;
+	std::vector<std::pair<std::string, std::shared_ptr<GLSLProgram>>> m_vShaders;		//!<Stores shaders
 public:
 	ResourceManager();	//!< Default constructor
 
