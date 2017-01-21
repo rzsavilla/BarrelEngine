@@ -160,7 +160,7 @@ void SceneComponent::init()
 	}
 
 	//Create fps text
-	m_FPSText = std::make_shared<Text>("FPS:", &m_Characters, 0.0f, 750.0f, glm::vec3(1.0f, 1.0f, 1.0f), 0.5f);
+	m_FPSText = std::make_shared<Text>("FPS:", &m_Characters, 1.0f, 745, glm::vec3(1.0f, 1.0f, 1.0f), 0.5f);
 	m_FPSText->setShader(m_res.getShader("text_shader"));
 }
 
@@ -172,7 +172,7 @@ void SceneComponent::handleMessage(std::shared_ptr<Message> msg)
 	}
 	else if (msg->sID == "Engine_FrameCount") {
 		int i = static_cast<EngineMessage::FrameCount*>(msg.get())->iFrames;	//get data from message
-		m_FPSText->setString("FPS: " + std::to_string(i));
+		m_FPSText->setString("FPS:" + std::to_string(i));
 	}
 	else if (msg->sID == "Scene_Game") {
 		//Look for game scene index

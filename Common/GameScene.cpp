@@ -91,6 +91,10 @@ void GameScene::initScene()
 	m_dMouseX = 0.0, m_dMouseY = 0.0;
 	m_dPrevMouseX = 0.0, m_dPrevMouseY = 0.0;
 	m_uiCameraActive = 0;
+
+	//Create Text
+	m_PickupCounterText = std::make_shared<Text>("", m_ptrCharacters, 0.0f, 600.0f, glm::vec3(1.0f, 1.0f, 1.0f), 2.0f);
+	m_PickupCounterText->setShader(m_ptrResources->getShader("text_shader"));
 }
 
 void GameScene::handleInput(GLFWwindow* window)
@@ -181,10 +185,14 @@ void GameScene::update(float dt)
 	for (auto robotIt = m_vRobots.begin(); robotIt != m_vRobots.end(); ++robotIt) {
 		(*robotIt).second.update(dt);
 	}
+
+	//Update Text
+
 }
 
 void GameScene::draw()
 {
+	m_PickupCounterText->draw();
 	gl::Enable(gl::DEPTH_TEST);
 	//////////////////RENDER//////////
 	for (auto modelIt = m_vModels.begin(); modelIt != m_vModels.end(); ++modelIt) {

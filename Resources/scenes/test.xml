@@ -323,7 +323,7 @@
 			<Y>0.0f</Y>
 			<Z>0.0f</Z>
 		</Orientation>
-		<FOV>50.0f</FOV>
+		<FOV>45.0f</FOV>
 		<AspectRatio>1.33333</AspectRatio>
 		<FarPlane>1000.0f</FarPlane>
 		<NearPlane>0.1f</NearPlane>
@@ -340,7 +340,7 @@
 			<Y>0.0f</Y>
 			<Z>0.0f</Z>
 		</Orientation>
-		<FOV>50.0f</FOV>
+		<FOV>90.0f</FOV>
 		<AspectRatio>1.3333f</AspectRatio>
 		<FarPlane>1000.0f</FarPlane>
 		<NearPlane>0.1f</NearPlane>
@@ -357,7 +357,7 @@
 			<Y>0.0f</Y>
 			<Z>0.0f</Z>
 		</Orientation>
-		<FOV>50.0f</FOV>
+		<FOV>45.0f</FOV>
 		<AspectRatio>1.33333</AspectRatio>
 		<FarPlane>1000.0f</FarPlane>
 		<NearPlane>0.1f</NearPlane>

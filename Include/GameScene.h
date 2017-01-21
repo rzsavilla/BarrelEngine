@@ -32,6 +32,8 @@ private:
 	//! Calculates distance between robot and model to determine if a collision has occured
 	bool collision(MyRobot* robot, Model* model);
 
+
+	std::shared_ptr<Text> m_PickupCounterText;
 public:
 	GameScene();		//!< Default Constructor
 
