@@ -114,15 +114,15 @@ void MyRobot::setShader(std::shared_ptr<GLSLProgram> shader)
 
 void MyRobot::setMaterial(Material * material)
 {
-	m_Material = material;
-	Head.setMaterial(m_Material);
-	Torso.setMaterial(m_Material);
-	ArmLeft.setMaterial(m_Material);
-	ArmRight.setMaterial(m_Material);
-	LegLeft.setMaterial(m_Material);
-	LegRight.setMaterial(m_Material);
-	FootLeft.setMaterial(m_Material);
-	FootRight.setMaterial(m_Material);
+	m_ptrMaterial = material;
+	Head.setMaterial(m_ptrMaterial);
+	Torso.setMaterial(m_ptrMaterial);
+	ArmLeft.setMaterial(m_ptrMaterial);
+	ArmRight.setMaterial(m_ptrMaterial);
+	LegLeft.setMaterial(m_ptrMaterial);
+	LegRight.setMaterial(m_ptrMaterial);
+	FootLeft.setMaterial(m_ptrMaterial);
+	FootRight.setMaterial(m_ptrMaterial);
 }
 
 std::shared_ptr<GLSLProgram> MyRobot::getShader()

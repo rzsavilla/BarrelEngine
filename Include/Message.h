@@ -1,11 +1,11 @@
+#pragma once
+
+#include <string>
+
 /**
 * @file	Message
 * Message used to communicate with components or pass data
 */
-
-#pragma once
-
-#include <string>
 
 /*! 
 	Message stores an ID which indicates its purpose

@@ -1,5 +1,10 @@
 /* https://learnopengl.com/ */
 
+/*
+	Phong fragment shader used for majority of models renders object with phong shading. 
+	Allows for multiple point lights. 
+*/
+
 #version 430
 
 //OpenGL required const number for arrays, must be manually changed when lights are changed

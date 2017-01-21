@@ -1,5 +1,11 @@
 /* https://learnopengl.com/ */
 
+/*
+	Colour shader used for Robot renders object with phong shading 
+	but instead of texture a colour is applied.
+	Allows for multiple point lights 
+*/
+
 #version 430
 
 //OpenGL required const number for arrays, must be manually changed when lights are changed
