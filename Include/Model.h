@@ -1,3 +1,9 @@
+/**
+* @class	Model
+* @brief	A drawable game object
+* Model is an object that draws and positions a mesh
+*/
+
 #pragma once
 #include "stdafx.h"
 #include "Mesh.h"

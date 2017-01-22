@@ -1,8 +1,9 @@
-/*!
-	\class Component
-	Abstract class
-	A base/Super/parent class for GameObject Components
+/**
+* @class	Component
+* @brief	Abstract class for creating atcomponents
+* Abstract class for creating attachable components
 */
+
 
 //http://www.randygaul.net/tag/c/
 

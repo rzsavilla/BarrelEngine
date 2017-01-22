@@ -1,3 +1,9 @@
+/**
+* @class	Light
+* @brief	Light stores light properties
+* Store light parameters to be passed to a shader program
+*/
+
 #pragma once
 
 #include <stdafx.h>

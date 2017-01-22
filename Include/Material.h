@@ -1,3 +1,9 @@
+/**
+* @class	Material
+* @brief	Material to be set onto a model
+* Material determines the reflectivity of a model
+*/
+
 #pragma once
 
 #include <stdafx.h>
