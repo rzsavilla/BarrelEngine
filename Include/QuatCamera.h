@@ -1,5 +1,5 @@
 /*!
-	Code is from IMAT3111 Shader programming module
+	Code is from IMAT3111 Shader programming module slightly modified
 */
 
 #pragma once
