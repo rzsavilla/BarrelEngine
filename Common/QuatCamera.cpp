@@ -1,3 +1,6 @@
+/*!
+	Code is from IMAT3111 Shader programming module
+*/
 
 #include <stdafx.h>
 #include "QuatCamera.h"

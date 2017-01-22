@@ -1,3 +1,7 @@
+/*!
+	Code is from IMAT3111 Shader programming module
+*/
+
 #pragma once
 
 #define GLM_FORCE_RADIANS
