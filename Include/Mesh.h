@@ -1,3 +1,9 @@
+/**
+* @class	Mesh
+* @brief	Mesh loaded from obj file 
+* Stores objects vertices, indices, normals, texture coordinates, will also parse the obj file
+*/
+
 #pragma once
 
 #include <stdafx.h>
@@ -22,13 +28,13 @@ public:
 	bool load(std::string sFilename);	//!< Parse obj file
 
 	
-	const std::vector<GLfloat>& getVertNormals();
-	const std::vector<GLuint>& getVertNormIndices();
-	const std::vector<GLfloat>& getTextCoords();
-	const std::vector<GLuint>& getTextIndices();
+	const std::vector<GLfloat>& getVertNormals();			//!< Returns reference to vertex normals
+	const std::vector<GLuint>& getVertNormIndices();		//!< Returns reference to vertex normals indices
+	const std::vector<GLfloat>& getTextCoords();			//!< Returns reference to texture coordinates
+	const std::vector<GLuint>& getTextIndices();			//!< Returns reference to texture coordinates indices
 
-	const std::vector<GLfloat>& getVertices();
-	const std::vector<GLuint>& getVertIndices();
+	const std::vector<GLfloat>& getVertices();				//!< Returns mesh vertices
+	const std::vector<GLuint>& getVertIndices();			//!< Returns mesh vertex indices
 
 	const std::vector<GLfloat>& getExpandedVertices();		//!< Returns expanded vertices
 	const std::vector<GLfloat>& getExpandedTexCoords();		//!< Returns expanded texture coordinates
